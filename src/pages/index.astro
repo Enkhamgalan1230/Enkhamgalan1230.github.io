@@ -16,6 +16,73 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <span class="cursor" aria-hidden="true">|</span>
       </div>
     </div>
+
+    <div class="projects-list">
+      <a class="project-row" href="/projects">
+        <span class="project-number">01</span>
+
+        <div class="project-main">
+          <h3>Project Alpha</h3>
+
+          <p>
+            A short placeholder description for a future data project.
+          </p>
+        </div>
+
+        <span class="project-year">2026</span>
+
+        <span class="project-arrow">↗</span>
+      </a>
+
+      <a class="project-row" href="/projects">
+        <span class="project-number">02</span>
+
+        <div class="project-main">
+          <h3>Project Beta</h3>
+
+          <p>
+            Another placeholder project ready for images, videos and case studies.
+          </p>
+        </div>
+
+        <span class="project-year">2026</span>
+
+        <span class="project-arrow">↗</span>
+      </a>
+
+      <a class="project-row" href="/projects">
+        <span class="project-number">03</span>
+
+        <div class="project-main">
+          <h3>Project Gamma</h3>
+
+          <p>
+            Future project content will live here with proper visuals and details.
+          </p>
+        </div>
+
+        <span class="project-year">2025</span>
+
+        <span class="project-arrow">↗</span>
+      </a>
+
+      <a class="project-row" href="/projects">
+        <span class="project-number">04</span>
+
+        <div class="project-main">
+          <h3>Project Delta</h3>
+
+          <p>
+            Placeholder for another project, experiment or product build.
+          </p>
+        </div>
+
+        <span class="project-year">2025</span>
+
+        <span class="project-arrow">↗</span>
+      </a>
+    </div>
+
     <a class="scroll-cue" href="#projects">
       <span>SCROLL TO EXPLORE</span>
       <span class="scroll-arrow">↓</span>
@@ -144,6 +211,167 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     animation: blink 0.8s steps(1) infinite;
   }
 
+  .projects-preview {
+    padding: 110px 36px 130px;
+
+    background: #edecea;
+  }
+
+  .projects-preview-inner {
+    width: min(1200px, 100%);
+
+    margin: 0 auto;
+  }
+
+  .projects-preview-heading {
+    margin-bottom: 56px;
+  }
+
+  .projects-eyebrow {
+    margin: 0 0 16px;
+
+    font-family: "Courier Prime", monospace;
+    font-size: 0.72rem;
+
+    letter-spacing: 0.08em;
+
+    color: #777777;
+  }
+
+  .projects-preview-heading h2 {
+    margin: 0;
+
+    font-family: "Instrument Serif", serif;
+
+    font-size: clamp(3rem, 6vw, 6rem);
+    font-weight: 400;
+
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+
+    color: #111111;
+  }
+
+  .projects-list {
+    border-top: 1px solid rgba(17, 17, 17, 0.18);
+  }
+
+  .project-row {
+    display: grid;
+
+    grid-template-columns:
+      50px
+      minmax(0, 1fr)
+      auto
+      30px;
+
+    align-items: center;
+
+    gap: 24px;
+
+    padding: 28px 0;
+
+    border-bottom: 1px solid rgba(17, 17, 17, 0.18);
+
+    transition:
+      color 0.25s ease,
+      padding-left 0.25s ease;
+  }
+
+  .project-number,
+  .project-year {
+    font-family: "Courier Prime", monospace;
+
+    font-size: 0.72rem;
+
+    color: #777777;
+  }
+
+  .project-main h3 {
+    margin: 0 0 6px;
+
+    font-family: "Instrument Serif", serif;
+
+    font-size: clamp(1.8rem, 3vw, 3rem);
+    font-weight: 400;
+
+    line-height: 1;
+  }
+
+  .project-main p {
+    margin: 0;
+
+    font-family: "Courier Prime", monospace;
+
+    font-size: 0.78rem;
+    line-height: 1.45;
+
+    color: #777777;
+  }
+
+  .project-arrow {
+    font-size: 1.4rem;
+
+    transition: transform 0.25s ease;
+  }
+
+  .project-row:hover {
+    color: #4d7657;
+
+    padding-left: 8px;
+  }
+
+  .project-row:hover .project-arrow {
+    transform: translate(4px, -4px);
+  }
+
+  @media (max-width: 640px) {
+    .projects-preview {
+      padding: 80px 18px 100px;
+    }
+
+    .projects-preview-heading {
+      margin-bottom: 40px;
+    }
+
+    .projects-preview-heading h2 {
+      font-size: 3.3rem;
+    }
+
+    .project-row {
+      grid-template-columns:
+        28px
+        minmax(0, 1fr)
+        22px;
+
+      gap: 12px;
+
+      padding: 24px 0;
+    }
+
+    .project-year {
+      display: none;
+    }
+
+    .project-number {
+      font-size: 0.62rem;
+    }
+
+    .project-main h3 {
+      font-size: 1.8rem;
+    }
+
+    .project-main p {
+      margin-top: 8px;
+
+      font-size: 0.68rem;
+    }
+
+    .project-arrow {
+      font-size: 1.1rem;
+    }
+  }
+
   .scroll-cue {
     position: absolute;
 
@@ -254,4 +482,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       font-size: clamp(2.2rem, 11vw, 4rem);
     }
   }
+
+
 </style>
