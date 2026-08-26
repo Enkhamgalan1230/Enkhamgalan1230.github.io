@@ -25,7 +25,7 @@ import FaceButton from "./FaceButton.astro";
     <div class="london-clock">
       <span class="clock-dot"></span>
       <span>LONDON</span>
-      <span id="london-time">00:00:00</span>
+      <span id="london-time">00:00</span>
     </div>
 
     <div class="header-right">
@@ -83,6 +83,7 @@ import FaceButton from "./FaceButton.astro";
       timeZone: "Europe/London",
       hour: "2-digit",
       minute: "2-digit",
+      second: "2-digit",
       hour12: false,
     }).format(new Date());
 
