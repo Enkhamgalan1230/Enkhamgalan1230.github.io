@@ -11,8 +11,11 @@
 </button>
 
 <script>
-  const button = document.querySelector<HTMLButtonElement>(".face-button");
-  const image = button?.querySelector<HTMLImageElement>(".face-image");
+  const button =
+    document.querySelector<HTMLButtonElement>(".face-button");
+
+  const image =
+    button?.querySelector<HTMLImageElement>(".face-image");
 
   const STRAIGHT = "/images/faces/straight-main.png";
   const LEFT_TRANSITION = "/images/faces/left-transition.png";
@@ -33,14 +36,8 @@
   ];
 
   let isPlaying = false;
-  let hasPlayedDuringHover = false;
 
-  /*
-   * Preload every frame.
-   *
-   * Without this, the browser might download an image only when
-   * we first try to display it, which could cause flickering.
-   */
+  // Preload every image frame
   [
     STRAIGHT,
     LEFT_TRANSITION,
@@ -53,15 +50,16 @@
   });
 
   const wait = (milliseconds: number) =>
-    new Promise((resolve) => setTimeout(resolve, milliseconds));
+    new Promise<void>((resolve) =>
+      setTimeout(resolve, milliseconds)
+    );
 
   async function playFaceSequence() {
-    if (!image || isPlaying || hasPlayedDuringHover) {
+    if (!image || isPlaying) {
       return;
     }
 
     isPlaying = true;
-    hasPlayedDuringHover = true;
 
     for (const frame of frames) {
       image.src = frame.src;
@@ -72,20 +70,23 @@
     }
 
     image.src = STRAIGHT;
+
+    // Ready to play again
     isPlaying = false;
   }
 
+  // Desktop
   button?.addEventListener("mouseenter", () => {
     playFaceSequence();
   });
 
-  button?.addEventListener("mouseleave", () => {
-    hasPlayedDuringHover = false;
+  // Mobile / click
+  button?.addEventListener("click", () => {
+    playFaceSequence();
+  });
 
-    /*
-     * The face should always return to the straight position
-     * whenever the cursor leaves the button.
-     */
+  // Always return to straight when leaving on desktop
+  button?.addEventListener("mouseleave", () => {
     if (image && !isPlaying) {
       image.src = STRAIGHT;
     }
