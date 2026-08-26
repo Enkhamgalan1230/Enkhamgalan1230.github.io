@@ -1,0 +1,176 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Entwan's Portfolio">
+  <section class="hero">
+
+    <div class="hero-content">
+      <p class="hero-intro">
+        Data and problem <span class="hero-green">given.</span><br />
+        I turn them into:
+      </p>
+
+      <div class="typewriter-wrapper">
+        <span id="typewriter"></span>
+        <span class="cursor" aria-hidden="true">|</span>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const words = [
+    "Efficiency",
+    "Automation",
+    "Predictions",
+    "“Yeahh, that makes sense” moments",
+    "CooooOol tings",
+  ];
+
+  const element = document.querySelector<HTMLElement>("#typewriter");
+
+  const typingSpeed = 85;
+  const deletingSpeed = 25;
+  const finishedPause = 1000;
+  const emptyPause = 500;
+
+  const wait = (time: number) =>
+    new Promise<void>((resolve) => setTimeout(resolve, time));
+
+  async function typeWord(word: string) {
+    if (!element) return;
+
+    for (let i = 1; i <= word.length; i++) {
+      element.textContent = word.slice(0, i);
+      await wait(typingSpeed);
+    }
+  }
+
+  async function deleteWord(word: string) {
+    if (!element) return;
+
+    for (let i = word.length; i >= 0; i--) {
+      element.textContent = word.slice(0, i);
+      await wait(deletingSpeed);
+    }
+  }
+
+  async function startTypewriter() {
+    if (!element) return;
+
+    while (true) {
+      for (const word of words) {
+        await typeWord(word);
+        await wait(finishedPause);
+
+        await deleteWord(word);
+        await wait(emptyPause);
+      }
+    }
+  }
+
+  startTypewriter();
+</script>
+
+<style>
+  .hero {
+    flex: 1;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    padding: 24px;
+
+    overflow: hidden;
+  }
+
+  .hero-green {
+    color: #4d7657;
+  }
+
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+
+    width: min(100%, 680px);
+
+    text-align: left;
+  }
+
+  .hero-intro {
+    margin: 0;
+
+    font-family: "Instrument Serif", serif;
+    font-size: clamp(2.1rem, 4vw, 4.2rem);
+    font-weight: 400;
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+
+    color: #111111;
+  }
+
+  .typewriter-wrapper {
+    min-height: 2em;
+
+    margin-top: 8px;
+
+    font-family: "Instrument Serif", serif;
+    font-size: clamp(2.3rem, 4.2vw, 4.4rem);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 0.95;
+
+    color: #4d7657;
+  }
+
+  .cursor {
+    display: inline-block;
+
+    margin-left: 2px;
+
+    font-style: normal;
+
+    animation: blink 0.8s steps(1) infinite;
+  }
+
+  @keyframes blink {
+    0%,
+    50% {
+      opacity: 1;
+    }
+
+    51%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero {
+      padding: 24px 18px;
+    }
+
+    .hero-content {
+      width: 100%;
+    }
+
+    .hero-intro {
+      font-size: clamp(2rem, 10vw, 3.5rem);
+      line-height: 1;
+    }
+
+    .typewriter-wrapper {
+      min-height: 2.1em;
+
+      margin-top: 12px;
+
+      font-size: clamp(2.2rem, 11vw, 4rem);
+    }
+  }
+</style>

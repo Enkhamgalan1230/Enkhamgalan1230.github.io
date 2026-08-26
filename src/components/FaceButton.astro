@@ -1,0 +1,134 @@
+<button
+  class="face-button"
+  type="button"
+  aria-label="Open navigation"
+>
+  <img
+    class="face-image"
+    src="/images/faces/straight-main.png"
+    alt=""
+  />
+</button>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>(".face-button");
+  const image = button?.querySelector<HTMLImageElement>(".face-image");
+
+  const STRAIGHT = "/images/faces/straight-main.png";
+  const LEFT_TRANSITION = "/images/faces/left-transition.png";
+  const LEFT_MAIN = "/images/faces/left-main.png";
+  const RIGHT_TRANSITION = "/images/faces/right-transition.png";
+  const RIGHT_MAIN = "/images/faces/right-main.png";
+
+  const frames = [
+    { src: STRAIGHT, duration: 80 },
+    { src: LEFT_TRANSITION, duration: 90 },
+    { src: LEFT_MAIN, duration: 240 },
+    { src: LEFT_TRANSITION, duration: 90 },
+    { src: STRAIGHT, duration: 120 },
+    { src: RIGHT_TRANSITION, duration: 90 },
+    { src: RIGHT_MAIN, duration: 240 },
+    { src: RIGHT_TRANSITION, duration: 90 },
+    { src: STRAIGHT, duration: 0 },
+  ];
+
+  let isPlaying = false;
+  let hasPlayedDuringHover = false;
+
+  /*
+   * Preload every frame.
+   *
+   * Without this, the browser might download an image only when
+   * we first try to display it, which could cause flickering.
+   */
+  [
+    STRAIGHT,
+    LEFT_TRANSITION,
+    LEFT_MAIN,
+    RIGHT_TRANSITION,
+    RIGHT_MAIN,
+  ].forEach((src) => {
+    const preload = new Image();
+    preload.src = src;
+  });
+
+  const wait = (milliseconds: number) =>
+    new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+  async function playFaceSequence() {
+    if (!image || isPlaying || hasPlayedDuringHover) {
+      return;
+    }
+
+    isPlaying = true;
+    hasPlayedDuringHover = true;
+
+    for (const frame of frames) {
+      image.src = frame.src;
+
+      if (frame.duration > 0) {
+        await wait(frame.duration);
+      }
+    }
+
+    image.src = STRAIGHT;
+    isPlaying = false;
+  }
+
+  button?.addEventListener("mouseenter", () => {
+    playFaceSequence();
+  });
+
+  button?.addEventListener("mouseleave", () => {
+    hasPlayedDuringHover = false;
+
+    /*
+     * The face should always return to the straight position
+     * whenever the cursor leaves the button.
+     */
+    if (image && !isPlaying) {
+      image.src = STRAIGHT;
+    }
+  });
+</script>
+
+<style>
+  .face-button {
+    width: 84px;
+    height: 84px;
+
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+    background: transparent;
+
+    cursor: pointer;
+  }
+
+  .face-image {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .face-button:focus-visible {
+    outline: 2px solid #111111;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 640px) {
+    .face-button {
+      width: 68px;
+      height: 68px;
+    }
+  }
+</style>
