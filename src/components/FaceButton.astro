@@ -1,7 +1,7 @@
 <button
   class="face-button"
   type="button"
-  aria-label="Open navigation"
+  aria-label="Open about me"
 >
   <img
     class="face-image"
@@ -10,12 +10,67 @@
   />
 </button>
 
+<div class="face-overlay" aria-hidden="true">
+  <div
+    class="about-card"
+    role="dialog"
+    aria-modal="true"
+    aria-label="About Entwan"
+  >
+    <button
+      class="about-card-close"
+      type="button"
+      aria-label="Close"
+    >
+      ×
+    </button>
+
+    <div class="about-card-image">
+      <img
+        src="images/profile/about.jpeg"
+        alt="Portrait of Entwan"
+      />
+    </div>
+
+    <div class="about-card-content">
+
+      <h2>
+        Hi, my name is <span>Enkh-Amgalan</span>.<br />
+        If it's easier just <span>Entwan</span>.
+      </h2>
+
+      <p class="about-card-text">
+        I'm a Data Scientist and AI Engineer based in London, originally from <b>Mongolia</b> .
+      </p>
+
+      <p class="about-card-text">
+        I came to the UK to chase my dream and ended up graduating with a BSc (Hons) in AI from <b>Buckinghamshire New University</b>.
+      </p>
+
+      <p class="about-card-text">
+        Outside work, I'm also a sushi chef, I train Muay Thai, go to JIM (gym haha), and play basketball. 
+        I love autumn, nature, painting, and my <b>skull-caps hat</b>.
+      </p>
+
+      <p class="about-card-text">
+        Me enjoy Learning and trying new stuff also hitting, throwing, lifting things around haha.
+      </p>
+    </div>
+  </div>
+</div>
+
 <script>
   const button =
     document.querySelector<HTMLButtonElement>(".face-button");
 
   const image =
     button?.querySelector<HTMLImageElement>(".face-image");
+
+  const overlay =
+    document.querySelector<HTMLElement>(".face-overlay");
+
+  const closeButton =
+    document.querySelector<HTMLButtonElement>(".about-card-close");
 
   const STRAIGHT = "/images/faces/straight-main.png";
   const LEFT_TRANSITION = "/images/faces/left-transition.png";
@@ -37,7 +92,6 @@
 
   let isPlaying = false;
 
-  // Preload frames
   [
     STRAIGHT,
     LEFT_TRANSITION,
@@ -69,35 +123,70 @@
         }
       }
     } finally {
-      // ALWAYS return to straight
       image.src = STRAIGHT;
-
-      // ALWAYS allow the next tap
       isPlaying = false;
     }
   }
 
-  if (button) {
-    // Every click/tap plays it
-    button.addEventListener("click", () => {
+  function openCard() {
+    if (!overlay) return;
+
+    overlay.classList.add("is-open");
+    overlay.setAttribute("aria-hidden", "false");
+
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeCard() {
+    if (!overlay) return;
+
+    overlay.classList.remove("is-open");
+    overlay.setAttribute("aria-hidden", "true");
+
+    document.body.style.overflow = "";
+
+    playFaceSequence();
+  }
+
+  button?.addEventListener("click", () => {
+    playFaceSequence();
+    openCard();
+  });
+
+  const canHover =
+    window.matchMedia("(hover: hover)").matches;
+
+  if (canHover) {
+    button?.addEventListener("mouseenter", () => {
       playFaceSequence();
     });
-
-    // Hover animation only for devices with a real mouse/trackpad
-    const canHover = window.matchMedia("(hover: hover)").matches;
-
-    if (canHover) {
-      button.addEventListener("mouseenter", () => {
-        playFaceSequence();
-      });
-    }
   }
+
+  closeButton?.addEventListener("click", () => {
+    closeCard();
+  });
+
+  overlay?.addEventListener("click", (event) => {
+    if (event.target === overlay) {
+      closeCard();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (
+      event.key === "Escape" &&
+      overlay?.classList.contains("is-open")
+    ) {
+      closeCard();
+    }
+  });
 </script>
 
 <style>
   .face-button {
     width: 84px;
     height: 84px;
+
     padding: 0;
 
     display: flex;
@@ -106,6 +195,7 @@
 
     border: 0;
     background: transparent;
+
     cursor: pointer;
 
     touch-action: manipulation;
@@ -125,13 +215,246 @@
   .face-button:focus-visible {
     outline: 2px solid #111111;
     outline-offset: 4px;
+
     border-radius: 4px;
   }
+
+  /* =========================
+     OVERLAY
+     ========================= */
+
+  .face-overlay {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px;
+
+    background: rgba(237, 236, 234, 0.3);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    z-index: 9999;
+
+    transition:
+      opacity 0.35s ease,
+      visibility 0.35s ease;
+  }
+
+  .face-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  /* =========================
+     ABOUT CARD
+     ========================= */
+
+  .about-card {
+    position: relative;
+
+    display: grid;
+    grid-template-columns: 42% 58%;
+
+    width: min(920px, 90vw);
+    min-height: 430px;
+
+    overflow: hidden;
+
+    background: #f7f6f4;
+
+    border-radius: 28px;
+
+    box-shadow:
+      0 30px 80px rgba(17, 17, 17, 0.12);
+
+    /*
+      Starts above the screen,
+      like a curtain/card being pulled down.
+    */
+    transform: translateY(-120vh);
+
+    transition:
+      transform 0.75s
+      cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .face-overlay.is-open .about-card {
+    transform: translateY(0);
+  }
+
+  /* =========================
+     IMAGE SIDE
+     ========================= */
+
+  .about-card-image {
+    min-height: 430px;
+
+    overflow: hidden;
+  }
+
+  .about-card-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+  }
+
+  /* =========================
+     CONTENT SIDE
+     ========================= */
+
+  .about-card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 64px 58px;
+  }
+
+  .about-card-content h2 {
+    margin: 0 0 28px;
+
+    font-family: "Instrument Serif", serif;
+
+    font-size: clamp(2.6rem, 4vw, 4rem);
+    font-weight: 400;
+
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+
+    color: #111111;
+  }
+
+  .about-card-content h2 span {
+    color: #4d7657;
+    font-style: italic;
+  }
+
+  .about-card-text {
+    max-width: 520px;
+
+    margin: 0 0 18px;
+
+    font-family: "Courier Prime", monospace;
+
+    font-size: 0.9rem;
+    line-height: 1.55;
+
+    color: #777777;
+  }
+
+  /* =========================
+     CLOSE BUTTON
+     ========================= */
+
+  .about-card-close {
+    position: absolute;
+
+    top: 20px;
+    right: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 44px;
+    height: 44px;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: rgba(237, 236, 234, 0.85);
+
+    font-family: "Courier Prime", monospace;
+    font-size: 1.6rem;
+    line-height: 1;
+
+    color: #111111;
+
+    cursor: pointer;
+
+    z-index: 2;
+
+    transition:
+      background 0.2s ease,
+      transform 0.2s ease;
+
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .about-card-close:hover {
+    background: #edecea;
+    transform: rotate(5deg);
+  }
+
+  /* =========================
+     MOBILE
+     ========================= */
 
   @media (max-width: 640px) {
     .face-button {
       width: 68px;
       height: 68px;
+    }
+
+    .face-overlay {
+      padding: 18px;
+    }
+
+    .about-card {
+      grid-template-columns: 1fr;
+
+      width: 100%;
+      max-height: calc(100vh - 36px);
+
+      overflow-y: auto;
+
+      border-radius: 22px;
+    }
+
+    .about-card-image {
+      width: 100%;
+      height: 280px;
+      min-height: 280px;
+    }
+
+    .about-card-content {
+      padding: 34px 28px 40px;
+    }
+
+    .about-card-label {
+      margin-bottom: 16px;
+
+      font-size: 0.68rem;
+    }
+
+    .about-card-content h2 {
+      margin-bottom: 22px;
+
+      font-size: 2.5rem;
+    }
+
+    .about-card-text {
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .about-card-close {
+      top: 12px;
+      right: 12px;
     }
   }
 </style>
