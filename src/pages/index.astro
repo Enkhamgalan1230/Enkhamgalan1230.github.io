@@ -17,9 +17,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
       <div class="project-cards">
         <a class="project-card" href="/projects">
-          <div class="project-card-image">
-            <img src="/images/projects/dummy-1.jpg" alt="" />
-          </div>
+          <div class="project-card-image placeholder-one"></div>
 
           <div class="project-card-footer">
             <span>Project Alpha</span>
@@ -28,9 +26,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </a>
 
         <a class="project-card" href="/projects">
-          <div class="project-card-image">
-            <img src="/images/projects/dummy-2.jpg" alt="" />
-          </div>
+          <div class="project-card-image placeholder-two"></div>
 
           <div class="project-card-footer">
             <span>Project Beta</span>
@@ -39,9 +35,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </a>
 
         <a class="project-card" href="/projects">
-          <div class="project-card-image">
-            <img src="/images/projects/dummy-3.jpg" alt="" />
-          </div>
+          <div class="project-card-image placeholder-three"></div>
 
           <div class="project-card-footer">
             <span>Project Gamma</span>
@@ -50,9 +44,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </a>
 
         <a class="project-card" href="/projects">
-          <div class="project-card-image">
-            <img src="/images/projects/dummy-4.jpg" alt="" />
-          </div>
+          <div class="project-card-image placeholder-four"></div>
 
           <div class="project-card-footer">
             <span>Project Delta</span>
@@ -61,9 +53,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </a>
 
         <a class="project-card" href="/projects">
-          <div class="project-card-image">
-            <img src="/images/projects/dummy-5.jpg" alt="" />
-          </div>
+          <div class="project-card-image placeholder-five"></div>
 
           <div class="project-card-footer">
             <span>Project Echo</span>
@@ -89,7 +79,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     "CooooOol AI tings",
   ];
 
-  const element = document.querySelector<HTMLElement>("#typewriter");
+  const element =
+    document.querySelector<HTMLElement>("#typewriter");
 
   const typingSpeed = 85;
   const deletingSpeed = 25;
@@ -97,7 +88,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   const emptyPause = 500;
 
   const wait = (time: number) =>
-    new Promise<void>((resolve) => setTimeout(resolve, time));
+    new Promise<void>((resolve) =>
+      setTimeout(resolve, time)
+    );
 
   async function typeWord(word: string) {
     if (!element) return;
@@ -124,7 +117,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       for (const word of words) {
         await typeWord(word);
         await wait(finishedPause);
-
         await deleteWord(word);
         await wait(emptyPause);
       }
@@ -145,32 +137,35 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     justify-content: center;
 
     width: 100%;
-    padding: 24px;
+
+    padding: 40px 24px 110px;
 
     overflow: hidden;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+
+    width: min(1180px, 100%);
+
+    text-align: left;
   }
 
   .hero-green {
     color: #4d7657;
   }
 
-
-  .hero-content {
-    position: relative;
-    z-index: 1;
-
-    width: min(100%, 680px);
-
-    text-align: left;
-  }
-
-
   .hero-intro {
-    margin: 0;
+    width: min(680px, 100%);
+
+    margin: 0 auto;
 
     font-family: "Instrument Serif", serif;
     font-size: clamp(2.1rem, 4vw, 4.2rem);
+
     font-weight: 400;
+
     line-height: 0.98;
     letter-spacing: -0.025em;
 
@@ -178,14 +173,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .typewriter-wrapper {
+    width: min(680px, 100%);
+
     min-height: 2em;
 
-    margin-top: 8px;
+    margin: 8px auto 0;
 
     font-family: "Instrument Serif", serif;
     font-size: clamp(2.3rem, 4.2vw, 4.4rem);
+
     font-style: italic;
     font-weight: 400;
+
     line-height: 0.95;
 
     color: #4d7657;
@@ -201,166 +200,152 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     animation: blink 0.8s steps(1) infinite;
   }
 
-  .projects-preview {
-    padding: 110px 36px 130px;
+  /* =========================
+     PROJECT CARDS
+     ========================= */
 
-    background: #edecea;
+  .project-cards {
+    width: 100%;
+
+    margin-top: 52px;
+
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+
+    gap: 22px;
+
+    align-items: center;
   }
 
-  .projects-preview-inner {
-    width: min(1200px, 100%);
+  .project-card {
+    position: relative;
 
-    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+
+    aspect-ratio: 0.72;
+
+    overflow: hidden;
+
+    background: #f6f5f2;
+
+    border: 1px solid rgba(17, 17, 17, 0.18);
+    border-radius: 14px;
+
+    box-shadow:
+      0 14px 28px rgba(17, 17, 17, 0.06);
+
+    transition:
+      transform 0.28s ease,
+      box-shadow 0.28s ease,
+      border-color 0.28s ease;
   }
 
-  .projects-preview-heading {
-    margin-bottom: 56px;
+  .project-card:nth-child(1) {
+    transform: translateY(8px) rotate(-1.5deg);
   }
 
-  .projects-eyebrow {
-    margin: 0 0 16px;
+  .project-card:nth-child(2) {
+    transform: translateY(-4px) rotate(0.8deg);
+  }
+
+  .project-card:nth-child(3) {
+    transform: translateY(6px) rotate(-0.4deg);
+  }
+
+  .project-card:nth-child(4) {
+    transform: translateY(-6px) rotate(1deg);
+  }
+
+  .project-card:nth-child(5) {
+    transform: translateY(7px) rotate(-0.8deg);
+  }
+
+  .project-card:hover {
+    transform: translateY(-12px) rotate(0deg) scale(1.025);
+
+    border-color: rgba(77, 118, 87, 0.45);
+
+    box-shadow:
+      0 22px 42px rgba(17, 17, 17, 0.1);
+  }
+
+  .project-card-image {
+    flex: 1;
+
+    min-height: 0;
+  }
+
+  /*
+    Temporary placeholder backgrounds.
+    Later we can replace each one with images or videos.
+  */
+
+  .placeholder-one {
+    background:
+      linear-gradient(
+        145deg,
+        #d8e1d8,
+        #aebdaf
+      );
+  }
+
+  .placeholder-two {
+    background:
+      linear-gradient(
+        145deg,
+        #dedbd1,
+        #c8bea6
+      );
+  }
+
+  .placeholder-three {
+    background:
+      linear-gradient(
+        145deg,
+        #d9d5df,
+        #b9adca
+      );
+  }
+
+  .placeholder-four {
+    background:
+      linear-gradient(
+        145deg,
+        #d7dfdf,
+        #aabbbb
+      );
+  }
+
+  .placeholder-five {
+    background:
+      linear-gradient(
+        145deg,
+        #dfd6cf,
+        #c5afa0
+      );
+  }
+
+  .project-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 14px 16px;
+
+    background: #f6f5f2;
 
     font-family: "Courier Prime", monospace;
     font-size: 0.72rem;
-
-    letter-spacing: 0.08em;
-
-    color: #777777;
-  }
-
-  .projects-preview-heading h2 {
-    margin: 0;
-
-    font-family: "Instrument Serif", serif;
-
-    font-size: clamp(3rem, 6vw, 6rem);
-    font-weight: 400;
-
-    line-height: 0.95;
-    letter-spacing: -0.03em;
 
     color: #111111;
   }
 
-  .projects-list {
-    border-top: 1px solid rgba(17, 17, 17, 0.18);
-  }
-
-  .project-row {
-    display: grid;
-
-    grid-template-columns:
-      50px
-      minmax(0, 1fr)
-      auto
-      30px;
-
-    align-items: center;
-
-    gap: 24px;
-
-    padding: 28px 0;
-
-    border-bottom: 1px solid rgba(17, 17, 17, 0.18);
-
-    transition:
-      color 0.25s ease,
-      padding-left 0.25s ease;
-  }
-
-  .project-number,
-  .project-year {
-    font-family: "Courier Prime", monospace;
-
-    font-size: 0.72rem;
-
-    color: #777777;
-  }
-
-  .project-main h3 {
-    margin: 0 0 6px;
-
-    font-family: "Instrument Serif", serif;
-
-    font-size: clamp(1.8rem, 3vw, 3rem);
-    font-weight: 400;
-
-    line-height: 1;
-  }
-
-  .project-main p {
-    margin: 0;
-
-    font-family: "Courier Prime", monospace;
-
-    font-size: 0.78rem;
-    line-height: 1.45;
-
-    color: #777777;
-  }
-
-  .project-arrow {
-    font-size: 1.4rem;
-
-    transition: transform 0.25s ease;
-  }
-
-  .project-row:hover {
-    color: #4d7657;
-
-    padding-left: 8px;
-  }
-
-  .project-row:hover .project-arrow {
-    transform: translate(4px, -4px);
-  }
-
-  @media (max-width: 640px) {
-    .projects-preview {
-      padding: 80px 18px 100px;
-    }
-
-    .projects-preview-heading {
-      margin-bottom: 40px;
-    }
-
-    .projects-preview-heading h2 {
-      font-size: 3.3rem;
-    }
-
-    .project-row {
-      grid-template-columns:
-        28px
-        minmax(0, 1fr)
-        22px;
-
-      gap: 12px;
-
-      padding: 24px 0;
-    }
-
-    .project-year {
-      display: none;
-    }
-
-    .project-number {
-      font-size: 0.62rem;
-    }
-
-    .project-main h3 {
-      font-size: 1.8rem;
-    }
-
-    .project-main p {
-      margin-top: 8px;
-
-      font-size: 0.68rem;
-    }
-
-    .project-arrow {
-      font-size: 1.1rem;
-    }
-  }
+  /* =========================
+     EXPLORE BUTTON
+     ========================= */
 
   .scroll-cue {
     position: absolute;
@@ -372,6 +357,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
     display: inline-flex;
     align-items: center;
+
     gap: 8px;
 
     padding: 8px 13px;
@@ -386,13 +372,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
     font-family: "Courier Prime", monospace;
     font-size: 0.62rem;
+
     letter-spacing: 0.06em;
 
     white-space: nowrap;
 
     z-index: 2;
 
-    animation: float-scroll-cue 2.8s ease-in-out infinite;
+    animation:
+      float-scroll-cue 2.8s ease-in-out infinite;
 
     transition:
       border-color 0.2s ease,
@@ -401,6 +389,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   .scroll-cue:hover {
     border-color: rgba(77, 118, 87, 0.7);
+
     background: rgba(237, 236, 234, 0.95);
   }
 
@@ -422,22 +411,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
   }
 
-  @media (max-width: 640px) {
-    .scroll-cue {
-      bottom: 82px;
-
-      padding: 7px 11px;
-
-      font-size: 0.56rem;
-    }
-  }
-
-@media (prefers-reduced-motion: reduce) {
-  .scroll-cue {
-    animation: none;
-  }
-}
-
   @keyframes blink {
     0%,
     50% {
@@ -450,9 +423,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
   }
 
+  /* =========================
+     MOBILE
+     ========================= */
+
   @media (max-width: 640px) {
     .hero {
-      padding: 24px 18px;
+      padding: 24px 18px 140px;
     }
 
     .hero-content {
@@ -460,18 +437,88 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
 
     .hero-intro {
+      width: 100%;
+
       font-size: clamp(2rem, 10vw, 3.5rem);
+
       line-height: 1;
     }
 
     .typewriter-wrapper {
+      width: 100%;
+
       min-height: 2.1em;
 
       margin-top: 12px;
 
       font-size: clamp(2.2rem, 11vw, 4rem);
     }
+
+    .project-cards {
+      width: calc(100vw - 36px);
+
+      margin-top: 40px;
+
+      display: flex;
+
+      gap: 14px;
+
+      overflow-x: auto;
+      overflow-y: visible;
+
+      padding: 12px 4px 22px;
+
+      scroll-snap-type: x mandatory;
+
+      scrollbar-width: none;
+    }
+
+    .project-cards::-webkit-scrollbar {
+      display: none;
+    }
+
+    .project-card {
+      flex: 0 0 68%;
+
+      aspect-ratio: 0.72;
+
+      scroll-snap-align: center;
+    }
+
+    .project-card:nth-child(1),
+    .project-card:nth-child(2),
+    .project-card:nth-child(3),
+    .project-card:nth-child(4),
+    .project-card:nth-child(5) {
+      transform: none;
+    }
+
+    .project-card-footer {
+      padding: 12px 13px;
+
+      font-size: 0.66rem;
+    }
+
+    .scroll-cue {
+      bottom: 82px;
+
+      padding: 7px 11px;
+
+      font-size: 0.56rem;
+    }
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-cue {
+      animation: none;
+    }
 
+    .project-card {
+      transition: none;
+    }
+
+    .cursor {
+      animation: none;
+    }
+  }
 </style>
