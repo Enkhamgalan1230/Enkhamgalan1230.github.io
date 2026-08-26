@@ -14,6 +14,21 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <span id="typewriter"></span>
         <span class="cursor" aria-hidden="true">|</span>
       </div>
+    </div>
+
+    <a class="scroll-cue" href="#projects">
+      <span>SCROLL TO EXPLORE</span>
+      <span class="scroll-arrow">↓</span>
+    </a>
+  </section>
+
+  <section class="projects-section" id="projects">
+    <div class="projects-inner reveal-section">
+      <div class="projects-heading">
+        <p class="projects-label">SELECTED WORK</p>
+
+        <h2>Some tings I've built.</h2>
+      </div>
 
       <div class="project-cards">
         <a class="project-card" href="/projects">
@@ -62,11 +77,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </a>
       </div>
     </div>
-
-    <a class="scroll-cue" href="/projects">
-      <span>EXPLORE ALL PROJECTS</span>
-      <span class="scroll-arrow">↗</span>
-    </a>
   </section>
 </BaseLayout>
 
@@ -88,9 +98,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   const emptyPause = 500;
 
   const wait = (time: number) =>
-    new Promise<void>((resolve) =>
-      setTimeout(resolve, time)
-    );
+    new Promise<void>((resolve) => {
+      setTimeout(resolve, time);
+    });
 
   async function typeWord(word: string) {
     if (!element) return;
@@ -117,6 +127,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       for (const word of words) {
         await typeWord(word);
         await wait(finishedPause);
+
         await deleteWord(word);
         await wait(emptyPause);
       }
@@ -124,12 +135,35 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   startTypewriter();
+
+  const revealSection =
+    document.querySelector<HTMLElement>(".reveal-section");
+
+  if (revealSection) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            revealSection.classList.add("is-visible");
+            observer.disconnect();
+          }
+        }
+      },
+      {
+        threshold: 0.2,
+      }
+    );
+
+    observer.observe(revealSection);
+  }
 </script>
 
 <style>
-  .hero {
-    flex: 1;
+  /* =========================
+     HERO
+     ========================= */
 
+  .hero {
     position: relative;
 
     display: flex;
@@ -137,8 +171,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     justify-content: center;
 
     width: 100%;
+    min-height: calc(100vh - 140px);
 
-    padding: 40px 24px 110px;
+    padding: 24px;
 
     overflow: hidden;
   }
@@ -147,7 +182,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     position: relative;
     z-index: 1;
 
-    width: min(1180px, 100%);
+    width: min(100%, 680px);
 
     text-align: left;
   }
@@ -157,9 +192,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .hero-intro {
-    width: min(680px, 100%);
-
-    margin: 0 auto;
+    margin: 0;
 
     font-family: "Instrument Serif", serif;
     font-size: clamp(2.1rem, 4vw, 4.2rem);
@@ -173,11 +206,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .typewriter-wrapper {
-    width: min(680px, 100%);
-
     min-height: 2em;
 
-    margin: 8px auto 0;
+    margin-top: 8px;
 
     font-family: "Instrument Serif", serif;
     font-size: clamp(2.3rem, 4.2vw, 4.4rem);
@@ -201,15 +232,134 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   /* =========================
+     SCROLL CUE
+     ========================= */
+
+  .scroll-cue {
+    position: absolute;
+
+    left: 50%;
+    bottom: 28px;
+
+    transform: translateX(-50%);
+
+    display: inline-flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 8px 13px;
+
+    border: 1px solid rgba(17, 17, 17, 0.22);
+    border-radius: 999px;
+
+    background: rgba(237, 236, 234, 0.72);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    font-family: "Courier Prime", monospace;
+    font-size: 0.62rem;
+
+    letter-spacing: 0.06em;
+
+    white-space: nowrap;
+
+    z-index: 2;
+
+    animation:
+      float-scroll-cue 2.8s ease-in-out infinite;
+
+    transition:
+      border-color 0.2s ease,
+      background 0.2s ease;
+  }
+
+  .scroll-cue:hover {
+    border-color: rgba(77, 118, 87, 0.7);
+
+    background: rgba(237, 236, 234, 0.95);
+  }
+
+  .scroll-arrow {
+    color: #4d7657;
+
+    font-size: 0.9rem;
+    line-height: 1;
+  }
+
+  /* =========================
+     PROJECT SECTION
+     ========================= */
+
+  .projects-section {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 100px 36px 120px;
+
+    background: #edecea;
+  }
+
+  .projects-inner {
+    width: min(1200px, 100%);
+
+    margin: 0 auto;
+
+    opacity: 0;
+
+    transform: translateY(50px);
+
+    transition:
+      opacity 0.8s ease,
+      transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .projects-inner.is-visible {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+
+  .projects-heading {
+    margin-bottom: 52px;
+  }
+
+  .projects-label {
+    margin: 0 0 14px;
+
+    font-family: "Courier Prime", monospace;
+    font-size: 0.7rem;
+
+    letter-spacing: 0.08em;
+
+    color: #777777;
+  }
+
+  .projects-heading h2 {
+    margin: 0;
+
+    font-family: "Instrument Serif", serif;
+    font-size: clamp(3rem, 5vw, 5.5rem);
+
+    font-weight: 400;
+
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+
+    color: #111111;
+  }
+
+  /* =========================
      PROJECT CARDS
      ========================= */
 
   .project-cards {
-    width: 100%;
-
-    margin-top: 52px;
-
     display: grid;
+
     grid-template-columns: repeat(5, minmax(0, 1fr));
 
     gap: 22px;
@@ -276,11 +426,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     min-height: 0;
   }
 
-  /*
-    Temporary placeholder backgrounds.
-    Later we can replace each one with images or videos.
-  */
-
   .placeholder-one {
     background:
       linear-gradient(
@@ -344,61 +489,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   /* =========================
-     EXPLORE BUTTON
+     ANIMATIONS
      ========================= */
-
-  .scroll-cue {
-    position: absolute;
-
-    left: 50%;
-    bottom: 28px;
-
-    transform: translateX(-50%);
-
-    display: inline-flex;
-    align-items: center;
-
-    gap: 8px;
-
-    padding: 8px 13px;
-
-    border: 1px solid rgba(17, 17, 17, 0.22);
-    border-radius: 999px;
-
-    background: rgba(237, 236, 234, 0.7);
-
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-
-    font-family: "Courier Prime", monospace;
-    font-size: 0.62rem;
-
-    letter-spacing: 0.06em;
-
-    white-space: nowrap;
-
-    z-index: 2;
-
-    animation:
-      float-scroll-cue 2.8s ease-in-out infinite;
-
-    transition:
-      border-color 0.2s ease,
-      background 0.2s ease;
-  }
-
-  .scroll-cue:hover {
-    border-color: rgba(77, 118, 87, 0.7);
-
-    background: rgba(237, 236, 234, 0.95);
-  }
-
-  .scroll-arrow {
-    color: #4d7657;
-
-    font-size: 0.9rem;
-    line-height: 1;
-  }
 
   @keyframes float-scroll-cue {
     0%,
@@ -429,7 +521,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   @media (max-width: 640px) {
     .hero {
-      padding: 24px 18px 140px;
+      min-height: calc(100vh - 110px);
+
+      padding: 24px 18px 120px;
     }
 
     .hero-content {
@@ -437,16 +531,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
 
     .hero-intro {
-      width: 100%;
-
       font-size: clamp(2rem, 10vw, 3.5rem);
 
       line-height: 1;
     }
 
     .typewriter-wrapper {
-      width: 100%;
-
       min-height: 2.1em;
 
       margin-top: 12px;
@@ -454,11 +544,29 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       font-size: clamp(2.2rem, 11vw, 4rem);
     }
 
+    .scroll-cue {
+      bottom: 82px;
+
+      padding: 7px 11px;
+
+      font-size: 0.56rem;
+    }
+
+    .projects-section {
+      min-height: 100vh;
+
+      padding: 80px 18px 100px;
+    }
+
+    .projects-heading {
+      margin-bottom: 38px;
+    }
+
+    .projects-heading h2 {
+      font-size: 3.2rem;
+    }
+
     .project-cards {
-      width: calc(100vw - 36px);
-
-      margin-top: 40px;
-
       display: flex;
 
       gap: 14px;
@@ -466,7 +574,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       overflow-x: auto;
       overflow-y: visible;
 
-      padding: 12px 4px 22px;
+      padding: 10px 4px 22px;
 
       scroll-snap-type: x mandatory;
 
@@ -498,27 +606,23 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
       font-size: 0.66rem;
     }
-
-    .scroll-cue {
-      bottom: 82px;
-
-      padding: 7px 11px;
-
-      font-size: 0.56rem;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .scroll-cue {
+    .scroll-cue,
+    .cursor {
       animation: none;
+    }
+
+    .projects-inner {
+      opacity: 1;
+      transform: none;
+
+      transition: none;
     }
 
     .project-card {
       transition: none;
-    }
-
-    .cursor {
-      animation: none;
     }
   }
 </style>
