@@ -37,7 +37,6 @@
 
   let isPlaying = false;
 
-  // Preload every image frame
   [
     STRAIGHT,
     LEFT_TRANSITION,
@@ -70,24 +69,33 @@
     }
 
     image.src = STRAIGHT;
-
-    // Ready to play again
     isPlaying = false;
   }
 
-  // Desktop
-  button?.addEventListener("mouseenter", () => {
-    playFaceSequence();
+  // Desktop mouse hover
+  button?.addEventListener("pointerenter", (event) => {
+    if (event.pointerType === "mouse") {
+      playFaceSequence();
+    }
   });
 
-  // Mobile / click
-  button?.addEventListener("click", () => {
-    playFaceSequence();
+  // Phone / tablet tap
+  button?.addEventListener("pointerdown", (event) => {
+    if (
+      event.pointerType === "touch" ||
+      event.pointerType === "pen"
+    ) {
+      playFaceSequence();
+    }
   });
 
-  // Always return to straight when leaving on desktop
-  button?.addEventListener("mouseleave", () => {
-    if (image && !isPlaying) {
+  // Desktop cleanup
+  button?.addEventListener("pointerleave", (event) => {
+    if (
+      event.pointerType === "mouse" &&
+      image &&
+      !isPlaying
+    ) {
       image.src = STRAIGHT;
     }
   });
