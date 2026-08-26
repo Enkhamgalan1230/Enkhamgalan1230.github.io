@@ -98,7 +98,6 @@
   .face-button {
     width: 84px;
     height: 84px;
-
     padding: 0;
 
     display: flex;
@@ -107,8 +106,10 @@
 
     border: 0;
     background: transparent;
-
     cursor: pointer;
+
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .face-image {
