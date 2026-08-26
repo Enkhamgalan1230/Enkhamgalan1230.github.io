@@ -145,74 +145,74 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .scroll-cue {
-  position: absolute;
+    position: absolute;
 
-  left: 50%;
-  bottom: 28px;
+    left: 50%;
+    bottom: 28px;
 
-  transform: translateX(-50%);
+    transform: translateX(-50%);
 
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 
-  padding: 8px 13px;
+    padding: 8px 13px;
 
-  border: 1px solid rgba(17, 17, 17, 0.22);
-  border-radius: 999px;
+    border: 1px solid rgba(17, 17, 17, 0.22);
+    border-radius: 999px;
 
-  background: rgba(237, 236, 234, 0.7);
+    background: rgba(237, 236, 234, 0.7);
 
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 
-  font-family: "Courier Prime", monospace;
-  font-size: 0.62rem;
-  letter-spacing: 0.06em;
+    font-family: "Courier Prime", monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
 
-  white-space: nowrap;
+    white-space: nowrap;
 
-  z-index: 2;
+    z-index: 2;
 
-  animation: float-scroll-cue 2.8s ease-in-out infinite;
+    animation: float-scroll-cue 2.8s ease-in-out infinite;
 
-  transition:
-    border-color 0.2s ease,
-    background 0.2s ease;
-}
-
-.scroll-cue:hover {
-  border-color: rgba(77, 118, 87, 0.7);
-  background: rgba(237, 236, 234, 0.95);
-}
-
-.scroll-arrow {
-  color: #4d7657;
-
-  font-size: 0.9rem;
-  line-height: 1;
-}
-
-@keyframes float-scroll-cue {
-  0%,
-  100% {
-    transform: translate(-50%, 0);
+    transition:
+      border-color 0.2s ease,
+      background 0.2s ease;
   }
 
-  50% {
-    transform: translate(-50%, -6px);
+  .scroll-cue:hover {
+    border-color: rgba(77, 118, 87, 0.7);
+    background: rgba(237, 236, 234, 0.95);
   }
-}
 
-@media (max-width: 640px) {
-  .scroll-cue {
-    bottom: 58px;
+  .scroll-arrow {
+    color: #4d7657;
 
-    padding: 7px 11px;
-
-    font-size: 0.56rem;
+    font-size: 0.9rem;
+    line-height: 1;
   }
-}
+
+  @keyframes float-scroll-cue {
+    0%,
+    100% {
+      transform: translate(-50%, 0);
+    }
+
+    50% {
+      transform: translate(-50%, -6px);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .scroll-cue {
+      bottom: 58px;
+
+      padding: 7px 11px;
+
+      font-size: 0.56rem;
+    }
+  }
 
 @media (prefers-reduced-motion: reduce) {
   .scroll-cue {
