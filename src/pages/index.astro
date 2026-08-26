@@ -530,7 +530,29 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   @keyframes card-float {
     0%,
     100% {
-      translate: 0 0;
+      translate: 0 4px;
+    }
+
+    50% {
+      translate: 0 -14px;
+    }
+  }
+
+  @keyframes card-rock {
+    0%,
+    100% {
+      rotate: -1.2deg;
+    }
+
+    50% {
+      rotate: 1.2deg;
+    }
+  }
+
+  @keyframes card-float-mobile {
+    0%,
+    100% {
+      translate: 0 2px;
     }
 
     50% {
@@ -538,36 +560,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
   }
 
-  @keyframes card-rock {
-    0%,
-    100% {
-      rotate: -0.8deg;
-    }
-
-    50% {
-      rotate: 0.8deg;
-    }
-  }
-
-  @keyframes card-float-mobile {
-    0%,
-    100% {
-      translate: 0 0;
-    }
-
-    50% {
-      translate: 0 -4px;
-    }
-  }
-
   @keyframes card-rock-mobile {
     0%,
     100% {
-      rotate: -0.4deg;
+      rotate: -0.7deg;
     }
 
     50% {
-      rotate: 0.4deg;
+      rotate: 0.7deg;
     }
   }
 
