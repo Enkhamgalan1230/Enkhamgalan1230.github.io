@@ -37,6 +37,7 @@
 
   let isPlaying = false;
 
+  // Preload frames
   [
     STRAIGHT,
     LEFT_TRANSITION,
@@ -48,57 +49,49 @@
     preload.src = src;
   });
 
-  const wait = (milliseconds: number) =>
-    new Promise<void>((resolve) =>
-      setTimeout(resolve, milliseconds)
-    );
+  function wait(ms: number) {
+    return new Promise<void>((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
 
   async function playFaceSequence() {
-    if (!image || isPlaying) {
-      return;
-    }
+    if (!image || isPlaying) return;
 
     isPlaying = true;
 
-    for (const frame of frames) {
-      image.src = frame.src;
+    try {
+      for (const frame of frames) {
+        image.src = frame.src;
 
-      if (frame.duration > 0) {
-        await wait(frame.duration);
+        if (frame.duration > 0) {
+          await wait(frame.duration);
+        }
       }
-    }
+    } finally {
+      // ALWAYS return to straight
+      image.src = STRAIGHT;
 
-    image.src = STRAIGHT;
-    isPlaying = false;
+      // ALWAYS allow the next tap
+      isPlaying = false;
+    }
   }
 
-  // Desktop mouse hover
-  button?.addEventListener("pointerenter", (event) => {
-    if (event.pointerType === "mouse") {
+  if (button) {
+    // Every click/tap plays it
+    button.addEventListener("click", () => {
       playFaceSequence();
-    }
-  });
+    });
 
-  // Phone / tablet tap
-  button?.addEventListener("pointerdown", (event) => {
-    if (
-      event.pointerType === "touch" ||
-      event.pointerType === "pen"
-    ) {
-      playFaceSequence();
-    }
-  });
+    // Hover animation only for devices with a real mouse/trackpad
+    const canHover = window.matchMedia("(hover: hover)").matches;
 
-  // Desktop cleanup
-  button?.addEventListener("pointerleave", (event) => {
-    if (
-      event.pointerType === "mouse" &&
-      image &&
-      !isPlaying
-    ) {
-      image.src = STRAIGHT;
+    if (canHover) {
+      button.addEventListener("mouseenter", () => {
+        playFaceSequence();
+      });
     }
-  });
+  }
 </script>
 
 <style>
