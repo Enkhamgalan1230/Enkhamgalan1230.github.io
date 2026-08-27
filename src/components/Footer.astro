@@ -6,7 +6,11 @@
     </div>
 
     <div class="footer-center">
-      <span>Built with Astro</span>
+      <img
+        src="/images/projects/ger.png"
+        alt=""
+        aria-hidden="true"
+      />
     </div>
 
     <div class="footer-right">
@@ -72,11 +76,15 @@
 
   .footer-center {
     justify-self: center;
+  }
 
-    font-family: "Courier Prime", monospace;
-    font-size: 0.68rem;
+  .footer-center img {
+    width: 34px;
+    height: 34px;
 
-    color: #8a8a8a;
+    object-fit: contain;
+
+    opacity: 0.9;
   }
 
   .footer-right a {
@@ -132,8 +140,10 @@
 
     .footer-center {
       justify-self: start;
-
-      font-size: 0.64rem;
+    }
+    .footer-center img {
+      width: 30px;
+      height: 30px;
     }
   }
 </style>
