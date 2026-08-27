@@ -243,11 +243,13 @@
     background: transparent;
 
     font-family: "Courier Prime", monospace;
-    font-size: 0.48rem;
+    font-size: 0.68rem;
 
-    letter-spacing: 0.06em;
+    font-weight: 700;
 
-    color: #777777;
+    letter-spacing: 0.08em;
+
+    color: #4d7657;
 
     cursor: pointer;
 
@@ -257,42 +259,52 @@
       color 0.2s ease;
   }
 
+  .face-hint:hover {
+    transform: translateY(2px);
+
+    color: #2f5f3b;
+  }
+
   .face-hint.is-hidden {
     opacity: 0;
+
     transform: translateY(-4px);
 
     pointer-events: none;
   }
 
-  .face-trigger:hover .face-hint {
-    color: #4d7657;
-
-    transform: translateY(2px);
-  }
-
   @keyframes face-notice {
     0%,
-    86%,
+    82%,
     100% {
       transform: translateY(0) rotate(0deg);
     }
 
-    90% {
-      transform: translateY(-3px) rotate(-2deg);
+    86% {
+      transform: translateY(-5px) rotate(-5deg);
     }
 
-    94% {
-      transform: translateY(-2px) rotate(2deg);
+    89% {
+      transform: translateY(-3px) rotate(5deg);
     }
 
-    97% {
+    92% {
+      transform: translateY(-4px) rotate(-4deg);
+    }
+
+    95% {
+      transform: translateY(-2px) rotate(3deg);
+    }
+
+    98% {
       transform: translateY(0) rotate(0deg);
     }
   }
 
   .face-button {
-    animation: face-notice 7s ease-in-out infinite;
+    animation: face-notice 4s ease-in-out infinite;
   }
+
 
   .face-button:hover {
     animation-play-state: paused;
@@ -529,6 +541,10 @@
 
     .face-overlay {
       padding: 18px;
+    }
+
+    .face-hint {
+      font-size: 0.72rem;
     }
 
     .about-card {
