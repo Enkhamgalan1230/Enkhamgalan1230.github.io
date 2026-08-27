@@ -76,15 +76,6 @@
   const faceHint =
     document.querySelector<HTMLButtonElement>(".face-hint");
 
-  const ABOUT_HINT_KEY = "entwan-about-hint-seen";
-
-  if (
-    faceHint &&
-    localStorage.getItem(ABOUT_HINT_KEY) === "true"
-  ) {
-    faceHint.classList.add("is-hidden");
-  }
-
   const image =
     faceButton?.querySelector<HTMLImageElement>(".face-image");
 
@@ -258,13 +249,6 @@
     color: #2f5f3b;
   }
 
-  .face-hint.is-hidden {
-    opacity: 0;
-
-    transform: translateY(-4px);
-
-    pointer-events: none;
-  }
 
   @keyframes face-notice {
     0%,
