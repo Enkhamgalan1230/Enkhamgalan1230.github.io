@@ -176,14 +176,7 @@
     playFaceSequence();
     openCard();
 
-    if (faceHint) {
-      faceHint.classList.add("is-hidden");
-
-      localStorage.setItem(
-        ABOUT_HINT_KEY,
-        "true"
-      );
-    }
+    faceButton?.classList.add("has-been-clicked");
   }
 
   faceButton?.addEventListener("click", openAbout);
@@ -302,7 +295,11 @@
   }
 
   .face-button {
-    animation: face-notice 4s ease-in-out infinite;
+    animation: face-notice 3.5s ease-in-out infinite;
+  }
+
+  .face-button.has-been-clicked {
+    animation: none;
   }
 
 
