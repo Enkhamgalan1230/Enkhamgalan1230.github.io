@@ -1,14 +1,24 @@
-<button
-  class="face-button"
-  type="button"
-  aria-label="Open about me"
->
-  <img
-    class="face-image"
-    src="/images/faces/straight-main.png"
-    alt=""
-  />
-</button>
+<div class="face-trigger">
+  <button
+    class="face-button"
+    type="button"
+    aria-label="Open about me"
+  >
+    <img
+      class="face-image"
+      src="/images/faces/straight-main.png"
+      alt=""
+    />
+  </button>
+
+  <button
+    class="face-hint"
+    type="button"
+    aria-label="Open about me"
+  >
+    ABOUT ME ↗
+  </button>
+</div>
 
 <div class="face-overlay" aria-hidden="true">
   <div
@@ -27,7 +37,7 @@
 
     <div class="about-card-image">
       <img
-        src="images/profile/about.jpeg"
+        src="/images/profile/about.jpeg"
         alt="Portrait of Entwan"
       />
     </div>
@@ -44,7 +54,7 @@
       </p>
 
       <p class="about-card-text">
-        I came to the UK to chase my dream and ended up graduating with a BSc (Hons) in AI from <b>Buckinghamshire New University</b>.
+        In 2021 came to the UK to chase my dream and ended up graduating with a BSc (Hons) in AI from <b>Buckinghamshire New University</b>.
       </p>
 
       <p class="about-card-text">
@@ -53,18 +63,30 @@
       </p>
 
       <p class="about-card-text">
-        Me enjoy Learning and trying new stuff also hitting, throwing, lifting things around haha.
+        I enjoy learning and trying new stuff also hitting, throwing, lifting things around haha.
       </p>
     </div>
   </div>
 </div>
 
 <script>
-  const button =
+  const faceButton =
     document.querySelector<HTMLButtonElement>(".face-button");
 
+  const faceHint =
+    document.querySelector<HTMLButtonElement>(".face-hint");
+
+  const ABOUT_HINT_KEY = "entwan-about-hint-seen";
+
+  if (
+    faceHint &&
+    localStorage.getItem(ABOUT_HINT_KEY) === "true"
+  ) {
+    faceHint.classList.add("is-hidden");
+  }
+
   const image =
-    button?.querySelector<HTMLImageElement>(".face-image");
+    faceButton?.querySelector<HTMLImageElement>(".face-image");
 
   const overlay =
     document.querySelector<HTMLElement>(".face-overlay");
@@ -145,19 +167,34 @@
 
     document.body.style.overflow = "";
 
-    playFaceSequence();
+    setTimeout(() => {
+      playFaceSequence();
+    }, 350);
   }
 
-  button?.addEventListener("click", () => {
+  function openAbout() {
     playFaceSequence();
     openCard();
-  });
+
+    if (faceHint) {
+      faceHint.classList.add("is-hidden");
+
+      localStorage.setItem(
+        ABOUT_HINT_KEY,
+        "true"
+      );
+    }
+  }
+
+  faceButton?.addEventListener("click", openAbout);
+
+  faceHint?.addEventListener("click", openAbout);
 
   const canHover =
     window.matchMedia("(hover: hover)").matches;
 
   if (canHover) {
-    button?.addEventListener("mouseenter", () => {
+    faceButton?.addEventListener("mouseenter", () => {
       playFaceSequence();
     });
   }
@@ -183,6 +220,86 @@
 </script>
 
 <style>
+
+  .face-trigger {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 3px;
+  }
+
+  .face-button {
+    cursor: pointer;
+  }
+
+  .face-hint {
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    font-family: "Courier Prime", monospace;
+    font-size: 0.48rem;
+
+    letter-spacing: 0.06em;
+
+    color: #777777;
+
+    cursor: pointer;
+
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease,
+      color 0.2s ease;
+  }
+
+  .face-hint.is-hidden {
+    opacity: 0;
+    transform: translateY(-4px);
+
+    pointer-events: none;
+  }
+
+  .face-trigger:hover .face-hint {
+    color: #4d7657;
+
+    transform: translateY(2px);
+  }
+
+  @keyframes face-notice {
+    0%,
+    86%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+
+    90% {
+      transform: translateY(-3px) rotate(-2deg);
+    }
+
+    94% {
+      transform: translateY(-2px) rotate(2deg);
+    }
+
+    97% {
+      transform: translateY(0) rotate(0deg);
+    }
+  }
+
+  .face-button {
+    animation: face-notice 7s ease-in-out infinite;
+  }
+
+  .face-button:hover {
+    animation-play-state: paused;
+
+    transform: translateY(-3px);
+  }
+
   .face-button {
     width: 84px;
     height: 84px;
