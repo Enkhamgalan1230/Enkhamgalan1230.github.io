@@ -1,7 +1,7 @@
 ---
 import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
 import "../styles/global.css";
+import Footer from "../components/Footer.astro";
 
 interface Props {
   title?: string;
@@ -15,7 +15,6 @@ const {
 ---
 
 <!doctype html>
-
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -46,83 +45,6 @@ const {
       <slot />
     </main>
 
-    <div class="mobile-london-clock">
-      <span class="mobile-clock-dot"></span>
-
-      <span>LONDON</span>
-
-      <span id="mobile-london-time">
-        00:00:00
-      </span>
-    </div>
-
     <Footer />
-
-    <script>
-      const mobileTimeElement =
-        document.querySelector<HTMLElement>(
-          "#mobile-london-time"
-        );
-
-      function updateMobileLondonTime() {
-        if (!mobileTimeElement) return;
-
-        const time =
-          new Intl.DateTimeFormat("en-GB", {
-            timeZone: "Europe/London",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: false,
-          }).format(new Date());
-
-        mobileTimeElement.textContent = time;
-      }
-
-      updateMobileLondonTime();
-
-      setInterval(
-        updateMobileLondonTime,
-        1000
-      );
-    </script>
   </body>
 </html>
-
-<style>
-  .mobile-london-clock {
-    display: none;
-  }
-
-  @media (max-width: 640px) {
-    .mobile-london-clock {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      gap: 7px;
-
-      width: 100%;
-
-      padding: 22px 18px 18px;
-
-      background: #edecea;
-
-      font-family: "Courier Prime", monospace;
-      font-size: 0.72rem;
-
-      white-space: nowrap;
-    }
-
-    .mobile-clock-dot {
-      width: 6px;
-      height: 6px;
-
-      flex-shrink: 0;
-
-      border-radius: 50%;
-
-      background: #4d7657;
-    }
-  }
-</style>

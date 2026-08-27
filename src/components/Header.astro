@@ -74,7 +74,11 @@ import FaceButton from "./FaceButton.astro";
 </header>
 
 <script>
-  const timeElement = document.querySelector<HTMLElement>("#london-time");
+  const timeElement =
+    document.querySelector<HTMLElement>("#london-time");
+
+  const londonClock =
+    document.querySelector<HTMLElement>(".london-clock");
 
   function updateLondonTime() {
     if (!timeElement) return;
@@ -90,19 +94,93 @@ import FaceButton from "./FaceButton.astro";
     timeElement.textContent = time;
   }
 
+  function positionMobileClock() {
+    if (!londonClock) return;
+
+    /*
+     * Desktop:
+     * clock belongs normally inside the header.
+     */
+    if (window.innerWidth > 640) {
+      londonClock.style.transform = "";
+      londonClock.classList.remove("is-at-footer");
+      return;
+    }
+
+    const footer =
+      document.querySelector<HTMLElement>(".site-footer");
+
+    if (!footer) {
+      londonClock.style.transform = "translateX(-50%)";
+      londonClock.classList.remove("is-at-footer");
+      return;
+    }
+
+    const footerTop =
+      footer.getBoundingClientRect().top;
+
+    const normalBottom = 12;
+
+    /*
+     * Position of the bottom of the floating clock
+     * when it is sitting normally at bottom: 12px.
+     */
+    const normalClockBottom =
+      window.innerHeight - normalBottom;
+
+    /*
+     * Once the footer rises above that point,
+     * calculate how much the clock needs to move up.
+     */
+    const overlap =
+      normalClockBottom - footerTop;
+
+    if (overlap > 0) {
+      londonClock.style.transform =
+        `translate(-50%, -${overlap}px)`;
+
+      londonClock.classList.add("is-at-footer");
+    } else {
+      londonClock.style.transform =
+        "translateX(-50%)";
+
+      londonClock.classList.remove("is-at-footer");
+    }
+  }
+
   updateLondonTime();
-  setInterval(updateLondonTime, 1000);
+
+  setInterval(
+    updateLondonTime,
+    1000
+  );
+
+  positionMobileClock();
+
+  window.addEventListener(
+    "scroll",
+    positionMobileClock,
+    { passive: true }
+  );
+
+  window.addEventListener(
+    "resize",
+    positionMobileClock
+  );
 </script>
 
 <style>
   .site-header {
     position: relative;
+
     padding: 28px 36px;
   }
 
   .header-inner {
     display: grid;
+
     grid-template-columns: 1fr auto 1fr;
+
     align-items: center;
 
     width: 100%;
@@ -110,19 +188,25 @@ import FaceButton from "./FaceButton.astro";
 
   .header-left {
     display: flex;
+
     align-items: center;
+
     justify-self: start;
 
     gap: 18px;
+
     min-width: 0;
   }
 
   .identity {
     display: flex;
+
     flex-direction: column;
+
     justify-content: center;
 
     gap: 4px;
+
     min-width: 0;
 
     font-family: "Courier Prime", monospace;
@@ -130,7 +214,9 @@ import FaceButton from "./FaceButton.astro";
 
   .identity-name {
     font-size: 0.9rem;
+
     font-weight: 500;
+
     line-height: 1.15;
 
     color: #111111;
@@ -140,7 +226,9 @@ import FaceButton from "./FaceButton.astro";
 
   .identity-role {
     font-size: 0.9rem;
+
     font-weight: 500;
+
     line-height: 1.2;
 
     color: #111111;
@@ -152,24 +240,41 @@ import FaceButton from "./FaceButton.astro";
     margin-top: 2px;
 
     font-family: "Noto Sans Mongolian", sans-serif;
+
     font-size: 1.5rem;
+
     font-weight: 100;
+
     line-height: 0.7;
 
     color: #111111;
   }
 
+  /*
+   * DESKTOP CLOCK
+   */
+
   .london-clock {
     position: static;
-    transform: none;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
+    justify-self: center;
 
     gap: 7px;
 
+    padding: 0;
+
+    transform: none;
+
+    background: transparent;
+
     font-family: "Courier Prime", monospace;
+
     font-size: 0.9rem;
 
     white-space: nowrap;
@@ -179,7 +284,10 @@ import FaceButton from "./FaceButton.astro";
     width: 6px;
     height: 6px;
 
+    flex-shrink: 0;
+
     border-radius: 50%;
+
     background: #4d7657;
   }
 
@@ -187,7 +295,9 @@ import FaceButton from "./FaceButton.astro";
     margin-left: 0;
 
     display: flex;
+
     align-items: center;
+
     justify-self: end;
 
     gap: 20px;
@@ -197,6 +307,7 @@ import FaceButton from "./FaceButton.astro";
 
   .social-links {
     display: flex;
+
     align-items: center;
 
     gap: 16px;
@@ -207,7 +318,9 @@ import FaceButton from "./FaceButton.astro";
   .social-links a,
   .email-button {
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     width: 32px;
@@ -269,6 +382,10 @@ import FaceButton from "./FaceButton.astro";
     }
   }
 
+  /*
+   * MOBILE
+   */
+
   @media (max-width: 640px) {
     .site-header {
       padding: 16px;
@@ -276,22 +393,27 @@ import FaceButton from "./FaceButton.astro";
 
     .header-inner {
       display: flex;
+
       align-items: center;
+
       gap: 10px;
     }
 
     .header-left {
       display: flex;
+
       align-items: center;
 
       gap: 10px;
 
       min-width: 0;
+
       flex: 1;
     }
 
     .identity {
       display: flex;
+
       flex: 1;
 
       min-width: 0;
@@ -299,6 +421,7 @@ import FaceButton from "./FaceButton.astro";
 
     .identity-name {
       font-size: 0.62rem;
+
       line-height: 1.1;
 
       white-space: normal;
@@ -306,6 +429,7 @@ import FaceButton from "./FaceButton.astro";
 
     .identity-role {
       font-size: 0.58rem;
+
       line-height: 1.15;
 
       white-space: normal;
@@ -315,6 +439,7 @@ import FaceButton from "./FaceButton.astro";
       margin-top: 2px;
 
       font-size: 0.78rem;
+
       line-height: 0.8;
     }
 
@@ -322,6 +447,7 @@ import FaceButton from "./FaceButton.astro";
       margin-left: auto;
 
       display: flex;
+
       align-items: center;
 
       gap: 8px;
@@ -345,9 +471,45 @@ import FaceButton from "./FaceButton.astro";
       height: 28px;
     }
 
+    /*
+     * MOBILE FLOATING CLOCK
+     */
+
     .london-clock {
-      display: none;
+      position: fixed;
+
+      left: 50%;
+      bottom: 12px;
+
+      justify-self: auto;
+
+      gap: 7px;
+
+      padding: 8px 12px;
+
+      transform: translateX(-50%);
+
+      background: #edecea;
+
+      font-size: 0.72rem;
+
+      white-space: nowrap;
+
+      z-index: 20;
+
+      border-top: 1px solid transparent;
+
+      transition:
+        border-color 0.2s ease;
     }
 
+    /*
+     * Footer has reached the clock.
+     */
+
+    .london-clock.is-at-footer {
+      border-top-color:
+        rgba(17, 17, 17, 0.18);
+    }
   }
 </style>
