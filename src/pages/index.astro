@@ -47,9 +47,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
       <div class="project-cards">
 
-        <!-- =========================
-             RECEIPT
-             ========================= -->
+        <!-- RECEIPT -->
 
         <button
           class="project-card project-card-receipt"
@@ -93,17 +91,10 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
           </div>
         </button>
 
-        <!-- =========================
-             PROJECT 2
-             ========================= -->
+        <!-- PROJECT 2 -->
 
-        <a
-          class="project-card"
-          href="/projects"
-        >
-          <div
-            class="project-card-image placeholder-two"
-          ></div>
+        <a class="project-card" href="/projects">
+          <div class="project-card-image placeholder-two"></div>
 
           <div class="project-card-footer">
             <span>Project Beta</span>
@@ -111,17 +102,10 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
           </div>
         </a>
 
-        <!-- =========================
-             PROJECT 3
-             ========================= -->
+        <!-- PROJECT 3 -->
 
-        <a
-          class="project-card"
-          href="/projects"
-        >
-          <div
-            class="project-card-image placeholder-three"
-          ></div>
+        <a class="project-card" href="/projects">
+          <div class="project-card-image placeholder-three"></div>
 
           <div class="project-card-footer">
             <span>Project Gamma</span>
@@ -129,17 +113,10 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
           </div>
         </a>
 
-        <!-- =========================
-             PROJECT 4
-             ========================= -->
+        <!-- PROJECT 4 -->
 
-        <a
-          class="project-card"
-          href="/projects"
-        >
-          <div
-            class="project-card-image placeholder-four"
-          ></div>
+        <a class="project-card" href="/projects">
+          <div class="project-card-image placeholder-four"></div>
 
           <div class="project-card-footer">
             <span>Project Delta</span>
@@ -147,17 +124,10 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
           </div>
         </a>
 
-        <!-- =========================
-             PROJECT 5
-             ========================= -->
+        <!-- PROJECT 5 -->
 
-        <a
-          class="project-card"
-          href="/projects"
-        >
-          <div
-            class="project-card-image placeholder-five"
-          ></div>
+        <a class="project-card" href="/projects">
+          <div class="project-card-image placeholder-five"></div>
 
           <div class="project-card-footer">
             <span>Project Echo</span>
@@ -183,9 +153,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
   ];
 
   const element =
-    document.querySelector<HTMLElement>(
-      "#typewriter"
-    );
+    document.querySelector<HTMLElement>("#typewriter");
 
   const typingSpeed = 85;
   const deletingSpeed = 25;
@@ -197,41 +165,21 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       setTimeout(resolve, time);
     });
 
-  async function typeWord(
-    word: string
-  ) {
+  async function typeWord(word: string) {
     if (!element) return;
 
-    for (
-      let i = 1;
-      i <= word.length;
-      i++
-    ) {
-      element.textContent =
-        word.slice(0, i);
-
-      await wait(
-        typingSpeed
-      );
+    for (let i = 1; i <= word.length; i++) {
+      element.textContent = word.slice(0, i);
+      await wait(typingSpeed);
     }
   }
 
-  async function deleteWord(
-    word: string
-  ) {
+  async function deleteWord(word: string) {
     if (!element) return;
 
-    for (
-      let i = word.length;
-      i >= 0;
-      i--
-    ) {
-      element.textContent =
-        word.slice(0, i);
-
-      await wait(
-        deletingSpeed
-      );
+    for (let i = word.length; i >= 0; i--) {
+      element.textContent = word.slice(0, i);
+      await wait(deletingSpeed);
     }
   }
 
@@ -241,16 +189,10 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     while (true) {
       for (const word of words) {
         await typeWord(word);
-
-        await wait(
-          finishedPause
-        );
+        await wait(finishedPause);
 
         await deleteWord(word);
-
-        await wait(
-          emptyPause
-        );
+        await wait(emptyPause);
       }
     }
   }
@@ -258,26 +200,17 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
   startTypewriter();
 
   const revealSection =
-    document.querySelector<HTMLElement>(
-      ".reveal-section"
-    );
+    document.querySelector<HTMLElement>(".reveal-section");
 
   if (revealSection) {
     const observer =
       new IntersectionObserver(
         (entries) => {
-          for (
-            const entry
-            of entries
-          ) {
-            if (
-              entry.isIntersecting
-            ) {
-              revealSection
-                .classList
-                .add(
-                  "is-visible"
-                );
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              revealSection.classList.add(
+                "is-visible"
+              );
 
               observer.disconnect();
             }
@@ -288,9 +221,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
         }
       );
 
-    observer.observe(
-      revealSection
-    );
+    observer.observe(revealSection);
   }
 </script>
 
@@ -310,9 +241,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     width: 100%;
 
     min-height:
-      calc(
-        100vh - 140px
-      );
+      calc(100vh - 140px);
 
     padding: 24px;
 
@@ -325,10 +254,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     z-index: 1;
 
     width:
-      min(
-        100%,
-        680px
-      );
+      min(100%, 680px);
 
     text-align: left;
   }
@@ -393,10 +319,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     font-style: normal;
 
     animation:
-      blink
-      0.8s
-      steps(1)
-      infinite;
+      blink 0.8s steps(1) infinite;
   }
 
   /* =========================
@@ -413,7 +336,6 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       translateX(-50%);
 
     display: inline-flex;
-
     align-items: center;
 
     gap: 8px;
@@ -423,22 +345,12 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
     border:
       1px solid
-      rgba(
-        17,
-        17,
-        17,
-        0.22
-      );
+      rgba(17, 17, 17, 0.22);
 
     border-radius: 999px;
 
     background:
-      rgba(
-        237,
-        236,
-        234,
-        0.72
-      );
+      rgba(237, 236, 234, 0.72);
 
     backdrop-filter:
       blur(8px);
@@ -452,8 +364,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
     font-size: 0.62rem;
 
-    letter-spacing:
-      0.06em;
+    letter-spacing: 0.06em;
 
     white-space: nowrap;
 
@@ -464,38 +375,12 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       2.8s
       ease-in-out
       infinite;
-
-    transition:
-      border-color
-      0.2s ease,
-      background
-      0.2s ease;
-  }
-
-  .scroll-cue:hover {
-    border-color:
-      rgba(
-        77,
-        118,
-        87,
-        0.7
-      );
-
-    background:
-      rgba(
-        237,
-        236,
-        234,
-        0.95
-      );
   }
 
   .scroll-arrow {
     color: #4d7657;
 
     font-size: 0.9rem;
-
-    line-height: 1;
   }
 
   /* =========================
@@ -506,7 +391,6 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     min-height: 100vh;
 
     display: flex;
-
     align-items: center;
     justify-content: center;
 
@@ -533,17 +417,15 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       translateY(50px);
 
     transition:
-      opacity
-      0.8s ease,
-
+      opacity 0.8s ease,
       transform
-      0.8s
-      cubic-bezier(
-        0.22,
-        1,
-        0.36,
-        1
-      );
+        0.8s
+        cubic-bezier(
+          0.22,
+          1,
+          0.36,
+          1
+        );
   }
 
   .projects-inner.is-visible {
@@ -607,10 +489,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     grid-template-columns:
       repeat(
         5,
-        minmax(
-          0,
-          1fr
-        )
+        minmax(0, 1fr)
       );
 
     gap: 26px;
@@ -644,23 +523,13 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
     border:
       1px solid
-      rgba(
-        17,
-        17,
-        17,
-        0.18
-      );
+      rgba(17, 17, 17, 0.18);
 
     border-radius: 16px;
 
     box-shadow:
       0 14px 28px
-      rgba(
-        17,
-        17,
-        17,
-        0.06
-      );
+      rgba(17, 17, 17, 0.06);
 
     animation:
       card-float
@@ -674,14 +543,9 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       infinite;
 
     transition:
-      transform
-      0.28s ease,
-
-      box-shadow
-      0.28s ease,
-
-      border-color
-      0.28s ease;
+      transform 0.28s ease,
+      box-shadow 0.28s ease,
+      border-color 0.28s ease;
   }
 
   .project-card:nth-child(1) {
@@ -735,29 +599,18 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
   }
 
   .project-card:hover {
-    animation-play-state:
-      paused;
+    animation-play-state: paused;
 
     transform:
       translateY(-14px)
       scale(1.03);
 
     border-color:
-      rgba(
-        77,
-        118,
-        87,
-        0.45
-      );
+      rgba(77, 118, 87, 0.45);
 
     box-shadow:
       0 24px 46px
-      rgba(
-        17,
-        17,
-        17,
-        0.11
-      );
+      rgba(17, 17, 17, 0.11);
   }
 
   .project-card-image {
@@ -807,7 +660,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
   }
 
   /* =========================
-     CARD FOOTER
+     GENERAL CARD FOOTER
      ========================= */
 
   .project-card-footer {
@@ -819,7 +672,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     gap: 12px;
 
     padding:
-      18px 20px;
+      17px 19px;
 
     background: #f6f5f2;
 
@@ -827,13 +680,9 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       "Courier Prime",
       monospace;
 
-    /*
-      Bigger desktop footer text.
-    */
+    font-size: 0.86rem;
 
-    font-size: 0.9rem;
-
-    font-weight: 700;
+    font-weight: 400;
 
     color: #111111;
   }
@@ -843,14 +692,9 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
      ========================= */
 
   .project-card-receipt {
-    background:
-      linear-gradient(
-        145deg,
-        #56675b,
-        #29342d
-      );
+    background: #292929;
 
-    color: #f6f5f2;
+    color: #ffffff;
   }
 
   .receipt-card-background {
@@ -862,17 +706,11 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
     z-index: 0;
 
-    background:
-      linear-gradient(
-        145deg,
-        #56675b,
-        #29342d
-      );
+    background: #292929;
   }
 
   /* =========================
-     RECEIPT GIF
-     DESKTOP
+     DESKTOP GIF
      ========================= */
 
   .receipt-card-background img {
@@ -889,23 +727,16 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     object-position:
       center bottom;
 
-    opacity: 0.82;
+    opacity: 0.78;
 
     /*
-      Tiny amount of blur.
+      THIS is the normal
+      desktop blur.
     */
 
     filter:
-      blur(0.3px)
+      blur(1.4px)
       saturate(0.95);
-
-    /*
-      This also helps the white
-      background/frame in the GIF
-      blend into the dark card.
-    */
-
-    mix-blend-mode: multiply;
 
     transform:
       translateX(-50%)
@@ -913,20 +744,25 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
     transition:
       transform
-      0.5s
-      cubic-bezier(
-        0.22,
-        1,
-        0.36,
-        1
-      ),
+        0.45s
+        cubic-bezier(
+          0.22,
+          1,
+          0.36,
+          1
+        ),
 
       filter
-      0.5s ease,
+        0.45s ease,
 
       opacity
-      0.5s ease;
+        0.45s ease;
   }
+
+  /* =========================
+     NEUTRAL OVERLAY
+     NO GREEN
+     ========================= */
 
   .receipt-card-overlay {
     position: absolute;
@@ -940,26 +776,26 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
         180deg,
 
         rgba(
-          25,
-          33,
-          28,
+          0,
+          0,
+          0,
           0.06
         )
         0%,
 
         rgba(
-          25,
-          33,
-          28,
+          0,
+          0,
+          0,
           0.08
         )
-        42%,
+        40%,
 
         rgba(
-          14,
-          21,
-          17,
-          0.68
+          0,
+          0,
+          0,
+          0.58
         )
         100%
       );
@@ -973,7 +809,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
   }
 
   /* =========================
-     RECEIPT TEXT
+     RECEIPT CONTENT
      ========================= */
 
   .receipt-card-content {
@@ -987,45 +823,38 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     display: flex;
     flex-direction: column;
 
-    padding: 25px;
+    padding: 24px;
 
     color: #ffffff;
   }
 
-  /*
-    AI / DATA / FULL STACK
-  */
+  /* AI / DATA / FULL STACK */
 
   .receipt-card-type {
     font-family:
       "Courier Prime",
       monospace;
 
-    font-size: 0.78rem;
+    font-size: 0.8rem;
 
-    font-weight: 700;
+    font-weight: 400;
 
-    line-height: 1.25;
+    line-height: 1.3;
 
     letter-spacing:
-      0.075em;
+      0.065em;
 
     color:
       rgba(
         255,
         255,
         255,
-        0.92
+        0.9
       );
 
     text-shadow:
-      0 2px 12px
-      rgba(
-        0,
-        0,
-        0,
-        0.22
-      );
+      0 2px 14px
+      rgba(0, 0, 0, 0.3);
   }
 
   .receipt-card-main {
@@ -1035,9 +864,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     flex-direction: column;
   }
 
-  /*
-    RECEIPT
-  */
+  /* RECEIPT */
 
   .receipt-card-main strong {
     font-family:
@@ -1053,7 +880,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
     font-weight: 400;
 
-    line-height: 0.82;
+    line-height: 0.84;
 
     letter-spacing:
       -0.035em;
@@ -1062,30 +889,23 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
     text-shadow:
       0 3px 20px
-      rgba(
-        0,
-        0,
-        0,
-        0.24
-      );
+      rgba(0, 0, 0, 0.28);
   }
 
-  /*
-    SMART GROCERY BUDGETING
-  */
+  /* SMART GROCERY BUDGETING */
 
   .receipt-card-main small {
-    margin-top: 14px;
+    margin-top: 13px;
 
     font-family:
       "Courier Prime",
       monospace;
 
-    font-size: 0.78rem;
+    font-size: 0.8rem;
 
-    font-weight: 700;
+    font-weight: 400;
 
-    line-height: 1.3;
+    line-height: 1.35;
 
     color:
       rgba(
@@ -1097,12 +917,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
     text-shadow:
       0 2px 12px
-      rgba(
-        0,
-        0,
-        0,
-        0.2
-      );
+      rgba(0, 0, 0, 0.28);
   }
 
   /* =========================
@@ -1116,10 +931,10 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
     background:
       rgba(
-        20,
-        28,
-        23,
-        0.46
+        22,
+        22,
+        22,
+        0.62
       );
 
     backdrop-filter:
@@ -1136,20 +951,25 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
         255,
         255,
         255,
-        0.15
+        0.12
       );
   }
 
   /* =========================
-     RECEIPT HOVER
+     DESKTOP HOVER
      ========================= */
 
   .project-card-receipt:hover
   .receipt-card-background img {
-    opacity: 0.95;
+    opacity: 0.92;
+
+    /*
+      Almost fully clear
+      when hovered.
+    */
 
     filter:
-      blur(0.15px)
+      blur(0.3px)
       saturate(1);
 
     transform:
@@ -1165,18 +985,12 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     0%,
     100% {
       transform:
-        translate(
-          -50%,
-          0
-        );
+        translate(-50%, 0);
     }
 
     50% {
       transform:
-        translate(
-          -50%,
-          -6px
-        );
+        translate(-50%, -6px);
     }
   }
 
@@ -1288,8 +1102,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       padding:
         7px 11px;
 
-      font-size:
-        0.56rem;
+      font-size: 0.56rem;
     }
 
     .projects-section {
@@ -1302,17 +1115,15 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     }
 
     .projects-heading {
-      margin-bottom:
-        38px;
+      margin-bottom: 38px;
     }
 
     .projects-heading h2 {
-      font-size:
-        3.2rem;
+      font-size: 3.2rem;
     }
 
     /* =========================
-       MOBILE SWIPE CARDS
+       MOBILE CARDS
        ========================= */
 
     .project-cards {
@@ -1331,8 +1142,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       scroll-snap-type:
         x mandatory;
 
-      scrollbar-width:
-        none;
+      scrollbar-width: none;
     }
 
     .project-cards::-webkit-scrollbar {
@@ -1412,15 +1222,16 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     }
 
     /* =========================
-       MOBILE CARD TEXT
+       MOBILE TEXT
        ========================= */
 
     .project-card-footer {
       padding:
         13px 14px;
 
-      font-size:
-        0.72rem;
+      font-size: 0.72rem;
+
+      font-weight: 400;
     }
 
     .receipt-card-content {
@@ -1428,11 +1239,12 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     }
 
     .receipt-card-type {
-      font-size:
-        0.58rem;
+      font-size: 0.6rem;
+
+      font-weight: 400;
 
       letter-spacing:
-        0.065em;
+        0.06em;
     }
 
     .receipt-card-main strong {
@@ -1442,52 +1254,40 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
           15vw,
           4.4rem
         );
+
+      font-weight: 400;
     }
 
     .receipt-card-main small {
       margin-top: 9px;
 
-      font-size:
-        0.62rem;
+      font-size: 0.64rem;
+
+      font-weight: 400;
     }
 
     /* =========================
-       MOBILE RECEIPT GIF
+       MOBILE GIF
        ========================= */
 
     .receipt-card-background img {
-      /*
-        Bigger on phone.
-      */
+      left: 50%;
+      bottom: 0;
 
       width: 130%;
       height: 130%;
 
-      left: 50%;
-      bottom: 0;
-
       object-fit: contain;
 
-      opacity: 0.84;
+      opacity: 0.82;
 
       /*
-        Tiny blur only.
-        CSS blur does not use %,
-        so 0.3px is effectively
-        the very slight blur you want.
+        Tiny blur on phone.
       */
 
       filter:
         blur(0.3px)
-        saturate(0.95);
-
-      /*
-        Helps suppress the GIF's
-        white loop frame.
-      */
-
-      mix-blend-mode:
-        multiply;
+        saturate(1);
 
       transform:
         translateX(-50%)
@@ -1495,17 +1295,17 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     }
 
     /*
-      Phone has no hover-specific
-      GIF change.
+      No fake hover change
+      on mobile.
     */
 
     .project-card-receipt:hover
     .receipt-card-background img {
-      opacity: 0.84;
+      opacity: 0.82;
 
       filter:
         blur(0.3px)
-        saturate(0.95);
+        saturate(1);
 
       transform:
         translateX(-50%)
