@@ -1,6 +1,5 @@
 ---
-import ProjectModal
-  from "../components/ProjectModal.astro";
+import ProjectModal from "../components/ProjectModal.astro";
 ---
 
 <ProjectModal
@@ -15,23 +14,22 @@ import ProjectModal
 
     <section class="project-hero">
       <div class="project-hero-top">
-        <span>
-          01 / SELECTED WORK
-        </span>
-
-        <span>
-          2024 → 2025
-        </span>
+        <span>01 / SELECTED WORK</span>
+        <span>2024 → 2025</span>
       </div>
 
-      <h1>
-        Receipt
-      </h1>
+      <div class="receipt-logo-wrap">
+        <img
+          src="/images/projects/receipt-pics/receipt-logo.jpg"
+          alt="Receipt project logo"
+        />
+      </div>
+
+      <h1>Receipt</h1>
 
       <p class="project-tagline">
         AI-driven grocery budgeting,
-        price comparison and smart
-        shopping.
+        price comparison and smart shopping.
       </p>
 
       <div class="project-meta">
@@ -130,6 +128,30 @@ import ProjectModal
     </section>
 
     <!-- =========================
+         DATA PIPELINE VISUAL
+         ========================= -->
+
+    <section class="pipeline-visual">
+      <div class="pipeline-heading">
+        <span>
+          DATA FLOW
+        </span>
+
+        <p>
+          Scrape → clean → store → fetch →
+          cache → use.
+        </p>
+      </div>
+
+      <div class="pipeline-image">
+        <img
+          src="/images/projects/receipt-pics/receipt-data-pipeline.jpg"
+          alt="Receipt data processing pipeline"
+        />
+      </div>
+    </section>
+
+    <!-- =========================
          ARCHITECTURE
          ========================= -->
 
@@ -148,9 +170,11 @@ import ProjectModal
       <div class="architecture-flow">
         <div class="architecture-node">
           <span>01</span>
+
           <strong>
             Supermarkets
           </strong>
+
           <small>
             Tesco, Sainsbury's,
             Asda, Aldi, Waitrose
@@ -163,9 +187,11 @@ import ProjectModal
 
         <div class="architecture-node">
           <span>02</span>
+
           <strong>
             Selenium
           </strong>
+
           <small>
             Product collection
           </small>
@@ -177,9 +203,11 @@ import ProjectModal
 
         <div class="architecture-node">
           <span>03</span>
+
           <strong>
             Cleaning
           </strong>
+
           <small>
             Names, prices,
             units and categories
@@ -192,9 +220,11 @@ import ProjectModal
 
         <div class="architecture-node">
           <span>04</span>
+
           <strong>
             Supabase
           </strong>
+
           <small>
             PostgreSQL storage
           </small>
@@ -206,9 +236,11 @@ import ProjectModal
 
         <div class="architecture-node">
           <span>05</span>
+
           <strong>
             Intelligence
           </strong>
+
           <small>
             NLP, matching,
             forecasting and AI
@@ -221,12 +253,48 @@ import ProjectModal
 
         <div class="architecture-node">
           <span>06</span>
+
           <strong>
             Streamlit
           </strong>
+
           <small>
             User experience
           </small>
+        </div>
+      </div>
+
+      <!-- =========================
+           SCRAPING DETAIL
+           ========================= -->
+
+      <div class="scraping-detail">
+        <div class="scraping-detail-text">
+          <span>
+            DATA COLLECTION
+          </span>
+
+          <h3>
+            Getting the data was a project
+            of its own.
+          </h3>
+
+          <p>
+            Each supermarket had different
+            page structures, pagination and
+            dynamically loaded products.
+            Selenium was used to navigate
+            categories, extract product
+            details and continue until the
+            available data had been collected.
+          </p>
+        </div>
+
+        <div class="scraping-detail-image">
+          <img
+            src="/images/projects/receipt-pics/receipt-scraping-pipeline.jpg"
+            alt="Receipt Selenium scraping workflow"
+          />
         </div>
       </div>
     </section>
@@ -321,6 +389,49 @@ import ProjectModal
     </section>
 
     <!-- =========================
+         DATA EXPLORATION
+         ========================= -->
+
+    <section class="data-exploration">
+      <div class="section-heading">
+        <span>
+          DATA EXPLORATION
+        </span>
+
+        <h2>
+          Before making predictions,
+          I had to understand the data.
+        </h2>
+      </div>
+
+      <div class="exploration-grid">
+        <figure class="exploration-item">
+          <img
+            src="/images/projects/receipt-pics/receipt-product-wordcloud.jpg"
+            alt="Word cloud generated from supermarket product names"
+          />
+
+          <figcaption>
+            Product-name exploration across
+            the collected supermarket data.
+          </figcaption>
+        </figure>
+
+        <figure class="exploration-item">
+          <img
+            src="/images/projects/receipt-pics/receipt-average-price-by-store.jpg"
+            alt="Average supermarket price comparison chart"
+          />
+
+          <figcaption>
+            Comparing average prices across
+            the five supermarket datasets.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- =========================
          DECISION
          ========================= -->
 
@@ -393,7 +504,6 @@ import ProjectModal
 <style>
   .receipt-project {
     width: 100%;
-
     color: #111111;
   }
 
@@ -402,14 +512,15 @@ import ProjectModal
      ========================= */
 
   .project-hero {
+    position: relative;
+
     min-height: 88vh;
 
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
 
-    padding:
-      70px 70px 64px;
+    padding: 70px 70px 64px;
   }
 
   .project-hero-top {
@@ -422,10 +533,7 @@ import ProjectModal
     display: flex;
     justify-content: space-between;
 
-    font-family:
-      "Courier Prime",
-      monospace;
-
+    font-family: "Courier Prime", monospace;
     font-size: 0.68rem;
 
     letter-spacing: 0.06em;
@@ -433,43 +541,45 @@ import ProjectModal
     color: #777777;
   }
 
+  .receipt-logo-wrap {
+    width: 110px;
+    height: 110px;
+
+    margin-bottom: 30px;
+
+    overflow: hidden;
+
+    border-radius: 50%;
+  }
+
+  .receipt-logo-wrap img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+  }
+
   .project-hero h1 {
     margin: 0;
 
-    font-family:
-      "Instrument Serif",
-      serif;
-
-    font-size:
-      clamp(
-        6rem,
-        15vw,
-        13rem
-      );
+    font-family: "Instrument Serif", serif;
+    font-size: clamp(6rem, 15vw, 13rem);
 
     font-weight: 400;
 
     line-height: 0.78;
-
     letter-spacing: -0.05em;
   }
 
   .project-tagline {
     max-width: 760px;
 
-    margin:
-      44px 0 28px;
+    margin: 44px 0 28px;
 
-    font-family:
-      "Instrument Serif",
-      serif;
-
-    font-size:
-      clamp(
-        2rem,
-        4vw,
-        4.5rem
-      );
+    font-family: "Instrument Serif", serif;
+    font-size: clamp(2rem, 4vw, 4.5rem);
 
     line-height: 0.98;
   }
@@ -484,19 +594,12 @@ import ProjectModal
   }
 
   .project-meta span {
-    padding:
-      7px 10px;
+    padding: 7px 10px;
 
-    border:
-      1px solid
-      rgba(17, 17, 17, 0.18);
-
+    border: 1px solid rgba(17, 17, 17, 0.18);
     border-radius: 999px;
 
-    font-family:
-      "Courier Prime",
-      monospace;
-
+    font-family: "Courier Prime", monospace;
     font-size: 0.62rem;
   }
 
@@ -511,19 +614,12 @@ import ProjectModal
 
   .project-actions a,
   .project-ending-links a {
-    padding:
-      12px 16px;
+    padding: 12px 16px;
 
-    border:
-      1px solid
-      rgba(17, 17, 17, 0.22);
-
+    border: 1px solid rgba(17, 17, 17, 0.22);
     border-radius: 999px;
 
-    font-family:
-      "Courier Prime",
-      monospace;
-
+    font-family: "Courier Prime", monospace;
     font-size: 0.7rem;
 
     transition:
@@ -535,7 +631,6 @@ import ProjectModal
   .project-actions a:hover,
   .project-ending-links a:hover {
     background: #4d7657;
-
     border-color: #4d7657;
 
     color: #ffffff;
@@ -546,8 +641,7 @@ import ProjectModal
      ========================= */
 
   .demo-section {
-    padding:
-      0 70px 110px;
+    padding: 0 70px 110px;
   }
 
   .demo-placeholder {
@@ -557,6 +651,8 @@ import ProjectModal
     align-items: center;
     justify-content: center;
 
+    overflow: hidden;
+
     border-radius: 22px;
 
     background:
@@ -565,8 +661,6 @@ import ProjectModal
         #d6ded7,
         #a9bbaa
       );
-
-    overflow: hidden;
   }
 
   .demo-placeholder > div {
@@ -574,29 +668,17 @@ import ProjectModal
   }
 
   .demo-label {
-    font-family:
-      "Courier Prime",
-      monospace;
-
+    font-family: "Courier Prime", monospace;
     font-size: 0.66rem;
 
     letter-spacing: 0.08em;
   }
 
   .demo-placeholder p {
-    margin:
-      14px 0;
+    margin: 14px 0;
 
-    font-family:
-      "Instrument Serif",
-      serif;
-
-    font-size:
-      clamp(
-        2.5rem,
-        6vw,
-        6rem
-      );
+    font-family: "Instrument Serif", serif;
+    font-size: clamp(2.5rem, 6vw, 6rem);
 
     line-height: 0.9;
   }
@@ -612,28 +694,21 @@ import ProjectModal
   .intro-grid {
     display: grid;
 
-    grid-template-columns:
-      1fr 1fr;
+    grid-template-columns: 1fr 1fr;
 
     gap: 60px;
 
-    padding:
-      20px 70px 130px;
+    padding: 20px 70px 130px;
   }
 
   .intro-block {
-    border-top:
-      1px solid
-      rgba(17, 17, 17, 0.18);
-
     padding-top: 20px;
+
+    border-top: 1px solid rgba(17, 17, 17, 0.18);
   }
 
   .section-number {
-    font-family:
-      "Courier Prime",
-      monospace;
-
+    font-family: "Courier Prime", monospace;
     font-size: 0.66rem;
 
     color: #777777;
@@ -643,9 +718,7 @@ import ProjectModal
   .section-heading h2,
   .decision-section h2,
   .project-ending h2 {
-    font-family:
-      "Instrument Serif",
-      serif;
+    font-family: "Instrument Serif", serif;
 
     font-weight: 400;
 
@@ -653,15 +726,9 @@ import ProjectModal
   }
 
   .intro-block h2 {
-    margin:
-      20px 0;
+    margin: 20px 0;
 
-    font-size:
-      clamp(
-        2.7rem,
-        4vw,
-        4.6rem
-      );
+    font-size: clamp(2.7rem, 4vw, 4.6rem);
 
     line-height: 0.95;
   }
@@ -670,15 +737,70 @@ import ProjectModal
   .decision-section p {
     max-width: 600px;
 
-    font-family:
-      "Courier Prime",
-      monospace;
-
+    font-family: "Courier Prime", monospace;
     font-size: 0.86rem;
 
     line-height: 1.6;
 
     color: #646464;
+  }
+
+  /* =========================
+     PIPELINE VISUAL
+     ========================= */
+
+  .pipeline-visual {
+    padding: 0 70px 130px;
+  }
+
+  .pipeline-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    margin-bottom: 24px;
+  }
+
+  .pipeline-heading span {
+    font-family: "Courier Prime", monospace;
+    font-size: 0.68rem;
+
+    letter-spacing: 0.08em;
+
+    color: #777777;
+  }
+
+  .pipeline-heading p {
+    max-width: 500px;
+
+    margin: 0;
+
+    font-family: "Instrument Serif", serif;
+    font-size: 1.8rem;
+
+    line-height: 1;
+
+    text-align: right;
+  }
+
+  .pipeline-image {
+    overflow: hidden;
+
+    padding: 30px;
+
+    border: 1px solid rgba(17, 17, 17, 0.14);
+    border-radius: 18px;
+
+    background: #ffffff;
+  }
+
+  .pipeline-image img {
+    display: block;
+
+    width: 100%;
+    height: auto;
   }
 
   /* =========================
@@ -691,10 +813,7 @@ import ProjectModal
 
   .section-heading > span,
   .decision-label {
-    font-family:
-      "Courier Prime",
-      monospace;
-
+    font-family: "Courier Prime", monospace;
     font-size: 0.68rem;
 
     letter-spacing: 0.08em;
@@ -705,15 +824,9 @@ import ProjectModal
   .section-heading h2 {
     max-width: 900px;
 
-    margin:
-      14px 0 0;
+    margin: 14px 0 0;
 
-    font-size:
-      clamp(
-        3.4rem,
-        6vw,
-        7rem
-      );
+    font-size: clamp(3.4rem, 6vw, 7rem);
 
     line-height: 0.9;
   }
@@ -723,8 +836,7 @@ import ProjectModal
      ========================= */
 
   .architecture-section {
-    padding:
-      110px 70px;
+    padding: 110px 70px;
 
     background: #111111;
 
@@ -739,8 +851,7 @@ import ProjectModal
   .architecture-flow {
     display: grid;
 
-    grid-template-columns:
-      repeat(11, auto);
+    grid-template-columns: repeat(11, auto);
 
     align-items: center;
 
@@ -752,25 +863,19 @@ import ProjectModal
 
     display: flex;
     flex-direction: column;
-    justify-content:
-      space-between;
+    justify-content: space-between;
 
     gap: 18px;
 
     padding: 18px;
 
-    border:
-      1px solid
-      rgba(255, 255, 255, 0.18);
-
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 14px;
   }
 
   .architecture-node span,
   .architecture-node small {
-    font-family:
-      "Courier Prime",
-      monospace;
+    font-family: "Courier Prime", monospace;
   }
 
   .architecture-node span {
@@ -780,10 +885,7 @@ import ProjectModal
   }
 
   .architecture-node strong {
-    font-family:
-      "Instrument Serif",
-      serif;
-
+    font-family: "Instrument Serif", serif;
     font-size: 1.6rem;
 
     font-weight: 400;
@@ -793,18 +895,83 @@ import ProjectModal
     max-width: 135px;
 
     font-size: 0.64rem;
-
     line-height: 1.35;
 
     color: #a8a8a8;
   }
 
   .architecture-arrow {
-    font-family:
-      "Courier Prime",
-      monospace;
+    font-family: "Courier Prime", monospace;
 
     color: #4d7657;
+  }
+
+  /* =========================
+     SCRAPING DETAIL
+     ========================= */
+
+  .scraping-detail {
+    display: grid;
+
+    grid-template-columns: 0.8fr 1.4fr;
+
+    gap: 60px;
+
+    align-items: center;
+
+    margin-top: 100px;
+    padding-top: 80px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .scraping-detail-text span {
+    font-family: "Courier Prime", monospace;
+    font-size: 0.64rem;
+
+    letter-spacing: 0.08em;
+
+    color: #8d8d8d;
+  }
+
+  .scraping-detail-text h3 {
+    margin: 16px 0 24px;
+
+    font-family: "Instrument Serif", serif;
+    font-size: clamp(2.5rem, 4vw, 4.5rem);
+
+    font-weight: 400;
+
+    line-height: 0.93;
+  }
+
+  .scraping-detail-text p {
+    margin: 0;
+
+    font-family: "Courier Prime", monospace;
+    font-size: 0.76rem;
+
+    line-height: 1.6;
+
+    color: #aaaaaa;
+  }
+
+  .scraping-detail-image {
+    overflow: hidden;
+
+    padding: 20px;
+
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 16px;
+
+    background: #ffffff;
+  }
+
+  .scraping-detail-image img {
+    display: block;
+
+    width: 100%;
+    height: auto;
   }
 
   /* =========================
@@ -812,15 +979,13 @@ import ProjectModal
      ========================= */
 
   .features-section {
-    padding:
-      130px 70px;
+    padding: 130px 70px;
   }
 
   .feature-grid {
     display: grid;
 
-    grid-template-columns:
-      repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
 
     gap: 18px;
   }
@@ -833,37 +998,22 @@ import ProjectModal
 
     padding: 24px;
 
-    border:
-      1px solid
-      rgba(17, 17, 17, 0.16);
-
+    border: 1px solid rgba(17, 17, 17, 0.16);
     border-radius: 18px;
   }
 
   .feature-card > span {
-    font-family:
-      "Courier Prime",
-      monospace;
-
+    font-family: "Courier Prime", monospace;
     font-size: 0.64rem;
 
     color: #777777;
   }
 
   .feature-card h3 {
-    margin:
-      auto 0 18px;
+    margin: auto 0 18px;
 
-    font-family:
-      "Instrument Serif",
-      serif;
-
-    font-size:
-      clamp(
-        2rem,
-        3vw,
-        3.7rem
-      );
+    font-family: "Instrument Serif", serif;
+    font-size: clamp(2rem, 3vw, 3.7rem);
 
     font-weight: 400;
 
@@ -875,15 +1025,55 @@ import ProjectModal
 
     margin: 0;
 
-    font-family:
-      "Courier Prime",
-      monospace;
-
+    font-family: "Courier Prime", monospace;
     font-size: 0.78rem;
 
     line-height: 1.55;
 
     color: #666666;
+  }
+
+  /* =========================
+     DATA EXPLORATION
+     ========================= */
+
+  .data-exploration {
+    padding: 130px 70px;
+  }
+
+  .exploration-grid {
+    display: grid;
+
+    grid-template-columns: 1.35fr 1fr;
+
+    gap: 22px;
+
+    align-items: start;
+  }
+
+  .exploration-item {
+    margin: 0;
+  }
+
+  .exploration-item img {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    border: 1px solid rgba(17, 17, 17, 0.12);
+    border-radius: 16px;
+  }
+
+  .exploration-item figcaption {
+    margin-top: 12px;
+
+    font-family: "Courier Prime", monospace;
+    font-size: 0.66rem;
+
+    line-height: 1.4;
+
+    color: #777777;
   }
 
   /* =========================
@@ -893,13 +1083,11 @@ import ProjectModal
   .decision-section {
     display: grid;
 
-    grid-template-columns:
-      120px 1fr;
+    grid-template-columns: 120px 1fr;
 
     gap: 40px;
 
-    padding:
-      130px 70px;
+    padding: 130px 70px;
 
     background: #d9e2da;
   }
@@ -907,15 +1095,9 @@ import ProjectModal
   .decision-section h2 {
     max-width: 900px;
 
-    margin:
-      18px 0 28px;
+    margin: 18px 0 28px;
 
-    font-size:
-      clamp(
-        3.5rem,
-        7vw,
-        7.5rem
-      );
+    font-size: clamp(3.5rem, 7vw, 7.5rem);
 
     line-height: 0.88;
   }
@@ -931,15 +1113,11 @@ import ProjectModal
     flex-direction: column;
     justify-content: center;
 
-    padding:
-      120px 70px;
+    padding: 120px 70px;
   }
 
   .project-ending > p {
-    font-family:
-      "Courier Prime",
-      monospace;
-
+    font-family: "Courier Prime", monospace;
     font-size: 0.7rem;
 
     color: #777777;
@@ -948,22 +1126,15 @@ import ProjectModal
   .project-ending h2 {
     max-width: 1000px;
 
-    margin:
-      24px 0 46px;
+    margin: 24px 0 46px;
 
-    font-size:
-      clamp(
-        4rem,
-        8vw,
-        8rem
-      );
+    font-size: clamp(4rem, 8vw, 8rem);
 
     line-height: 0.84;
   }
 
   .project-ending-links {
     display: flex;
-
     flex-wrap: wrap;
 
     gap: 12px;
@@ -977,8 +1148,14 @@ import ProjectModal
     .project-hero {
       min-height: 88dvh;
 
-      padding:
-        90px 20px 36px;
+      padding: 90px 20px 36px;
+    }
+
+    .receipt-logo-wrap {
+      width: 82px;
+      height: 82px;
+
+      margin-bottom: 24px;
     }
 
     .project-hero-top {
@@ -990,17 +1167,11 @@ import ProjectModal
     }
 
     .project-hero h1 {
-      font-size:
-        clamp(
-          5rem,
-          26vw,
-          8rem
-        );
+      font-size: clamp(5rem, 26vw, 8rem);
     }
 
     .project-tagline {
-      margin:
-        30px 0 22px;
+      margin: 30px 0 22px;
 
       font-size: 2.3rem;
     }
@@ -1010,15 +1181,13 @@ import ProjectModal
     }
 
     .project-meta span {
-      padding:
-        6px 8px;
+      padding: 6px 8px;
 
       font-size: 0.55rem;
     }
 
     .demo-section {
-      padding:
-        0 16px 80px;
+      padding: 0 16px 80px;
     }
 
     .demo-placeholder {
@@ -1028,26 +1197,50 @@ import ProjectModal
     }
 
     .intro-grid {
-      grid-template-columns:
-        1fr;
+      grid-template-columns: 1fr;
 
       gap: 60px;
 
-      padding:
-        20px 20px 90px;
+      padding: 20px 20px 90px;
+    }
+
+    .pipeline-visual {
+      padding: 0 20px 90px;
+    }
+
+    .pipeline-heading {
+      display: block;
+    }
+
+    .pipeline-heading p {
+      margin-top: 10px;
+
+      font-size: 1.5rem;
+
+      text-align: left;
+    }
+
+    .pipeline-image {
+      overflow-x: auto;
+
+      padding: 12px;
+    }
+
+    .pipeline-image img {
+      width: 850px;
+      max-width: none;
     }
 
     .architecture-section,
     .features-section,
+    .data-exploration,
     .decision-section,
     .project-ending {
-      padding:
-        90px 20px;
+      padding: 90px 20px;
     }
 
     .architecture-flow {
-      grid-template-columns:
-        1fr;
+      grid-template-columns: 1fr;
     }
 
     .architecture-arrow {
@@ -1058,18 +1251,42 @@ import ProjectModal
       min-height: 130px;
     }
 
+    .scraping-detail {
+      grid-template-columns: 1fr;
+
+      gap: 32px;
+
+      margin-top: 70px;
+      padding-top: 60px;
+    }
+
+    .scraping-detail-image {
+      overflow-x: auto;
+
+      padding: 10px;
+    }
+
+    .scraping-detail-image img {
+      width: 900px;
+      max-width: none;
+    }
+
     .feature-grid {
-      grid-template-columns:
-        1fr;
+      grid-template-columns: 1fr;
     }
 
     .feature-card {
       min-height: 260px;
     }
 
+    .exploration-grid {
+      grid-template-columns: 1fr;
+
+      gap: 34px;
+    }
+
     .decision-section {
-      grid-template-columns:
-        1fr;
+      grid-template-columns: 1fr;
 
       gap: 30px;
     }
@@ -1079,12 +1296,18 @@ import ProjectModal
     }
 
     .project-ending h2 {
-      font-size:
-        clamp(
-          3.5rem,
-          17vw,
-          5.5rem
-        );
+      font-size: clamp(3.5rem, 17vw, 5.5rem);
+    }
+  }
+
+  /* =========================
+     REDUCED MOTION
+     ========================= */
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-actions a,
+    .project-ending-links a {
+      transition: none;
     }
   }
 </style>
