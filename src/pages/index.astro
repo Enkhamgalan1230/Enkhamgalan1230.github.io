@@ -36,14 +36,22 @@ import ReceiptProject
 
       <div class="project-cards">
         <button
-          class="project-card"
+          class="project-card project-card-receipt"
           type="button"
           data-project-open="receipt-project"
           aria-label="Open Receipt project"
         >
-          <div
-            class="project-card-image placeholder-one"
-          >
+          <div class="receipt-card-background">
+            <img
+              src="/gifs/reciept.gif"
+              alt=""
+              aria-hidden="true"
+            />
+
+            <div class="receipt-card-overlay"></div>
+          </div>
+
+          <div class="project-card-image">
             <div class="receipt-card-content">
               <span>
                 AI / DATA / FULL STACK
@@ -59,7 +67,7 @@ import ReceiptProject
             </div>
           </div>
 
-          <div class="project-card-footer">
+          <div class="project-card-footer receipt-card-footer">
             <span>Receipt</span>
             <span>01</span>
           </div>
@@ -552,6 +560,145 @@ import ReceiptProject
     color: #111111;
   }
 
+  /* =========================
+    RECEIPT CARD
+    ========================= */
+
+  .project-card-receipt {
+    background:
+      linear-gradient(
+        145deg,
+        #56675b,
+        #29342d
+      );
+
+    color: #f6f5f2;
+  }
+
+  .receipt-card-background {
+    position: absolute;
+
+    inset: 0;
+
+    overflow: hidden;
+
+    z-index: 0;
+  }
+
+  .receipt-card-background img {
+    position: absolute;
+
+    left: 50%;
+    bottom: -3%;
+
+    width: 115%;
+    height: 115%;
+
+    object-fit: cover;
+    object-position: center bottom;
+
+    opacity: 0.58;
+
+    filter:
+      blur(4px)
+      saturate(0.8);
+
+    transform:
+      translateX(-50%)
+      scale(1.04);
+
+    transition:
+      transform 0.5s
+        cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.5s ease,
+      opacity 0.5s ease;
+  }
+
+  .receipt-card-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+      linear-gradient(
+        180deg,
+        rgba(33, 44, 36, 0.25) 0%,
+        rgba(28, 38, 31, 0.18) 35%,
+        rgba(20, 28, 23, 0.72) 100%
+      );
+  }
+
+  .project-card-receipt
+  .project-card-image {
+    position: relative;
+
+    z-index: 1;
+  }
+
+  .project-card-receipt
+  .receipt-card-content {
+    position: relative;
+
+    z-index: 2;
+
+    color: #ffffff;
+  }
+
+  .project-card-receipt
+  .receipt-card-content span {
+    color:
+      rgba(255, 255, 255, 0.78);
+  }
+
+  .project-card-receipt
+  .receipt-card-content strong {
+    color: #ffffff;
+
+    text-shadow:
+      0 2px 18px
+      rgba(0, 0, 0, 0.18);
+  }
+
+  .project-card-receipt
+  .receipt-card-content small {
+    color:
+      rgba(255, 255, 255, 0.82);
+  }
+
+  .receipt-card-footer {
+    position: relative;
+
+    z-index: 2;
+
+    background:
+      rgba(20, 28, 23, 0.34);
+
+    backdrop-filter:
+      blur(10px);
+
+    -webkit-backdrop-filter:
+      blur(10px);
+
+    color: #ffffff;
+
+    border-top:
+      1px solid
+      rgba(255, 255, 255, 0.12);
+  }
+
+  .project-card-receipt:hover
+  .receipt-card-background img {
+    opacity: 0.78;
+
+    filter:
+      blur(1.5px)
+      saturate(1);
+
+    transform:
+      translateX(-50%)
+      scale(1.1);
+  }
+
   .receipt-card-content span {
     font-family:
       "Courier Prime",
@@ -689,6 +836,30 @@ import ReceiptProject
       margin-top: 12px;
 
       font-size: clamp(2.2rem, 11vw, 4rem);
+    }
+
+    .receipt-card-background img {
+      width: 120%;
+      height: 120%;
+
+      opacity: 0.64;
+
+      filter:
+        blur(3px)
+        saturate(0.85);
+    }
+
+    .project-card-receipt:hover
+    .receipt-card-background img {
+      opacity: 0.64;
+
+      filter:
+        blur(3px)
+        saturate(0.85);
+
+      transform:
+        translateX(-50%)
+        scale(1.04);
     }
 
     .scroll-cue {
