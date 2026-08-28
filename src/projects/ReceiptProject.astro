@@ -18,13 +18,6 @@ import ProjectModal from "../components/ProjectModal.astro";
         <span>2024 → 2025</span>
       </div>
 
-      <div class="receipt-logo-wrap">
-        <img
-          src="/images/projects/receipt-pics/receipt-logo.jpg"
-          alt="Receipt project logo"
-        />
-      </div>
-
       <h1>Receipt</h1>
 
       <p class="project-tagline">
@@ -36,10 +29,21 @@ import ProjectModal from "../components/ProjectModal.astro";
         <span>PYTHON</span>
         <span>STREAMLIT</span>
         <span>SUPABASE</span>
+        <span>POSTGRESQL</span>
         <span>SELENIUM</span>
         <span>NLP</span>
+        <span>SPACY</span>
+        <span>SENTENCE TRANSFORMERS</span>
         <span>ARIMA</span>
         <span>LLM</span>
+        <span>GROQ API</span>
+        <span>PHOTON API</span>
+        <span>FOLIUM</span>
+        <span>PLOTLY</span>
+        <span>WEB SCRAPING</span>
+        <span>DATA CLEANING</span>
+        <span>DATA VISUALISATION</span>
+        <span>SEMANTIC SEARCH</span>
       </div>
 
       <div class="project-actions">
@@ -99,11 +103,12 @@ import ProjectModal from "../components/ProjectModal.astro";
 
         <p>
           Grocery prices change constantly,
-          while budgeting tools, price
-          comparison platforms and forecasting
-          systems often exist separately.
-          Receipt brings those jobs together
-          into one student-focused platform.
+          while <strong>budgeting tools</strong>,
+          <strong>price comparison platforms</strong>
+          and <strong>forecasting systems</strong>
+          often exist separately. Receipt brings
+          those jobs together into one
+          student-focused platform.
         </p>
       </div>
 
@@ -117,37 +122,13 @@ import ProjectModal from "../components/ProjectModal.astro";
         </h2>
 
         <p>
-          A data-driven application that
-          collects supermarket pricing,
-          standardises the data, compares
-          products, tracks price changes,
-          forecasts trends and generates
-          personalised shopping lists.
+          A <strong>data-driven application</strong>
+          that collects supermarket pricing,
+          <strong>cleans and standardises</strong>
+          the data, compares products, tracks
+          price changes, forecasts trends and
+          generates <strong>personalised shopping lists</strong>.
         </p>
-      </div>
-    </section>
-
-    <!-- =========================
-         DATA PIPELINE VISUAL
-         ========================= -->
-
-    <section class="pipeline-visual">
-      <div class="pipeline-heading">
-        <span>
-          DATA FLOW
-        </span>
-
-        <p>
-          Scrape → clean → store → fetch →
-          cache → use.
-        </p>
-      </div>
-
-      <div class="pipeline-image">
-        <img
-          src="/images/projects/receipt-pics/receipt-data-pipeline.jpg"
-          alt="Receipt data processing pipeline"
-        />
       </div>
     </section>
 
@@ -242,7 +223,7 @@ import ProjectModal from "../components/ProjectModal.astro";
           </strong>
 
           <small>
-            NLP, matching,
+            NLP, embeddings,
             forecasting and AI
           </small>
         </div>
@@ -259,7 +240,7 @@ import ProjectModal from "../components/ProjectModal.astro";
           </strong>
 
           <small>
-            User experience
+            Interactive application
           </small>
         </div>
       </div>
@@ -281,16 +262,18 @@ import ProjectModal from "../components/ProjectModal.astro";
 
           <p>
             Each supermarket had different
-            page structures, pagination and
+            <strong>page structures</strong>,
+            <strong>pagination</strong> and
             dynamically loaded products.
-            Selenium was used to navigate
-            categories, extract product
-            details and continue until the
-            available data had been collected.
+            <strong>Selenium</strong> was used
+            to navigate categories, extract
+            product names, prices, units and
+            discounts, and continue through
+            the available catalogue.
           </p>
         </div>
 
-        <div class="scraping-detail-image">
+        <div class="scraping-detail-image visual-hover">
           <img
             src="/images/projects/receipt-pics/receipt-scraping-pipeline.jpg"
             alt="Receipt Selenium scraping workflow"
@@ -325,12 +308,12 @@ import ProjectModal from "../components/ProjectModal.astro";
           </h3>
 
           <p>
-            Build a list by typing,
-            speaking or asking an AI
-            assistant. NLP extracts
-            grocery items and semantic
-            matching connects them to
-            real supermarket products.
+            Build a list by typing, speaking
+            or asking an <strong>AI assistant</strong>.
+            <strong>spaCy</strong> extracts grocery
+            items and <strong>Sentence Transformers</strong>
+            map those requests to real supermarket
+            products using semantic similarity.
           </p>
         </article>
 
@@ -344,10 +327,11 @@ import ProjectModal from "../components/ProjectModal.astro";
           </h3>
 
           <p>
-            Compare products across five
-            UK supermarkets using cleaned
-            and standardised pricing,
-            discount and unit-cost data.
+            Compare products across
+            <strong>five UK supermarkets</strong>
+            using cleaned and standardised
+            pricing, discounts and
+            <strong>price-per-unit</strong> data.
           </p>
         </article>
 
@@ -362,9 +346,11 @@ import ProjectModal from "../components/ProjectModal.astro";
 
           <p>
             Historical price and inflation
-            data are processed into
-            category-level time series
-            and forecast using ARIMA.
+            data are transformed into
+            <strong>time-series datasets</strong>
+            and forecast using
+            <strong>ARIMA</strong> to estimate
+            future category-level price movement.
           </p>
         </article>
 
@@ -378,11 +364,48 @@ import ProjectModal from "../components/ProjectModal.astro";
           </h3>
 
           <p>
-            Use a postcode or current
-            location to find nearby
-            supermarkets, calculate
-            distance and display the
-            results on an interactive map.
+            Use a postcode or current location
+            to find nearby supermarkets through
+            the <strong>Photon API</strong>.
+            Distances are calculated using
+            <strong>geodesic distance</strong>
+            and displayed on an interactive
+            <strong>Folium map</strong>.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <span>
+            05
+          </span>
+
+          <h3>
+            AI assistance
+          </h3>
+
+          <p>
+            Receipt connects to an
+            <strong>LLM through the Groq API</strong>
+            so users can describe a meal or request
+            shopping suggestions using natural language.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <span>
+            06
+          </span>
+
+          <h3>
+            Data visualisation
+          </h3>
+
+          <p>
+            <strong>Plotly</strong> charts expose
+            price distributions, supermarket
+            comparisons, weekly inflation and
+            historical price trends directly
+            inside the application.
           </p>
         </article>
       </div>
@@ -406,10 +429,12 @@ import ProjectModal from "../components/ProjectModal.astro";
 
       <div class="exploration-grid">
         <figure class="exploration-item">
-          <img
-            src="/images/projects/receipt-pics/receipt-product-wordcloud.jpg"
-            alt="Word cloud generated from supermarket product names"
-          />
+          <div class="exploration-image visual-hover">
+            <img
+              src="/images/projects/receipt-pics/receipt-product-wordcloud.jpg"
+              alt="Word cloud generated from supermarket product names"
+            />
+          </div>
 
           <figcaption>
             Product-name exploration across
@@ -418,10 +443,12 @@ import ProjectModal from "../components/ProjectModal.astro";
         </figure>
 
         <figure class="exploration-item">
-          <img
-            src="/images/projects/receipt-pics/receipt-average-price-by-store.jpg"
-            alt="Average supermarket price comparison chart"
-          />
+          <div class="exploration-image visual-hover">
+            <img
+              src="/images/projects/receipt-pics/receipt-average-price-by-store.jpg"
+              alt="Average supermarket price comparison chart"
+            />
+          </div>
 
           <figcaption>
             Comparing average prices across
@@ -451,13 +478,15 @@ import ProjectModal from "../components/ProjectModal.astro";
         </h2>
 
         <p>
-          I explored more complex
-          forecasting approaches including
-          LSTM and XGBoost, but the available
-          historical data did not justify
-          higher-capacity models. ARIMA was
-          a better fit for the data available
-          at the time.
+          I explored more complex forecasting
+          approaches including
+          <strong>LSTM</strong> and
+          <strong>XGBoost</strong>, but the
+          available historical data did not
+          justify higher-capacity models.
+          <strong>ARIMA</strong> was a better
+          fit for the dataset available at
+          the time.
         </p>
       </div>
     </section>
@@ -507,6 +536,11 @@ import ProjectModal from "../components/ProjectModal.astro";
     color: #111111;
   }
 
+  .receipt-project strong {
+    font-weight: 700;
+    color: #111111;
+  }
+
   /* =========================
      HERO
      ========================= */
@@ -541,26 +575,6 @@ import ProjectModal from "../components/ProjectModal.astro";
     color: #777777;
   }
 
-  .receipt-logo-wrap {
-    width: 110px;
-    height: 110px;
-
-    margin-bottom: 30px;
-
-    overflow: hidden;
-
-    border-radius: 50%;
-  }
-
-  .receipt-logo-wrap img {
-    display: block;
-
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-  }
-
   .project-hero h1 {
     margin: 0;
 
@@ -588,19 +602,23 @@ import ProjectModal from "../components/ProjectModal.astro";
     display: flex;
     flex-wrap: wrap;
 
-    gap: 8px;
+    gap: 10px;
 
-    margin-top: 8px;
+    max-width: 1050px;
+
+    margin-top: 14px;
   }
 
   .project-meta span {
-    padding: 7px 10px;
+    padding: 10px 14px;
 
-    border: 1px solid rgba(17, 17, 17, 0.18);
+    border: 1px solid rgba(17, 17, 17, 0.2);
     border-radius: 999px;
 
     font-family: "Courier Prime", monospace;
-    font-size: 0.62rem;
+    font-size: 0.72rem;
+
+    letter-spacing: 0.025em;
   }
 
   .project-actions {
@@ -746,64 +764,6 @@ import ProjectModal from "../components/ProjectModal.astro";
   }
 
   /* =========================
-     PIPELINE VISUAL
-     ========================= */
-
-  .pipeline-visual {
-    padding: 0 70px 130px;
-  }
-
-  .pipeline-heading {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-
-    gap: 30px;
-
-    margin-bottom: 24px;
-  }
-
-  .pipeline-heading span {
-    font-family: "Courier Prime", monospace;
-    font-size: 0.68rem;
-
-    letter-spacing: 0.08em;
-
-    color: #777777;
-  }
-
-  .pipeline-heading p {
-    max-width: 500px;
-
-    margin: 0;
-
-    font-family: "Instrument Serif", serif;
-    font-size: 1.8rem;
-
-    line-height: 1;
-
-    text-align: right;
-  }
-
-  .pipeline-image {
-    overflow: hidden;
-
-    padding: 30px;
-
-    border: 1px solid rgba(17, 17, 17, 0.14);
-    border-radius: 18px;
-
-    background: #ffffff;
-  }
-
-  .pipeline-image img {
-    display: block;
-
-    width: 100%;
-    height: auto;
-  }
-
-  /* =========================
      SECTION HEADINGS
      ========================= */
 
@@ -889,6 +849,8 @@ import ProjectModal from "../components/ProjectModal.astro";
     font-size: 1.6rem;
 
     font-weight: 400;
+
+    color: #f5f4f1;
   }
 
   .architecture-node small {
@@ -956,6 +918,10 @@ import ProjectModal from "../components/ProjectModal.astro";
     color: #aaaaaa;
   }
 
+  .scraping-detail-text strong {
+    color: #ffffff;
+  }
+
   .scraping-detail-image {
     overflow: hidden;
 
@@ -967,11 +933,26 @@ import ProjectModal from "../components/ProjectModal.astro";
     background: #ffffff;
   }
 
-  .scraping-detail-image img {
+  /* =========================
+     IMAGE HOVER
+     ========================= */
+
+  .visual-hover {
+    overflow: hidden;
+  }
+
+  .visual-hover img {
     display: block;
 
     width: 100%;
     height: auto;
+
+    transition:
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .visual-hover:hover img {
+    transform: scale(1.045);
   }
 
   /* =========================
@@ -1055,14 +1036,13 @@ import ProjectModal from "../components/ProjectModal.astro";
     margin: 0;
   }
 
-  .exploration-item img {
-    display: block;
-
-    width: 100%;
-    height: auto;
-
+  .exploration-image {
     border: 1px solid rgba(17, 17, 17, 0.12);
     border-radius: 16px;
+  }
+
+  .exploration-image img {
+    border-radius: inherit;
   }
 
   .exploration-item figcaption {
@@ -1151,13 +1131,6 @@ import ProjectModal from "../components/ProjectModal.astro";
       padding: 90px 20px 36px;
     }
 
-    .receipt-logo-wrap {
-      width: 82px;
-      height: 82px;
-
-      margin-bottom: 24px;
-    }
-
     .project-hero-top {
       top: 20px;
       left: 20px;
@@ -1177,13 +1150,13 @@ import ProjectModal from "../components/ProjectModal.astro";
     }
 
     .project-meta {
-      gap: 6px;
+      gap: 7px;
     }
 
     .project-meta span {
-      padding: 6px 8px;
+      padding: 8px 10px;
 
-      font-size: 0.55rem;
+      font-size: 0.62rem;
     }
 
     .demo-section {
@@ -1202,33 +1175,6 @@ import ProjectModal from "../components/ProjectModal.astro";
       gap: 60px;
 
       padding: 20px 20px 90px;
-    }
-
-    .pipeline-visual {
-      padding: 0 20px 90px;
-    }
-
-    .pipeline-heading {
-      display: block;
-    }
-
-    .pipeline-heading p {
-      margin-top: 10px;
-
-      font-size: 1.5rem;
-
-      text-align: left;
-    }
-
-    .pipeline-image {
-      overflow-x: auto;
-
-      padding: 12px;
-    }
-
-    .pipeline-image img {
-      width: 850px;
-      max-width: none;
     }
 
     .architecture-section,
@@ -1298,16 +1244,21 @@ import ProjectModal from "../components/ProjectModal.astro";
     .project-ending h2 {
       font-size: clamp(3.5rem, 17vw, 5.5rem);
     }
+
+    .visual-hover:hover img {
+      transform: none;
+    }
   }
 
-  /* =========================
-     REDUCED MOTION
-     ========================= */
-
   @media (prefers-reduced-motion: reduce) {
+    .visual-hover img,
     .project-actions a,
     .project-ending-links a {
       transition: none;
+    }
+
+    .visual-hover:hover img {
+      transform: none;
     }
   }
 </style>
