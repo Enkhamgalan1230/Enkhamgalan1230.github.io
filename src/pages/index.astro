@@ -1,6 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ReceiptProject
+  from "../projects/ReceiptProject.astro";
+
 ---
+
 
 <BaseLayout title="Entwan's Portfolio">
   <section class="hero">
@@ -31,14 +35,35 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       </div>
 
       <div class="project-cards">
-        <a class="project-card" href="/projects">
-          <div class="project-card-image placeholder-one"></div>
+        <button
+          class="project-card"
+          type="button"
+          data-project-open="receipt-project"
+          aria-label="Open Receipt project"
+        >
+          <div
+            class="project-card-image placeholder-one"
+          >
+            <div class="receipt-card-content">
+              <span>
+                AI / DATA / FULL STACK
+              </span>
+
+              <strong>
+                Receipt
+              </strong>
+
+              <small>
+                Smart grocery budgeting
+              </small>
+            </div>
+          </div>
 
           <div class="project-card-footer">
-            <span>Project Alpha</span>
+            <span>Receipt</span>
             <span>01</span>
           </div>
-        </a>
+        </button>
 
         <a class="project-card" href="/projects">
           <div class="project-card-image placeholder-two"></div>
@@ -78,6 +103,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       </div>
     </div>
   </section>
+  <ReceiptProject />
 </BaseLayout>
 
 <script>
@@ -498,6 +524,71 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     font-size: 0.72rem;
 
     color: #111111;
+  }
+
+  .project-card {
+    appearance: none;
+
+    width: 100%;
+
+    padding: 0;
+
+    text-align: left;
+
+    color: inherit;
+
+    cursor: pointer;
+  }
+
+  .receipt-card-content {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 18px;
+
+    color: #111111;
+  }
+
+  .receipt-card-content span {
+    font-family:
+      "Courier Prime",
+      monospace;
+
+    font-size: 0.52rem;
+
+    letter-spacing: 0.06em;
+  }
+
+  .receipt-card-content strong {
+    margin-top: auto;
+
+    font-family:
+      "Instrument Serif",
+      serif;
+
+    font-size:
+      clamp(
+        2.3rem,
+        3vw,
+        4rem
+      );
+
+    font-weight: 400;
+
+    line-height: 0.9;
+  }
+
+  .receipt-card-content small {
+    margin-top: 8px;
+
+    font-family:
+      "Courier Prime",
+      monospace;
+
+    font-size: 0.58rem;
   }
 
   /* =========================
