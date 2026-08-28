@@ -26,24 +26,16 @@ import ProjectModal from "../components/ProjectModal.astro";
       </p>
 
       <div class="project-meta">
-        <span>PYTHON</span>
-        <span>STREAMLIT</span>
+        <span class="meta-accent">PYTHON</span>
+        <span class="meta-accent">STREAMLIT</span>
         <span>SUPABASE</span>
         <span>POSTGRESQL</span>
         <span>SELENIUM</span>
         <span>NLP</span>
-        <span>SPACY</span>
         <span>SENTENCE TRANSFORMERS</span>
-        <span>ARIMA</span>
-        <span>LLM</span>
+        <span class="meta-accent">ARIMA</span>
         <span>GROQ API</span>
-        <span>PHOTON API</span>
-        <span>FOLIUM</span>
         <span>PLOTLY</span>
-        <span>WEB SCRAPING</span>
-        <span>DATA CLEANING</span>
-        <span>DATA VISUALISATION</span>
-        <span>SEMANTIC SEARCH</span>
       </div>
 
       <div class="project-actions">
@@ -601,24 +593,46 @@ import ProjectModal from "../components/ProjectModal.astro";
   .project-meta {
     display: flex;
     flex-wrap: wrap;
+    gap: 9px;
 
-    gap: 10px;
+    max-width: 950px;
 
-    max-width: 1050px;
-
-    margin-top: 14px;
+    margin-top: 18px;
   }
 
   .project-meta span {
-    padding: 10px 14px;
+    padding: 9px 13px;
 
-    border: 1px solid rgba(17, 17, 17, 0.2);
+    border:
+      1px solid
+      rgba(17, 17, 17, 0.16);
+
     border-radius: 999px;
 
-    font-family: "Courier Prime", monospace;
-    font-size: 0.72rem;
+    background:
+      rgba(255, 255, 255, 0.28);
+
+    font-family:
+      "Courier Prime",
+      monospace;
+
+    font-size: 0.68rem;
+
+    font-weight: 400;
 
     letter-spacing: 0.025em;
+
+    color: #333333;
+  }
+
+  .project-meta .meta-accent {
+    border-color:
+      rgba(77, 118, 87, 0.4);
+
+    background:
+      rgba(77, 118, 87, 0.1);
+
+    color: #36533d;
   }
 
   .project-actions {
