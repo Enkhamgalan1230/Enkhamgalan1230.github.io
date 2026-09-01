@@ -43,6 +43,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
         <h2>
           Some things I've built.
         </h2>
+
       </div>
 
       <!-- =========================
@@ -84,7 +85,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
                     muted
                     loop
                     playsinline
-                    preload="auto"
+                    preload="metadata"
                     aria-hidden="true"
                   >
                     <source
@@ -458,7 +459,63 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
           →
         </button>
 
+        <a
+          class="projects-scroll-cue"
+          href="#head-prompt"
+        >
+          <span>SCROLL TO EXPLORE</span>
+          <span class="scroll-arrow" aria-hidden="true">&#x2193;</span>
+        </a>
+
       </div>
+    </div>
+  </section>
+
+  <section
+    class="head-prompt"
+    id="head-prompt"
+    aria-labelledby="head-prompt-title"
+  >
+    <p class="head-prompt-label">BY THE WAY &#x1F447;</p>
+
+    <h2 id="head-prompt-title">
+      Did you click on that
+      <span class="head-prompt-yet">
+        <img
+          class="head-prompt-face"
+          src="/images/faces/straight-main.png"
+          alt=""
+          aria-hidden="true"
+        />
+        yet?
+      </span>
+    </h2>
+
+    <div class="head-prompt-actions">
+      <button
+        class="head-prompt-button head-prompt-button-muted"
+        type="button"
+        data-head-not-yet
+      >
+        Not yet
+      </button>
+
+      <button
+        class="head-prompt-button"
+        type="button"
+        data-head-did-it
+      >
+        Yeah I did
+      </button>
+    </div>
+
+    <div
+      class="head-toast"
+      data-head-toast
+      role="status"
+      aria-live="polite"
+    >
+      NICE TO MEET YOU IN THAT CASE :3
     </div>
   </section>
 
@@ -468,6 +525,99 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
 
 <script>
+  const notYetButton =
+    document.querySelector<HTMLButtonElement>(
+      "[data-head-not-yet]"
+    );
+
+  const didItButton =
+    document.querySelector<HTMLButtonElement>(
+      "[data-head-did-it]"
+    );
+
+  let toastTimer: number | undefined;
+
+  function showHeadToast() {
+    const toast =
+      document.querySelector<HTMLElement>(
+        "[data-head-toast]"
+      );
+
+    if (!toast) return;
+
+    window.clearTimeout(toastTimer);
+    toast.classList.remove("is-visible");
+
+    requestAnimationFrame(() => {
+      toast?.classList.add("is-visible");
+    });
+
+    toastTimer = window.setTimeout(() => {
+      toast?.classList.remove("is-visible");
+    }, 3200);
+  }
+
+  notYetButton?.addEventListener("click", () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  });
+
+  didItButton?.addEventListener("click", showHeadToast);
+
+  const promptFace =
+    document.querySelector<HTMLImageElement>(
+      ".head-prompt-face"
+    );
+
+  const promptFaceFrames = [
+    { src: "/images/faces/straight-main.png", duration: 80 },
+    { src: "/images/faces/left-transition.png", duration: 90 },
+    { src: "/images/faces/left-main.png", duration: 240 },
+    { src: "/images/faces/left-transition.png", duration: 90 },
+    { src: "/images/faces/straight-main.png", duration: 120 },
+    { src: "/images/faces/right-transition.png", duration: 90 },
+    { src: "/images/faces/right-main.png", duration: 240 },
+    { src: "/images/faces/right-transition.png", duration: 90 },
+    { src: "/images/faces/straight-main.png", duration: 0 },
+  ];
+
+  let promptFacePlaying = false;
+
+  promptFaceFrames.forEach(({ src }) => {
+    const image = new Image();
+    image.src = src;
+  });
+
+  async function playPromptFace() {
+    if (
+      !promptFace ||
+      promptFacePlaying ||
+      document.hidden ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+
+    promptFacePlaying = true;
+
+    try {
+      for (const frame of promptFaceFrames) {
+        promptFace.src = frame.src;
+
+        if (frame.duration > 0) {
+          await wait(frame.duration);
+        }
+      }
+    } finally {
+      promptFace.src = "/images/faces/straight-main.png";
+      promptFacePlaying = false;
+    }
+  }
+
+  window.setInterval(playPromptFace, 6000);
+
   /* =========================
      TYPEWRITER
      ========================= */
@@ -598,6 +748,125 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
 
   /* =========================
+     SCROLL TRANSITION
+     ========================= */
+
+  const hero =
+    document.querySelector<HTMLElement>(
+      ".hero"
+    );
+
+  const scrollCue =
+    document.querySelector<HTMLAnchorElement>(
+      ".scroll-cue"
+    );
+
+  const projectsSection =
+    document.querySelector<HTMLElement>(
+      ".projects-section"
+    );
+
+  const headPrompt =
+    document.querySelector<HTMLElement>(
+      "#head-prompt"
+    );
+
+  let scrollFrame: number | undefined;
+
+  function updateScrollTransition() {
+    scrollFrame = undefined;
+
+    if (hero) {
+      const fadeStart = 90;
+      const fadeDistance = Math.max(
+        hero.offsetHeight * 0.9,
+        620
+      );
+
+      const fade = Math.min(
+        Math.max(
+          (window.scrollY - fadeStart) /
+            fadeDistance,
+          0
+        ),
+        1
+      );
+
+      hero.style.setProperty(
+        "--hero-fade",
+        fade.toFixed(3)
+      );
+    }
+
+    if (!scrollCue || !hero || !headPrompt) {
+      return;
+    }
+
+    const promptTop =
+      headPrompt.getBoundingClientRect().top;
+
+    const promptFade = Math.min(
+      Math.max(
+        (window.innerHeight * 0.95 - promptTop) /
+          (window.innerHeight * 0.75),
+        0
+      ),
+      1
+    );
+
+    headPrompt.style.setProperty(
+      "--prompt-fade",
+      promptFade.toFixed(3)
+    );
+
+    projectsSection?.style.setProperty(
+      "--projects-fade",
+      (1 - promptFade).toFixed(3)
+    );
+
+    const heroHasPassed =
+      hero.getBoundingClientRect().bottom <= 0;
+
+    const promptIsVisible =
+      promptTop <=
+      window.innerHeight * 0.72;
+
+    const shouldFloat =
+      heroHasPassed && !promptIsVisible;
+
+    scrollCue.classList.toggle(
+      "is-floating",
+      shouldFloat
+    );
+
+    scrollCue.href = shouldFloat
+      ? "#head-prompt"
+      : "#projects";
+  }
+
+  function requestScrollTransition() {
+    if (scrollFrame !== undefined) return;
+
+    scrollFrame = window.requestAnimationFrame(
+      updateScrollTransition
+    );
+  }
+
+  window.addEventListener(
+    "scroll",
+    requestScrollTransition,
+    { passive: true }
+  );
+
+  window.addEventListener(
+    "resize",
+    requestScrollTransition
+  );
+
+  requestScrollTransition();
+
+
+  /* =========================
      PROJECT CAROUSEL
      ========================= */
 
@@ -627,6 +896,12 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
           ".carousel-item"
         )
       );
+
+    const videos = items.map((item) =>
+      item.querySelector<HTMLVideoElement>(
+        ".project-video-background video"
+      )
+    );
 
     /*
       Position numbers.
@@ -768,6 +1043,11 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
               ? "auto"
               : "none";
 
+          item.classList.toggle(
+            "is-visible",
+            visible
+          );
+
           item.setAttribute(
             "aria-hidden",
             visible
@@ -776,6 +1056,43 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
           );
         }
       );
+
+      updateVideoPlayback(visibleCount);
+    }
+
+    /*
+      Video backgrounds are the most expensive part of
+      the carousel. Keep only a small number playing and
+      pause everything that is outside the viewport.
+    */
+    function updateVideoPlayback(
+      visibleCount: number
+    ) {
+      const maxPlayingVideos =
+        window.innerWidth <= 640
+          ? 1
+          : 3;
+
+      let playingVideos = 0;
+
+      videos.forEach((video, index) => {
+        if (!video) return;
+
+        const shouldPlay =
+          positions[index] >= 0 &&
+          positions[index] < visibleCount &&
+          playingVideos < maxPlayingVideos;
+
+        if (shouldPlay) {
+          playingVideos += 1;
+
+          video.play().catch(() => {
+            // Autoplay can be unavailable in some browsers.
+          });
+        } else {
+          video.pause();
+        }
+      });
     }
 
     /* =========================
@@ -975,12 +1292,44 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     padding: 24px;
 
     overflow: hidden;
+
+    isolation: isolate;
+
+    background: #edecea;
+  }
+
+  /*
+    A quiet dot grid gives the hero texture while keeping
+    the negative space and typography in control.
+  */
+
+  .hero::before {
+    position: absolute;
+    inset: 0;
+
+    content: "";
+    pointer-events: none;
+    z-index: 0;
+
+    background-image:
+      radial-gradient(
+        circle,
+        rgba(17, 17, 17, 0.17) 1.25px,
+        transparent 1.5px
+      );
+    background-size: 30px 30px;
+
+    opacity: calc(1 - var(--hero-fade, 0));
   }
 
   .hero-content {
     position: relative;
 
     z-index: 1;
+
+    opacity: calc(1 - var(--hero-fade, 0));
+
+    will-change: opacity;
 
     width:
       min(
@@ -1123,12 +1472,197 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       2.8s
       ease-in-out
       infinite;
+
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .scroll-cue.is-floating {
+    position: fixed;
+
+    right: 24px;
+    bottom: 24px;
+    left: auto;
+
+    animation: none;
+
+    transform: none;
   }
 
   .scroll-arrow {
     color: #4d7657;
 
     font-size: 0.9rem;
+  }
+
+  .projects-scroll-cue {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    width: max-content;
+    margin: 24px auto 0;
+    padding: 8px 13px;
+
+    border: 1px solid rgba(17, 17, 17, 0.22);
+    border-radius: 999px;
+
+    background: rgba(237, 236, 234, 0.72);
+
+    font-family: "Courier Prime", monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .projects-scroll-cue:hover {
+    transform: translateY(2px);
+    border-color: #4d7657;
+    background: rgba(77, 118, 87, 0.08);
+  }
+
+  /* =========================
+     HEAD PROMPT
+     ========================= */
+
+  .head-prompt {
+    min-height: calc(100vh - 80px);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 88px 24px 112px;
+
+    text-align: center;
+
+    background: #edecea;
+
+    opacity: var(--prompt-fade, 0);
+
+    transition: opacity 0.18s linear;
+
+    will-change: opacity;
+  }
+
+  .head-prompt-label {
+    margin: 0 0 14px;
+
+    font-family: "Courier Prime", monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: #777777;
+  }
+
+  .head-prompt h2 {
+    margin: 0;
+
+    font-family: "Instrument Serif", serif;
+    font-size: clamp(3rem, 5.4vw, 5.5rem);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+
+    animation:
+      head-prompt-float
+      4.8s
+      ease-in-out
+      infinite;
+  }
+
+  .head-prompt-yet {
+    white-space: nowrap;
+  }
+
+  .head-prompt-face {
+    display: inline-block;
+
+    width: 1em;
+    height: 1em;
+
+    margin: 0 0.08em;
+
+    object-fit: contain;
+    vertical-align: -0.12em;
+  }
+
+  .head-prompt-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .head-prompt-button {
+    padding: 11px 16px;
+
+    border: 1px solid rgba(17, 17, 17, 0.22);
+    border-radius: 999px;
+
+    background: #4d7657;
+    color: #ffffff;
+
+    font-family: "Courier Prime", monospace;
+    font-size: 0.76rem;
+    cursor: pointer;
+
+    transition:
+      transform 0.2s ease,
+      background 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .head-prompt-button-muted {
+    background: transparent;
+    color: #333333;
+  }
+
+  .head-prompt-button:hover {
+    transform: translateY(-2px);
+    border-color: #4d7657;
+  }
+
+  .head-prompt-button-muted:hover {
+    background: rgba(77, 118, 87, 0.08);
+  }
+
+  .head-toast {
+    position: fixed;
+    top: 22px;
+    right: 22px;
+    z-index: 10000;
+
+    max-width: min(330px, calc(100vw - 44px));
+    padding: 13px 16px;
+
+    border: 1px solid rgba(17, 17, 17, 0.12);
+    border-radius: 10px;
+
+    background: #111111;
+    color: #ffffff;
+
+    font-family: "Courier Prime", monospace;
+    font-size: 0.74rem;
+    line-height: 1.4;
+
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .head-toast.is-visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   /* =========================
@@ -1147,6 +1681,12 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       130px;
 
     background: #edecea;
+
+    opacity: var(--projects-fade, 1);
+
+    transition: opacity 0.18s linear;
+
+    will-change: opacity;
 
     overflow: hidden;
   }
@@ -1271,8 +1811,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     top: 0;
     left: 0;
 
-    will-change:
-      transform;
+    will-change: auto;
 
     transform:
       translate3d(
@@ -1280,6 +1819,14 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
         0,
         0
       );
+  }
+
+  .carousel-item:not(.is-visible) .project-card {
+    animation-play-state: paused;
+  }
+
+  .carousel-item.is-visible {
+    will-change: transform;
   }
 
   /* =========================
@@ -1301,6 +1848,10 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     padding: 0;
 
     overflow: hidden;
+
+    contain: layout paint;
+
+    backface-visibility: hidden;
 
     appearance: none;
 
@@ -1350,6 +1901,9 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       0.28s ease,
 
       border-color
+      0.28s ease,
+
+      scale
       0.28s ease;
   }
 
@@ -1407,26 +1961,30 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       -2.2s;
   }
 
-  .project-card:hover {
-    animation-play-state:
-      paused;
+  @media (hover: hover) and (pointer: fine) {
+    .project-card:hover {
+      scale: 1.035;
 
-    border-color:
-      rgba(
-        77,
-        118,
-        87,
-        0.4
-      );
+      animation-play-state:
+        paused;
 
-    box-shadow:
-      0 22px 44px
-      rgba(
-        17,
-        17,
-        17,
-        0.12
-      );
+      border-color:
+        rgba(
+          77,
+          118,
+          87,
+          0.4
+        );
+
+      box-shadow:
+        0 22px 44px
+        rgba(
+          17,
+          17,
+          17,
+          0.12
+        );
+    }
   }
 
   .project-card-image {
@@ -1580,6 +2138,8 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     filter: none;
 
     transform: none;
+
+    contain: strict;
   }
 
   /* =========================
@@ -1766,6 +2326,17 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
      ANIMATIONS
      ========================= */
 
+  @keyframes head-prompt-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-7px);
+    }
+  }
+
   @keyframes float-scroll-cue {
     0%,
     100% {
@@ -1928,7 +2499,21 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       padding:
         80px
         20px
-        100px;
+      100px;
+    }
+
+    .head-prompt {
+      min-height: calc(100dvh - 80px);
+
+      padding: 72px 20px 90px;
+    }
+
+    .head-prompt h2 {
+      font-size: clamp(2.8rem, 13vw, 4.2rem);
+    }
+
+    .head-prompt-actions {
+      flex-wrap: wrap;
     }
 
     .projects-heading {
@@ -2010,8 +2595,11 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
     .scroll-cue,
     .cursor,
-    .project-card {
+    .project-card,
+    .head-prompt h2 {
       animation: none;
+
+      transition: none;
     }
 
     .projects-inner {
@@ -2022,12 +2610,23 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       transition: none;
     }
 
+    .projects-section,
+    .head-prompt {
+      transition: none;
+    }
+
     .project-card {
       translate: none;
       rotate: none;
     }
 
     .carousel-button {
+      transition: none;
+    }
+
+    .head-prompt-button,
+    .head-toast,
+    .projects-scroll-cue {
       transition: none;
     }
 
