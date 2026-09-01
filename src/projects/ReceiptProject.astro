@@ -408,97 +408,6 @@ import ProjectModal from "../components/ProjectModal.astro";
     </section>
 
     <!-- =========================
-         DATA EXPLORATION
-         ========================= -->
-
-    <section class="data-exploration">
-      <div class="section-heading">
-        <span>
-          DATA EXPLORATION
-        </span>
-
-        <h2>
-          Before making predictions,
-          I had to understand the data.
-        </h2>
-      </div>
-
-      <div class="exploration-grid">
-
-        <figure class="exploration-item">
-          <div class="exploration-image visual-hover">
-            <img
-              src="/images/projects/receipt-pics/receipt-product-wordcloud.jpg"
-              alt="Word cloud generated from supermarket product names"
-            />
-          </div>
-
-          <figcaption>
-            Exploring recurring language and product
-            patterns across the collected supermarket
-            catalogue.
-          </figcaption>
-        </figure>
-
-        <figure class="exploration-item">
-          <div class="exploration-image visual-hover">
-            <img
-              src="/images/projects/receipt-pics/receipt-average-price-by-store.jpg"
-              alt="Average supermarket price comparison chart"
-            />
-          </div>
-
-          <figcaption>
-            Comparing average listed prices across
-            the five retailer datasets.
-          </figcaption>
-        </figure>
-
-      </div>
-    </section>
-
-    <!-- =========================
-         MODEL DECISION
-         ========================= -->
-
-    <section class="decision-section">
-      <span class="section-number">
-        03
-      </span>
-
-      <div>
-        <p class="decision-label">
-          MODEL SELECTION
-        </p>
-
-        <h2>
-          Complexity has to
-          earn its place.
-        </h2>
-
-        <p>
-          I evaluated <strong>LSTM</strong> and
-          <strong>XGBoost</strong> alongside
-          <strong>ARIMA</strong>. The available
-          historical series was too limited to support
-          higher-capacity models reliably, so ARIMA
-          offered the most defensible balance of
-          interpretability, data requirements and
-          short-term forecasting capability.
-        </p>
-
-        <p class="testing-note">
-          The wider application was also assessed
-          through documented black-box testing
-          covering authentication, invalid inputs,
-          list management, comparison tools,
-          forecasting, store search and session
-          behaviour.
-        </p>
-      </div>
-    </section>
-
-    <!-- =========================
          END
          ========================= -->
 
@@ -516,6 +425,11 @@ import ProjectModal from "../components/ProjectModal.astro";
       <p class="ending-supporting">
         Designed, engineered and deployed
         from data collection to user experience.
+      </p>
+
+      <p class="case-study-note">
+        Full case study, including technical decisions
+        and testing, available upon request.
       </p>
 
       <div class="project-ending-links">
@@ -543,6 +457,35 @@ import ProjectModal from "../components/ProjectModal.astro";
 <style>
   .receipt-project {
     width: 100%;
+
+    background:
+      radial-gradient(
+        circle at 8% 8%,
+        #E5D5D2 0%,
+        transparent 34%
+      ),
+      radial-gradient(
+        circle at 94% 18%,
+        #93788F 0%,
+        transparent 32%
+      ),
+      radial-gradient(
+        circle at 72% 74%,
+        #B398A8 0%,
+        transparent 38%
+      ),
+      radial-gradient(
+        circle at 18% 88%,
+        #745973 0%,
+        transparent 30%
+      ),
+      linear-gradient(
+        135deg,
+        #D6C3C7 0%,
+        #C7B1BA 48%,
+        #D6C3C7 100%
+      );
+
     color: #111111;
   }
 
@@ -796,8 +739,8 @@ import ProjectModal from "../components/ProjectModal.astro";
     background:
       linear-gradient(
         145deg,
-        #d6ded7,
-        #a9bbaa
+        #E5D5D2,
+        #D6C3C7
       );
   }
 
@@ -964,14 +907,20 @@ import ProjectModal from "../components/ProjectModal.astro";
     padding:
       110px 70px;
 
-    background: #111111;
+    background:
+      linear-gradient(
+        135deg,
+        #403640 0%,
+        #594957 52%,
+        #745973 100%
+      );
 
-    color: #f5f4f1;
+    color: #F7F0F0;
   }
 
   .architecture-section
     .section-heading > span {
-    color: #8a8a8a;
+    color: #D6C3C7;
   }
 
   .architecture-flow {
@@ -1058,7 +1007,7 @@ import ProjectModal from "../components/ProjectModal.astro";
 
     font-size: 1rem;
 
-    color: #4d7657;
+    color: #D6C3C7;
   }
 
   /* =========================
@@ -1184,7 +1133,7 @@ import ProjectModal from "../components/ProjectModal.astro";
 
     border-radius: 16px;
 
-    background: #ffffff;
+    background: #E5D5D2;
   }
 
   /* =========================
@@ -1224,6 +1173,8 @@ import ProjectModal from "../components/ProjectModal.astro";
   .features-section {
     padding:
       130px 70px;
+
+    background: rgba(247, 246, 244, 0.42);
   }
 
   .feature-grid {
@@ -1256,6 +1207,8 @@ import ProjectModal from "../components/ProjectModal.astro";
       );
 
     border-radius: 18px;
+
+    background: rgba(247, 246, 244, 0.72);
 
     transition:
       transform 0.25s ease,
@@ -1471,6 +1424,8 @@ import ProjectModal from "../components/ProjectModal.astro";
 
     padding:
       120px 70px;
+
+    background: rgba(247, 246, 244, 0.58);
   }
 
   .ending-label {
@@ -1482,7 +1437,7 @@ import ProjectModal from "../components/ProjectModal.astro";
 
     font-size: 0.76rem;
 
-    color: #777777;
+    color: #332b32;
   }
 
   .project-ending h2 {
@@ -1515,7 +1470,27 @@ import ProjectModal from "../components/ProjectModal.astro";
 
     line-height: 1.55;
 
-    color: #666666;
+    color: #403840;
+  }
+
+  .feature-card:nth-child(even) {
+    background: rgba(214, 195, 199, 0.68);
+  }
+
+  .case-study-note {
+    max-width: 600px;
+
+    margin: -22px 0 34px;
+
+    font-family:
+      "Courier Prime",
+      monospace;
+
+    font-size: 0.78rem;
+
+    line-height: 1.5;
+
+    color: #4b4149;
   }
 
   .project-ending-links {
