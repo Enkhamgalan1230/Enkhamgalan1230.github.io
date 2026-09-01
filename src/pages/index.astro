@@ -515,7 +515,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       role="status"
       aria-live="polite"
     >
-      NICE TO MEET YOU IN THAT CASE :3
+      NICE TO MEET YOU IN THAT CASE &#x1F91D;
     </div>
   </section>
 
@@ -1641,11 +1641,13 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     max-width: min(330px, calc(100vw - 44px));
     padding: 13px 16px;
 
-    border: 1px solid rgba(17, 17, 17, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
 
-    background: #111111;
+    background: linear-gradient(135deg, #4d7657, #628b6b);
     color: #ffffff;
+
+    box-shadow: 0 12px 30px rgba(77, 118, 87, 0.24);
 
     font-family: "Courier Prime", monospace;
     font-size: 0.74rem;
@@ -2004,7 +2006,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
   .carousel-button {
     position: absolute;
 
-    top: 50%;
+    top: calc((100% - 56px) / 2);
 
     z-index: 20;
 
@@ -2073,12 +2075,14 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       border-color 0.2s ease;
   }
 
-  .carousel-button:hover {
-    background: #4d7657;
+  @media (hover: hover) and (pointer: fine) {
+    .carousel-button:hover {
+      background: #4d7657;
 
-    border-color: #4d7657;
+      border-color: #4d7657;
 
-    color: #ffffff;
+      color: #ffffff;
+    }
   }
 
   .carousel-button:active {
