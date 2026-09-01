@@ -45,95 +45,418 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
         </h2>
       </div>
 
-      <div class="project-cards">
+      <!-- =========================
+           CAROUSEL
+           ========================= -->
 
-        <!-- RECEIPT -->
+      <div class="projects-carousel">
 
         <button
-          class="project-card project-card-receipt"
+          class="carousel-button carousel-button-left"
           type="button"
-          data-project-open="receipt-project"
-          aria-label="Open Receipt project"
+          aria-label="Previous projects"
+          data-carousel-prev
         >
-          <div class="receipt-card-background">
-            <img
-              src="/gifs/reciept.gif"
-              alt=""
-              aria-hidden="true"
-            />
-
-            <div class="receipt-card-overlay"></div>
-          </div>
-
-          <div class="project-card-image">
-            <div class="receipt-card-content">
-
-              <span class="receipt-card-type">
-                AI / DATA / FULL STACK
-              </span>
-
-              <div class="receipt-card-main">
-                <strong>
-                  Receipt
-                </strong>
-
-                <small>
-                  Smart grocery budgeting
-                </small>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="project-card-footer receipt-card-footer">
-            <span>Receipt</span>
-            <span>01</span>
-          </div>
+          ←
         </button>
 
-        <!-- PROJECT 2 -->
+        <div class="projects-viewport">
 
-        <a class="project-card" href="/projects">
-          <div class="project-card-image placeholder-two"></div>
+          <div
+            class="project-cards"
+            data-project-track
+          >
 
-          <div class="project-card-footer">
-            <span>Project Beta</span>
-            <span>02</span>
+            <!-- =========================
+                 01 RECEIPT
+                 ========================= -->
+
+            <div class="carousel-item">
+              <button
+                class="project-card project-card-video"
+                type="button"
+                data-project-open="receipt-project"
+                aria-label="Open Receipt project"
+              >
+                <div class="project-video-background">
+                  <video
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="auto"
+                    aria-hidden="true"
+                  >
+                    <source
+                      src="/videos/patterns/vids/pattern1.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
+                </div>
+
+                <div class="project-card-image">
+                  <div class="video-card-content">
+
+                    <span class="video-card-type">
+                      AI / DATA / FULL STACK
+                    </span>
+
+                    <div class="video-card-main">
+                      <strong>
+                        Receipt
+                      </strong>
+
+                      <small>
+                        Smart grocery budgeting
+                      </small>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="project-card-footer video-card-footer">
+                  <span>Receipt</span>
+                  <span>01</span>
+                </div>
+
+              </button>
+            </div>
+
+            <!-- =========================
+                 02 PLACEHOLDER
+                 ========================= -->
+
+            <div class="carousel-item">
+              <a
+                class="project-card project-card-video"
+                href="/projects"
+                aria-label="Open Project Two"
+              >
+                <div class="project-video-background">
+                  <video
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    aria-hidden="true"
+                  >
+                    <source
+                      src="/videos/patterns/vids/pattern2.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
+                </div>
+
+                <div class="project-card-image">
+                  <div class="video-card-content">
+
+                    <span class="video-card-type">
+                      DATA / AUTOMATION
+                    </span>
+
+                    <div class="video-card-main">
+                      <strong>
+                        Project Two
+                      </strong>
+
+                      <small>
+                        Another useful thing I built
+                      </small>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="project-card-footer video-card-footer">
+                  <span>Project Two</span>
+                  <span>02</span>
+                </div>
+
+              </a>
+            </div>
+
+            <!-- =========================
+                 03 PLACEHOLDER
+                 ========================= -->
+
+            <div class="carousel-item">
+              <a
+                class="project-card project-card-video"
+                href="/projects"
+                aria-label="Open Project Three"
+              >
+                <div class="project-video-background">
+                  <video
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    aria-hidden="true"
+                  >
+                    <source
+                      src="/videos/patterns/vids/pattern3.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
+                </div>
+
+                <div class="project-card-image">
+                  <div class="video-card-content">
+
+                    <span class="video-card-type">
+                      AI / NLP / EXPERIMENT
+                    </span>
+
+                    <div class="video-card-main">
+                      <strong>
+                        Project Three
+                      </strong>
+
+                      <small>
+                        Machines doing clever things
+                      </small>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="project-card-footer video-card-footer">
+                  <span>Project Three</span>
+                  <span>03</span>
+                </div>
+
+              </a>
+            </div>
+
+            <!-- =========================
+                 04 PLACEHOLDER
+                 ========================= -->
+
+            <div class="carousel-item">
+              <a
+                class="project-card project-card-video"
+                href="/projects"
+                aria-label="Open Project Four"
+              >
+                <div class="project-video-background">
+                  <video
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    aria-hidden="true"
+                  >
+                    <source
+                      src="/videos/patterns/vids/pattern4.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
+                </div>
+
+                <div class="project-card-image">
+                  <div class="video-card-content">
+
+                    <span class="video-card-type">
+                      DATA / CLOUD / SYSTEMS
+                    </span>
+
+                    <div class="video-card-main">
+                      <strong>
+                        Project Four
+                      </strong>
+
+                      <small>
+                        Data going somewhere useful
+                      </small>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="project-card-footer video-card-footer">
+                  <span>Project Four</span>
+                  <span>04</span>
+                </div>
+
+              </a>
+            </div>
+
+            <!-- =========================
+                 05 PLACEHOLDER
+                 ========================= -->
+
+            <div class="carousel-item">
+              <a
+                class="project-card project-card-video"
+                href="/projects"
+                aria-label="Open Project Five"
+              >
+                <div class="project-video-background">
+                  <video
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    aria-hidden="true"
+                  >
+                    <source
+                      src="/videos/patterns/vids/pattern5.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
+                </div>
+
+                <div class="project-card-image">
+                  <div class="video-card-content">
+
+                    <span class="video-card-type">
+                      ANALYTICS / VISUALISATION
+                    </span>
+
+                    <div class="video-card-main">
+                      <strong>
+                        Project Five
+                      </strong>
+
+                      <small>
+                        Turning numbers into something useful
+                      </small>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="project-card-footer video-card-footer">
+                  <span>Project Five</span>
+                  <span>05</span>
+                </div>
+
+              </a>
+            </div>
+
+            <!-- =========================
+                 06 PLACEHOLDER
+                 ========================= -->
+
+            <div class="carousel-item">
+              <a
+                class="project-card project-card-video"
+                href="/projects"
+                aria-label="Open Project Six"
+              >
+                <div class="project-video-background">
+                  <video
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    aria-hidden="true"
+                  >
+                    <source
+                      src="/videos/patterns/vids/pattern6.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
+                </div>
+
+                <div class="project-card-image">
+                  <div class="video-card-content">
+
+                    <span class="video-card-type">
+                      PYTHON / DATA / TOOLING
+                    </span>
+
+                    <div class="video-card-main">
+                      <strong>
+                        Project Six
+                      </strong>
+
+                      <small>
+                        Solving another annoying problem
+                      </small>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="project-card-footer video-card-footer">
+                  <span>Project Six</span>
+                  <span>06</span>
+                </div>
+
+              </a>
+            </div>
+
+            <!-- =========================
+                 07 PLACEHOLDER
+                 ========================= -->
+
+            <div class="carousel-item">
+              <a
+                class="project-card project-card-video"
+                href="/projects"
+                aria-label="Open Project Seven"
+              >
+                <div class="project-video-background">
+                  <video
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    aria-hidden="true"
+                  >
+                    <source
+                      src="/videos/patterns/vids/pattern7.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
+                </div>
+
+                <div class="project-card-image">
+                  <div class="video-card-content">
+
+                    <span class="video-card-type">
+                      AI / DATA / SOMETHING COOL
+                    </span>
+
+                    <div class="video-card-main">
+                      <strong>
+                        Project Seven
+                      </strong>
+
+                      <small>
+                        CooooOol things live here
+                      </small>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="project-card-footer video-card-footer">
+                  <span>Project Seven</span>
+                  <span>07</span>
+                </div>
+
+              </a>
+            </div>
+
           </div>
-        </a>
+        </div>
 
-        <!-- PROJECT 3 -->
-
-        <a class="project-card" href="/projects">
-          <div class="project-card-image placeholder-three"></div>
-
-          <div class="project-card-footer">
-            <span>Project Gamma</span>
-            <span>03</span>
-          </div>
-        </a>
-
-        <!-- PROJECT 4 -->
-
-        <a class="project-card" href="/projects">
-          <div class="project-card-image placeholder-four"></div>
-
-          <div class="project-card-footer">
-            <span>Project Delta</span>
-            <span>04</span>
-          </div>
-        </a>
-
-        <!-- PROJECT 5 -->
-
-        <a class="project-card" href="/projects">
-          <div class="project-card-image placeholder-five"></div>
-
-          <div class="project-card-footer">
-            <span>Project Echo</span>
-            <span>05</span>
-          </div>
-        </a>
+        <button
+          class="carousel-button carousel-button-right"
+          type="button"
+          aria-label="Next projects"
+          data-carousel-next
+        >
+          →
+        </button>
 
       </div>
     </div>
@@ -143,7 +466,12 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
 </BaseLayout>
 
+
 <script>
+  /* =========================
+     TYPEWRITER
+     ========================= */
+
   const words = [
     "Automation",
     "Predictions",
@@ -153,7 +481,9 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
   ];
 
   const element =
-    document.querySelector<HTMLElement>("#typewriter");
+    document.querySelector<HTMLElement>(
+      "#typewriter"
+    );
 
   const typingSpeed = 85;
   const deletingSpeed = 25;
@@ -165,21 +495,41 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       setTimeout(resolve, time);
     });
 
-  async function typeWord(word: string) {
+  async function typeWord(
+    word: string
+  ) {
     if (!element) return;
 
-    for (let i = 1; i <= word.length; i++) {
-      element.textContent = word.slice(0, i);
-      await wait(typingSpeed);
+    for (
+      let i = 1;
+      i <= word.length;
+      i++
+    ) {
+      element.textContent =
+        word.slice(0, i);
+
+      await wait(
+        typingSpeed
+      );
     }
   }
 
-  async function deleteWord(word: string) {
+  async function deleteWord(
+    word: string
+  ) {
     if (!element) return;
 
-    for (let i = word.length; i >= 0; i--) {
-      element.textContent = word.slice(0, i);
-      await wait(deletingSpeed);
+    for (
+      let i = word.length;
+      i >= 0;
+      i--
+    ) {
+      element.textContent =
+        word.slice(0, i);
+
+      await wait(
+        deletingSpeed
+      );
     }
   }
 
@@ -189,28 +539,48 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     while (true) {
       for (const word of words) {
         await typeWord(word);
-        await wait(finishedPause);
+
+        await wait(
+          finishedPause
+        );
 
         await deleteWord(word);
-        await wait(emptyPause);
+
+        await wait(
+          emptyPause
+        );
       }
     }
   }
 
   startTypewriter();
 
+
+  /* =========================
+     SECTION REVEAL
+     ========================= */
+
   const revealSection =
-    document.querySelector<HTMLElement>(".reveal-section");
+    document.querySelector<HTMLElement>(
+      ".reveal-section"
+    );
 
   if (revealSection) {
     const observer =
       new IntersectionObserver(
         (entries) => {
-          for (const entry of entries) {
-            if (entry.isIntersecting) {
-              revealSection.classList.add(
-                "is-visible"
-              );
+          for (
+            const entry
+            of entries
+          ) {
+            if (
+              entry.isIntersecting
+            ) {
+              revealSection
+                .classList
+                .add(
+                  "is-visible"
+                );
 
               observer.disconnect();
             }
@@ -221,9 +591,366 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
         }
       );
 
-    observer.observe(revealSection);
+    observer.observe(
+      revealSection
+    );
+  }
+
+
+  /* =========================
+     PROJECT CAROUSEL
+     ========================= */
+
+  const projectTrack =
+    document.querySelector<HTMLElement>(
+      "[data-project-track]"
+    );
+
+  const nextButton =
+    document.querySelector<HTMLButtonElement>(
+      "[data-carousel-next]"
+    );
+
+  const previousButton =
+    document.querySelector<HTMLButtonElement>(
+      "[data-carousel-prev]"
+    );
+
+  if (
+    projectTrack &&
+    nextButton &&
+    previousButton
+  ) {
+    const items =
+      Array.from(
+        projectTrack.querySelectorAll<HTMLElement>(
+          ".carousel-item"
+        )
+      );
+
+    /*
+      Position numbers.
+
+      Desktop initial:
+      0 1 2 3 4 5 6
+
+      0-4 are visible.
+      5 and 6 wait off-screen right.
+
+      After NEXT:
+      -1 0 1 2 3 4 5
+
+      Then the -1 card is silently
+      wrapped to position 6.
+    */
+
+    const positions =
+      items.map(
+        (_, index) => index
+      );
+
+    let carouselAnimating = false;
+
+    const animationDuration = 600;
+
+    /* =========================
+       RESPONSIVE CARD COUNT
+       ========================= */
+
+    function getVisibleCount() {
+      if (
+        window.innerWidth <= 640
+      ) {
+        return 1;
+      }
+
+      if (
+        window.innerWidth <= 1100
+      ) {
+        return 3;
+      }
+
+      return 5;
+    }
+
+    /* =========================
+       SIZE / POSITION
+       ========================= */
+
+    function layoutItems(
+      animate = false
+    ) {
+      const visibleCount =
+        getVisibleCount();
+
+      const styles =
+        window.getComputedStyle(
+          projectTrack
+        );
+
+      const gap =
+        parseFloat(
+          styles.getPropertyValue(
+            "--project-gap"
+          )
+        ) || 22;
+
+      const trackWidth =
+        projectTrack
+          .getBoundingClientRect()
+          .width;
+
+      const cardWidth =
+        (
+          trackWidth
+          -
+          (
+            gap *
+            (
+              visibleCount - 1
+            )
+          )
+        )
+        /
+        visibleCount;
+
+      /*
+        Preserve original playing-card
+        ratio of 0.72.
+      */
+
+      const cardHeight =
+        cardWidth / 0.72;
+
+      projectTrack.style.height =
+        `${cardHeight}px`;
+
+      items.forEach(
+        (item, index) => {
+          const position =
+            positions[index];
+
+          const x =
+            position *
+            (
+              cardWidth + gap
+            );
+
+          item.style.width =
+            `${cardWidth}px`;
+
+          item.style.height =
+            `${cardHeight}px`;
+
+          item.style.transition =
+            animate
+              ? `transform ${animationDuration}ms cubic-bezier(0.22, 1, 0.36, 1)`
+              : "none";
+
+          item.style.transform =
+            `translate3d(${x}px, 0, 0)`;
+
+          const visible =
+            position >= 0 &&
+            position < visibleCount;
+
+          const nearby =
+            position >= -1 &&
+            position <= visibleCount + 1;
+
+          item.style.visibility =
+            nearby
+              ? "visible"
+              : "hidden";
+
+          item.style.pointerEvents =
+            visible
+              ? "auto"
+              : "none";
+
+          item.setAttribute(
+            "aria-hidden",
+            visible
+              ? "false"
+              : "true"
+          );
+        }
+      );
+    }
+
+    /* =========================
+       NEXT
+       ========================= */
+
+    function goNext() {
+      if (
+        carouselAnimating ||
+        items.length === 0
+      ) {
+        return;
+      }
+
+      carouselAnimating = true;
+
+      /*
+        Move every wrapper one
+        position to the left.
+      */
+
+      positions.forEach(
+        (_, index) => {
+          positions[index] -= 1;
+        }
+      );
+
+      layoutItems(true);
+
+      window.setTimeout(
+        () => {
+          /*
+            Anything that left the
+            screen gets placed quietly
+            at the far right.
+
+            No DOM movement.
+            No card animation restart.
+          */
+
+          positions.forEach(
+            (position, index) => {
+              if (position < 0) {
+                positions[index] +=
+                  items.length;
+              }
+            }
+          );
+
+          layoutItems(false);
+
+          carouselAnimating = false;
+        },
+        animationDuration
+      );
+    }
+
+    /* =========================
+       PREVIOUS
+       ========================= */
+
+    function goPrevious() {
+      if (
+        carouselAnimating ||
+        items.length === 0
+      ) {
+        return;
+      }
+
+      carouselAnimating = true;
+
+      /*
+        Find the item currently
+        furthest to the right.
+      */
+
+      let highestPosition =
+        Math.max(
+          ...positions
+        );
+
+      /*
+        Move that card silently to
+        one position before the
+        visible viewport.
+      */
+
+      const itemToWrap =
+        positions.indexOf(
+          highestPosition
+        );
+
+      positions[itemToWrap] = -1;
+
+      layoutItems(false);
+
+      /*
+        Force the browser to commit
+        that hidden starting position.
+      */
+
+      void projectTrack.offsetWidth;
+
+      /*
+        Now everything slides right.
+      */
+
+      positions.forEach(
+        (_, index) => {
+          positions[index] += 1;
+        }
+      );
+
+      layoutItems(true);
+
+      window.setTimeout(
+        () => {
+          layoutItems(false);
+
+          carouselAnimating = false;
+        },
+        animationDuration
+      );
+    }
+
+    /* =========================
+       BUTTON EVENTS
+       ========================= */
+
+    nextButton.addEventListener(
+      "click",
+      goNext
+    );
+
+    previousButton.addEventListener(
+      "click",
+      goPrevious
+    );
+
+    /* =========================
+       RESIZE
+       ========================= */
+
+    let resizeTimer:
+      number | undefined;
+
+    window.addEventListener(
+      "resize",
+      () => {
+        window.clearTimeout(
+          resizeTimer
+        );
+
+        resizeTimer =
+          window.setTimeout(
+            () => {
+              layoutItems(false);
+            },
+            120
+          );
+      }
+    );
+
+    /* =========================
+       INITIAL LAYOUT
+       ========================= */
+
+    requestAnimationFrame(
+      () => {
+        layoutItems(false);
+      }
+    );
   }
 </script>
+
 
 <style>
 
@@ -241,7 +968,9 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     width: 100%;
 
     min-height:
-      calc(100vh - 140px);
+      calc(
+        100vh - 140px
+      );
 
     padding: 24px;
 
@@ -254,7 +983,10 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     z-index: 1;
 
     width:
-      min(100%, 680px);
+      min(
+        100%,
+        680px
+      );
 
     text-align: left;
   }
@@ -304,6 +1036,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       );
 
     font-style: italic;
+
     font-weight: 400;
 
     line-height: 0.95;
@@ -319,7 +1052,10 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     font-style: normal;
 
     animation:
-      blink 0.8s steps(1) infinite;
+      blink
+      0.8s
+      steps(1)
+      infinite;
   }
 
   /* =========================
@@ -336,6 +1072,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       translateX(-50%);
 
     display: inline-flex;
+
     align-items: center;
 
     gap: 8px;
@@ -345,12 +1082,22 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
     border:
       1px solid
-      rgba(17, 17, 17, 0.22);
+      rgba(
+        17,
+        17,
+        17,
+        0.22
+      );
 
     border-radius: 999px;
 
     background:
-      rgba(237, 236, 234, 0.72);
+      rgba(
+        237,
+        236,
+        234,
+        0.72
+      );
 
     backdrop-filter:
       blur(8px);
@@ -364,7 +1111,8 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
     font-size: 0.62rem;
 
-    letter-spacing: 0.06em;
+    letter-spacing:
+      0.06em;
 
     white-space: nowrap;
 
@@ -395,17 +1143,18 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     justify-content: center;
 
     padding:
-      110px
-      32px
+      110px 30px
       130px;
 
     background: #edecea;
+
+    overflow: hidden;
   }
 
   .projects-inner {
     width:
       min(
-        1540px,
+        1700px,
         100%
       );
 
@@ -480,22 +1229,65 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
   }
 
   /* =========================
-     PROJECT CARDS
+     CAROUSEL
      ========================= */
 
-  .project-cards {
-    display: grid;
+  .projects-carousel {
+    position: relative;
 
-    grid-template-columns:
-      repeat(
-        5,
-        minmax(0, 1fr)
-      );
-
-    gap: 26px;
-
-    align-items: center;
+    width: 100%;
   }
+
+  .projects-viewport {
+    position: relative;
+
+    width: 100%;
+
+    overflow: hidden;
+
+    padding:
+      20px 2px
+      30px;
+  }
+
+  .project-cards {
+    --project-gap: 22px;
+
+    position: relative;
+
+    width: 100%;
+
+    min-height: 300px;
+  }
+
+  /*
+    THIS wrapper does the
+    horizontal carousel motion.
+  */
+
+  .carousel-item {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    will-change:
+      transform;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  /* =========================
+     PROJECT CARD
+
+     Card itself ONLY handles
+     floating/rocking.
+     ========================= */
 
   .project-card {
     position: relative;
@@ -504,8 +1296,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     flex-direction: column;
 
     width: 100%;
-
-    aspect-ratio: 0.72;
+    height: 100%;
 
     padding: 0;
 
@@ -515,6 +1306,8 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
     text-align: left;
 
+    text-decoration: none;
+
     color: inherit;
 
     cursor: pointer;
@@ -523,181 +1316,238 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
     border:
       1px solid
-      rgba(17, 17, 17, 0.18);
+      rgba(
+        17,
+        17,
+        17,
+        0.17
+      );
 
-    border-radius: 16px;
+    border-radius: 18px;
 
     box-shadow:
-      0 14px 28px
-      rgba(17, 17, 17, 0.06);
+      0 14px 30px
+      rgba(
+        17,
+        17,
+        17,
+        0.07
+      );
 
     animation:
       card-float
-      5.6s
+      5.8s
       ease-in-out
       infinite,
 
       card-rock
-      7.2s
+      7.5s
       ease-in-out
       infinite;
 
     transition:
-      transform 0.28s ease,
-      box-shadow 0.28s ease,
-      border-color 0.28s ease;
+      box-shadow
+      0.28s ease,
+
+      border-color
+      0.28s ease;
   }
 
-  .project-card:nth-child(1) {
-    animation-duration:
-      5.4s,
-      7.4s;
+  /*
+    Different starting points
+    so cards don't float together.
+  */
 
+  .carousel-item:nth-child(1)
+  .project-card {
     animation-delay:
       -1.2s,
       -2.8s;
   }
 
-  .project-card:nth-child(2) {
-    animation-duration:
-      6.3s,
-      8.1s;
-
+  .carousel-item:nth-child(2)
+  .project-card {
     animation-delay:
       -3.1s,
       -0.7s;
   }
 
-  .project-card:nth-child(3) {
-    animation-duration:
-      5.9s,
-      6.8s;
-
+  .carousel-item:nth-child(3)
+  .project-card {
     animation-delay:
       -2.2s,
       -4.1s;
   }
 
-  .project-card:nth-child(4) {
-    animation-duration:
-      6.8s,
-      7.7s;
-
+  .carousel-item:nth-child(4)
+  .project-card {
     animation-delay:
       -4.6s,
       -1.5s;
   }
 
-  .project-card:nth-child(5) {
-    animation-duration:
-      5.1s,
-      8.4s;
-
+  .carousel-item:nth-child(5)
+  .project-card {
     animation-delay:
       -0.9s,
       -3.4s;
   }
 
-  .project-card:hover {
-    animation-play-state: paused;
+  .carousel-item:nth-child(6)
+  .project-card {
+    animation-delay:
+      -2.7s,
+      -1.1s;
+  }
 
-    transform:
-      translateY(-14px)
-      scale(1.03);
+  .carousel-item:nth-child(7)
+  .project-card {
+    animation-delay:
+      -4s,
+      -2.2s;
+  }
+
+  .project-card:hover {
+    animation-play-state:
+      paused;
 
     border-color:
-      rgba(77, 118, 87, 0.45);
+      rgba(
+        77,
+        118,
+        87,
+        0.4
+      );
 
     box-shadow:
-      0 24px 46px
-      rgba(17, 17, 17, 0.11);
+      0 22px 44px
+      rgba(
+        17,
+        17,
+        17,
+        0.12
+      );
   }
 
   .project-card-image {
+    position: relative;
+
     flex: 1;
 
     min-height: 0;
+
+    z-index: 1;
   }
 
   /* =========================
-     PLACEHOLDERS
+     ARROWS
      ========================= */
 
-  .placeholder-two {
-    background:
-      linear-gradient(
-        145deg,
-        #dedbd1,
-        #c8bea6
-      );
-  }
+  .carousel-button {
+    position: absolute;
 
-  .placeholder-three {
-    background:
-      linear-gradient(
-        145deg,
-        #d9d5df,
-        #b9adca
-      );
-  }
+    top: 50%;
 
-  .placeholder-four {
-    background:
-      linear-gradient(
-        145deg,
-        #d7dfdf,
-        #aabbbb
-      );
-  }
+    z-index: 20;
 
-  .placeholder-five {
-    background:
-      linear-gradient(
-        145deg,
-        #dfd6cf,
-        #c5afa0
-      );
-  }
+    width: 46px;
+    height: 46px;
 
-  /* =========================
-     GENERAL CARD FOOTER
-     ========================= */
-
-  .project-card-footer {
     display: flex;
-
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
 
-    gap: 12px;
+    padding: 0;
 
-    padding:
-      17px 19px;
+    border:
+      1px solid
+      rgba(
+        17,
+        17,
+        17,
+        0.16
+      );
 
-    background: #f6f5f2;
+    border-radius: 999px;
+
+    background:
+      rgba(
+        237,
+        236,
+        234,
+        0.92
+      );
+
+    backdrop-filter:
+      blur(10px);
+
+    -webkit-backdrop-filter:
+      blur(10px);
+
+    color: #111111;
 
     font-family:
       "Courier Prime",
       monospace;
 
-    font-size: 0.86rem;
+    font-size: 1.05rem;
 
-    font-weight: 400;
+    line-height: 1;
 
-    color: #111111;
+    cursor: pointer;
+
+    transform:
+      translateY(-50%);
+
+    box-shadow:
+      0 8px 24px
+      rgba(
+        17,
+        17,
+        17,
+        0.08
+      );
+
+    transition:
+      transform 0.2s ease,
+      background 0.2s ease,
+      color 0.2s ease,
+      border-color 0.2s ease;
   }
 
-  /* =========================
-     RECEIPT CARD
-     ========================= */
+  .carousel-button:hover {
+    background: #4d7657;
 
-  .project-card-receipt {
-    background: #292929;
+    border-color: #4d7657;
 
     color: #ffffff;
   }
 
-  .receipt-card-background {
+  .carousel-button:active {
+    transform:
+      translateY(-50%)
+      scale(0.92);
+  }
+
+  .carousel-button-left {
+    left: -22px;
+  }
+
+  .carousel-button-right {
+    right: -22px;
+  }
+
+  /* =========================
+     VIDEO BACKGROUND
+     ========================= */
+
+  .project-card-video {
+    background: #edecea;
+
+    color: #ffffff;
+  }
+
+  .project-video-background {
     position: absolute;
 
     inset: 0;
@@ -706,113 +1556,37 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
     z-index: 0;
 
-    background: #292929;
+    background: #edecea;
   }
 
-  /* =========================
-     DESKTOP GIF
-     ========================= */
-
-  .receipt-card-background img {
-    position: absolute;
-
-    left: 50%;
-    bottom: 0;
-
-    width: 130%;
-    height: 130%;
-
-    object-fit: contain;
-
-    object-position:
-      center bottom;
-
-    opacity: 0.78;
-
-    /*
-      THIS is the normal
-      desktop blur.
-    */
-
-    filter:
-      blur(1.4px)
-      saturate(0.95);
-
-    transform:
-      translateX(-50%)
-      scale(1);
-
-    transition:
-      transform
-        0.45s
-        cubic-bezier(
-          0.22,
-          1,
-          0.36,
-          1
-        ),
-
-      filter
-        0.45s ease,
-
-      opacity
-        0.45s ease;
-  }
-
-  /* =========================
-     NEUTRAL OVERLAY
-     NO GREEN
-     ========================= */
-
-  .receipt-card-overlay {
+  .project-video-background video {
     position: absolute;
 
     inset: 0;
 
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    object-position: center;
+
     pointer-events: none;
 
-    background:
-      linear-gradient(
-        180deg,
+    opacity: 1;
 
-        rgba(
-          0,
-          0,
-          0,
-          0.06
-        )
-        0%,
+    filter: none;
 
-        rgba(
-          0,
-          0,
-          0,
-          0.08
-        )
-        40%,
-
-        rgba(
-          0,
-          0,
-          0,
-          0.58
-        )
-        100%
-      );
-  }
-
-  .project-card-receipt
-  .project-card-image {
-    position: relative;
-
-    z-index: 1;
+    transform: none;
   }
 
   /* =========================
-     RECEIPT CONTENT
+     CARD CONTENT
      ========================= */
 
-  .receipt-card-content {
+  .video-card-content {
     position: relative;
 
     z-index: 2;
@@ -828,120 +1602,153 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     color: #ffffff;
   }
 
-  /* AI / DATA / FULL STACK */
-
-  .receipt-card-type {
+  .video-card-type {
     font-family:
       "Courier Prime",
       monospace;
 
-    font-size: 0.8rem;
+    font-size: 0.86rem;
 
     font-weight: 400;
 
-    line-height: 1.3;
+    line-height: 1.4;
 
     letter-spacing:
-      0.065em;
+      0.045em;
 
     color:
       rgba(
         255,
         255,
         255,
-        0.9
+        0.98
       );
 
     text-shadow:
       0 2px 14px
-      rgba(0, 0, 0, 0.3);
+      rgba(
+        0,
+        0,
+        0,
+        0.5
+      );
   }
 
-  .receipt-card-main {
+  .video-card-main {
     margin-top: auto;
 
     display: flex;
     flex-direction: column;
   }
 
-  /* RECEIPT */
-
-  .receipt-card-main strong {
+  .video-card-main strong {
     font-family:
       "Instrument Serif",
       serif;
 
     font-size:
       clamp(
-        3.4rem,
-        3.7vw,
-        5.2rem
+        2.8rem,
+        3vw,
+        4.6rem
       );
 
     font-weight: 400;
 
-    line-height: 0.84;
+    line-height: 0.86;
 
     letter-spacing:
       -0.035em;
 
     color: #ffffff;
 
+    overflow-wrap: anywhere;
+
     text-shadow:
       0 3px 20px
-      rgba(0, 0, 0, 0.28);
+      rgba(
+        0,
+        0,
+        0,
+        0.48
+      );
   }
 
-  /* SMART GROCERY BUDGETING */
+  .video-card-main small {
+    margin-top: 14px;
 
-  .receipt-card-main small {
-    margin-top: 13px;
+    max-width: 260px;
 
     font-family:
       "Courier Prime",
       monospace;
 
-    font-size: 0.8rem;
+    font-size: 0.86rem;
 
     font-weight: 400;
 
-    line-height: 1.35;
+    line-height: 1.45;
 
     color:
       rgba(
         255,
         255,
         255,
-        0.9
+        0.98
       );
 
     text-shadow:
-      0 2px 12px
-      rgba(0, 0, 0, 0.28);
+      0 2px 14px
+      rgba(
+        0,
+        0,
+        0,
+        0.5
+      );
   }
 
   /* =========================
-     RECEIPT FOOTER
+     FOOTER
      ========================= */
 
-  .receipt-card-footer {
+  .project-card-footer {
     position: relative;
 
-    z-index: 2;
+    z-index: 3;
 
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding:
+      17px 19px;
+
+    font-family:
+      "Courier Prime",
+      monospace;
+
+    font-size: 0.82rem;
+
+    font-weight: 400;
+  }
+
+  .video-card-footer {
     background:
       rgba(
-        22,
-        22,
-        22,
-        0.62
+        20,
+        20,
+        20,
+        0.34
       );
 
     backdrop-filter:
-      blur(10px);
+      blur(8px);
 
     -webkit-backdrop-filter:
-      blur(10px);
+      blur(8px);
 
     color: #ffffff;
 
@@ -951,30 +1758,8 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
         255,
         255,
         255,
-        0.12
+        0.15
       );
-  }
-
-  /* =========================
-     DESKTOP HOVER
-     ========================= */
-
-  .project-card-receipt:hover
-  .receipt-card-background img {
-    opacity: 0.92;
-
-    /*
-      Almost fully clear
-      when hovered.
-    */
-
-    filter:
-      blur(0.3px)
-      saturate(1);
-
-    transform:
-      translateX(-50%)
-      scale(1.035);
   }
 
   /* =========================
@@ -985,12 +1770,18 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     0%,
     100% {
       transform:
-        translate(-50%, 0);
+        translate(
+          -50%,
+          0
+        );
     }
 
     50% {
       transform:
-        translate(-50%, -6px);
+        translate(
+          -50%,
+          -6px
+        );
     }
   }
 
@@ -1006,47 +1797,71 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     }
   }
 
+  /*
+    IMPORTANT:
+
+    Float ONLY controls translate.
+
+    Rock ONLY controls rotate.
+
+    They no longer fight over
+    the same animation property.
+  */
+
   @keyframes card-float {
     0%,
     100% {
-      translate: 0 4px;
+      translate:
+        0 3px;
     }
 
     50% {
-      translate: 0 -14px;
+      translate:
+        0 -9px;
     }
   }
 
   @keyframes card-rock {
     0%,
     100% {
-      rotate: -1.2deg;
+      rotate:
+        -0.45deg;
     }
 
     50% {
-      rotate: 1.2deg;
+      rotate:
+        0.45deg;
     }
   }
 
-  @keyframes card-float-mobile {
-    0%,
-    100% {
-      translate: 0 2px;
+  /* =========================
+     TABLET
+     ========================= */
+
+  @media (
+    max-width: 1100px
+  ) and (
+    min-width: 641px
+  ) {
+
+    .project-cards {
+      --project-gap: 18px;
     }
 
-    50% {
-      translate: 0 -8px;
-    }
-  }
-
-  @keyframes card-rock-mobile {
-    0%,
-    100% {
-      rotate: -0.7deg;
+    .carousel-button-left {
+      left: -18px;
     }
 
-    50% {
-      rotate: 0.7deg;
+    .carousel-button-right {
+      right: -18px;
+    }
+
+    .video-card-type {
+      font-size: 0.78rem;
+    }
+
+    .video-card-main small {
+      font-size: 0.78rem;
     }
   }
 
@@ -1054,7 +1869,9 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
      MOBILE
      ========================= */
 
-  @media (max-width: 640px) {
+  @media (
+    max-width: 640px
+  ) {
 
     .hero {
       min-height:
@@ -1110,7 +1927,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 
       padding:
         80px
-        18px
+        20px
         100px;
     }
 
@@ -1122,194 +1939,63 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
       font-size: 3.2rem;
     }
 
-    /* =========================
-       MOBILE CARDS
-       ========================= */
+    .projects-viewport {
+      padding:
+        16px 0
+        26px;
+    }
 
     .project-cards {
-      display: flex;
-
-      gap: 14px;
-
-      overflow-x: auto;
-      overflow-y: visible;
-
-      padding:
-        12px
-        4px
-        24px;
-
-      scroll-snap-type:
-        x mandatory;
-
-      scrollbar-width: none;
+      --project-gap: 14px;
     }
 
-    .project-cards::-webkit-scrollbar {
-      display: none;
+    .video-card-content {
+      padding: 20px;
     }
 
-    .project-card {
-      flex:
-        0 0 68%;
+    .video-card-type {
+      font-size: 0.72rem;
 
-      aspect-ratio:
-        0.72;
-
-      scroll-snap-align:
-        center;
-
-      animation:
-        card-float-mobile
-        6s
-        ease-in-out
-        infinite,
-
-        card-rock-mobile
-        8s
-        ease-in-out
-        infinite;
+      line-height: 1.4;
     }
 
-    .project-card:nth-child(1) {
-      animation-duration:
-        5.8s,
-        7.6s;
-
-      animation-delay:
-        -1.4s,
-        -3.1s;
+    .video-card-main strong {
+      font-size:
+        clamp(
+          3rem,
+          15vw,
+          4.5rem
+        );
     }
 
-    .project-card:nth-child(2) {
-      animation-duration:
-        6.5s,
-        8.3s;
+    .video-card-main small {
+      margin-top: 10px;
 
-      animation-delay:
-        -3.5s,
-        -0.8s;
+      font-size: 0.76rem;
+
+      line-height: 1.45;
     }
-
-    .project-card:nth-child(3) {
-      animation-duration:
-        5.6s,
-        7.1s;
-
-      animation-delay:
-        -2.4s,
-        -4.3s;
-    }
-
-    .project-card:nth-child(4) {
-      animation-duration:
-        6.9s,
-        8s;
-
-      animation-delay:
-        -4.7s,
-        -1.6s;
-    }
-
-    .project-card:nth-child(5) {
-      animation-duration:
-        5.3s,
-        8.6s;
-
-      animation-delay:
-        -1s,
-        -3.6s;
-    }
-
-    /* =========================
-       MOBILE TEXT
-       ========================= */
 
     .project-card-footer {
       padding:
-        13px 14px;
+        14px 15px;
 
       font-size: 0.72rem;
-
-      font-weight: 400;
     }
 
-    .receipt-card-content {
-      padding: 18px;
+    .carousel-button {
+      width: 42px;
+      height: 42px;
+
+      font-size: 1rem;
     }
 
-    .receipt-card-type {
-      font-size: 0.6rem;
-
-      font-weight: 400;
-
-      letter-spacing:
-        0.06em;
+    .carousel-button-left {
+      left: -12px;
     }
 
-    .receipt-card-main strong {
-      font-size:
-        clamp(
-          2.8rem,
-          15vw,
-          4.4rem
-        );
-
-      font-weight: 400;
-    }
-
-    .receipt-card-main small {
-      margin-top: 9px;
-
-      font-size: 0.64rem;
-
-      font-weight: 400;
-    }
-
-    /* =========================
-       MOBILE GIF
-       ========================= */
-
-    .receipt-card-background img {
-      left: 50%;
-      bottom: 0;
-
-      width: 130%;
-      height: 130%;
-
-      object-fit: contain;
-
-      opacity: 0.82;
-
-      /*
-        Tiny blur on phone.
-      */
-
-      filter:
-        blur(0.3px)
-        saturate(1);
-
-      transform:
-        translateX(-50%)
-        scale(1);
-    }
-
-    /*
-      No fake hover change
-      on mobile.
-    */
-
-    .project-card-receipt:hover
-    .receipt-card-background img {
-      opacity: 0.82;
-
-      filter:
-        blur(0.3px)
-        saturate(1);
-
-      transform:
-        translateX(-50%)
-        scale(1);
+    .carousel-button-right {
+      right: -12px;
     }
   }
 
@@ -1339,12 +2025,14 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     .project-card {
       translate: none;
       rotate: none;
+    }
 
+    .carousel-button {
       transition: none;
     }
 
-    .receipt-card-background img {
-      transition: none;
+    .carousel-item {
+      transition: none !important;
     }
   }
 
