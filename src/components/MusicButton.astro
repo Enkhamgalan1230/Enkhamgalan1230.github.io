@@ -10,19 +10,20 @@
     <div class="music-card-content">
       <div class="music-heading-row">
         <div>
-          <span class="music-card-label" data-listening-label>CONNECT SPOTIFY</span>
-          <h2 data-listening-heading>What am I listening to?</h2>
+          <span class="music-card-label" data-listening-label>NOW PLAYING</span>
+          <h2 data-listening-heading>What I’m listening to</h2>
         </div>
-        <button class="spotify-connect" type="button" data-spotify-connect>REFRESH</button>
+        <button class="spotify-connect" type="button" data-spotify-connect>UPDATE</button>
       </div>
 
       <a class="current-track" data-now-playing href="#" target="_blank" rel="noreferrer">
-        <span class="current-track-placeholder" data-now-playing-placeholder>Connect Spotify to see what is playing.</span>
+        <span class="current-track-placeholder" data-now-playing-placeholder>Loading my listening activity...</span>
         <img data-now-playing-image alt="" hidden />
-        <span data-now-playing-copy hidden>
-          <strong data-now-playing-title></strong>
-          <small data-now-playing-artist></small>
-        </span>
+          <span data-now-playing-copy hidden>
+            <strong data-now-playing-title></strong>
+            <small data-now-playing-artist></small>
+            <small class="now-playing-status"><i data-now-playing-dot></i><span data-now-playing-state>PLAYING NOW</span><span data-now-playing-time></span></small>
+          </span>
         <span class="music-track-arrow" aria-hidden="true">&#8599;</span>
       </a>
 
@@ -77,6 +78,9 @@
   const nowCopy = document.querySelector<HTMLElement>("[data-now-playing-copy]");
   const nowTitle = document.querySelector<HTMLElement>("[data-now-playing-title]");
   const nowArtist = document.querySelector<HTMLElement>("[data-now-playing-artist]");
+  const nowDot = document.querySelector<HTMLElement>("[data-now-playing-dot]");
+  const nowState = document.querySelector<HTMLElement>("[data-now-playing-state]");
+  const nowTime = document.querySelector<HTMLElement>("[data-now-playing-time]");
   const artistsContainer = document.querySelector<HTMLElement>("[data-top-artists]");
   const tracksContainer = document.querySelector<HTMLOListElement>("[data-top-tracks]");
   const form = document.querySelector<HTMLFormElement>("[data-recommendation-form]");
@@ -97,7 +101,11 @@
   }
 
   const names = (items: Array<{ name: string }> = []) => items.map((item) => item.name).join(", ");
-  const trackInfo = (track: any) => ({ name: track.name, artists: names(track.artists), album: track.album?.name ?? "", image: track.album?.images?.[1]?.url ?? track.album?.images?.[0]?.url ?? "", url: track.external_urls?.spotify ?? "#" });
+  const escapeHtml = (value: unknown) => String(value ?? "").replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[character] ?? character);
+  const formatTime = (milliseconds: number) => {
+    const seconds = Math.max(0, Math.floor(milliseconds / 1000));
+    return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+  };
 
   function renderListening(current: any, recent: any) {
     const track = current ?? recent;
@@ -108,6 +116,9 @@
       if (placeholder) { placeholder.hidden = false; placeholder.textContent = "Start a song on Spotify and it will appear here."; }
       if (nowImage) { nowImage.hidden = true; nowImage.removeAttribute("src"); }
       if (nowCopy) nowCopy.hidden = true;
+      if (nowDot) nowDot.classList.remove("is-playing");
+      if (nowState) nowState.textContent = "NOT PLAYING";
+      if (nowTime) nowTime.textContent = "";
       if (nowPlaying) nowPlaying.href = "#";
       return;
     }
@@ -118,12 +129,15 @@
     if (nowCopy) nowCopy.hidden = false;
     if (nowTitle) nowTitle.textContent = track.name;
     if (nowArtist) nowArtist.textContent = `${track.artists} · ${track.album}`;
+    if (nowDot) nowDot.classList.toggle("is-playing", playing);
+    if (nowState) nowState.textContent = playing ? "PLAYING NOW" : "LAST PLAYED";
+    if (nowTime) nowTime.textContent = track.progress != null && track.duration != null ? `${formatTime(track.progress)} / ${formatTime(track.duration)}` : "";
     if (nowPlaying) nowPlaying.href = track.url;
   }
 
   function renderArtists(items: any[] = []) {
     if (!artistsContainer) return;
-    artistsContainer.innerHTML = items.length ? items.map((artist) => `<a class="artist-card" href="${artist.url}" target="_blank" rel="noreferrer"><img src="${artist.image}" alt="" loading="lazy" /><span>${artist.name}</span><small>OPEN &#8599;</small></a>`).join("") : `<p class="music-muted">No top artist data available yet.</p>`;
+    artistsContainer.innerHTML = items.length ? items.map((artist) => `<article class="artist-card"><img src="${escapeHtml(artist.image)}" alt="" loading="lazy" /><a href="${escapeHtml(artist.url)}" target="_blank" rel="noreferrer"><span>${escapeHtml(artist.name)}</span></a><small>OPEN &#8599;</small></article>`).join("") : `<p class="music-muted">No top artist data available yet.</p>`;
   }
 
   function renderTracks(items: any[] = []) {
@@ -180,28 +194,33 @@
   .music-button span { font-family:Georgia,serif; font-size:1.75rem; line-height:1; }
   .music-overlay { position:fixed; inset:0; z-index:1000; display:flex; align-items:center; justify-content:center; padding:30px; background:rgba(64,54,64,.56); opacity:0; visibility:hidden; pointer-events:none; transition:opacity .35s ease,visibility .35s ease; }
   .music-overlay.is-open { opacity:1; visibility:visible; pointer-events:auto; }
-  .music-card { position:relative; display:grid; grid-template-columns:24% 76%; width:min(1100px,94vw); max-height:calc(100vh - 60px); overflow:hidden; border-radius:22px; background:#f7f6f4; box-shadow:0 24px 80px rgba(28,20,29,.28); transform:translateY(-90px); transition:transform .65s cubic-bezier(.22,1,.36,1); }
+  .music-card { position:relative; display:grid; grid-template-columns:20% 80%; width:min(1000px,94vw); height:min(760px,calc(100vh - 60px)); min-height:0; overflow:hidden; border-radius:22px; background:#f7f6f4; box-shadow:0 24px 80px rgba(28,20,29,.28); transform:translateY(-90px); transition:transform .65s cubic-bezier(.22,1,.36,1); }
   .music-overlay.is-open .music-card { transform:translateY(0); }
   .music-card-note { display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 30% 25%,#e5d5d2,transparent 40%),linear-gradient(145deg,#d6c3c7,#93788f); color:#403640; font-family:Georgia,serif; font-size:clamp(8rem,18vw,14rem); }
-  .music-card-content { min-width:0; overflow-y:auto; padding:48px 54px 54px; }
+  .music-card-content { min-width:0; min-height:0; overflow-y:auto; overscroll-behavior:contain; scrollbar-color:#b4a4ac transparent; padding:48px 54px 54px; }
   .music-heading-row { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; }
   .music-card-label,.music-section-title { color:#777; font:0.7rem "Courier Prime",monospace; letter-spacing:.08em; }
   .music-card-content h2 { margin:12px 0 22px; color:#111; font:400 clamp(2.8rem,5vw,4.8rem)/.92 "Instrument Serif",serif; letter-spacing:-.025em; }
   .spotify-connect { flex-shrink:0; padding:10px 13px; border:1px solid #4d7657; border-radius:999px; background:transparent; color:#4d7657; font:.68rem "Courier Prime",monospace; cursor:pointer; }
   .spotify-connect:hover { background:#4d7657; color:#fff; }
-  .current-track { display:grid; grid-template-columns:72px minmax(0,1fr) auto; align-items:center; gap:16px; min-height:72px; margin:0 0 28px; color:#111; text-decoration:none; }
-  .current-track img { width:72px; height:72px; object-fit:cover; border-radius:7px; }
+  .current-track { display:grid; grid-template-columns:76px minmax(0,1fr) auto; align-items:center; gap:16px; min-height:76px; margin:0 0 32px; padding:12px; border:1px solid rgba(17,17,17,.13); border-radius:12px; background:#fff; color:#111; text-decoration:none; box-shadow:4px 4px 0 rgba(64,54,64,.08); }
+  .current-track img { width:76px; height:76px; object-fit:cover; border-radius:8px; }
   .current-track > span:not(.music-track-arrow) { display:flex; min-width:0; flex-direction:column; gap:4px; }
   .current-track strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:400 1.9rem "Instrument Serif",serif; }
   .current-track small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#777; font:.7rem "Courier Prime",monospace; }
+  .now-playing-status { display:flex; align-items:center; gap:7px; margin-top:7px; color:#4d7657 !important; font-size:.6rem !important; letter-spacing:.04em; }
+  .now-playing-status i { width:6px; height:6px; border-radius:50%; background:#aaa; }
+  .now-playing-status i.is-playing { background:#4d7657; box-shadow:0 0 0 4px rgba(77,118,87,.12); }
+  [data-now-playing-time] { margin-left:auto; }
   .current-track-placeholder,.music-muted { color:#777; font:.76rem "Courier Prime",monospace; }
   .music-track-arrow { color:#777; font:.9rem "Courier Prime",monospace; }
   .music-section-title { margin:0 0 10px; }
-  .music-artists { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin-bottom:28px; }
-  .artist-card { display:flex; min-width:0; flex-direction:column; gap:7px; color:#111; text-decoration:none; }
-  .artist-card img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:8px; transition:transform .25s ease; }
-  .artist-card:hover img { transform:translateY(-4px); }
-  .artist-card span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:.75rem "Courier Prime",monospace; }
+  .music-artists { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:14px; margin-bottom:28px; }
+  .artist-card { display:flex; min-width:0; flex-direction:column; gap:6px; color:#111; }
+  .artist-card img { width:56px; height:56px; object-fit:cover; border-radius:50%; opacity:.88; }
+  .artist-card a { overflow:hidden; color:#111; text-decoration:underline; text-decoration-color:rgba(17,17,17,.3); text-underline-offset:3px; }
+  .artist-card a:hover { text-decoration-color:currentColor; }
+  .artist-card span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:.7rem "Courier Prime",monospace; }
   .artist-card small { color:#777; font:.6rem "Courier Prime",monospace; }
   .music-taste,.recommendation-note { margin:0; color:#777; font:.75rem/1.5 "Courier Prime",monospace; }
   .top-tracks-heading { margin-top:26px; }
@@ -239,9 +258,9 @@
     .music-button { width:28px; height:28px; }
     .music-button span { font-size:1.5rem; }
     .music-overlay { padding:18px; }
-    .music-card { grid-template-columns:1fr; width:100%; max-height:calc(100vh - 36px); overflow-y:auto; }
+    .music-card { display:flex; flex-direction:column; width:100%; height:calc(100vh - 36px); max-height:none; overflow:hidden; }
     .music-card-note { min-height:150px; font-size:8rem; }
-    .music-card-content { padding:34px 28px 40px; }
+    .music-card-content { flex:1; padding:34px 28px 40px; }
     .music-heading-row { display:block; }
     .spotify-connect { margin-bottom:18px; }
     .music-artists { grid-template-columns:repeat(3,minmax(0,1fr)); }

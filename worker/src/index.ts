@@ -249,7 +249,14 @@ export default {
       );
 
       return json({
-        current: current?.item ? { ...trackData(current.item), isPlaying: current.is_playing } : null,
+        current: current?.item
+          ? {
+              ...trackData(current.item),
+              isPlaying: current.is_playing,
+              progress: current.progress_ms,
+              duration: current.item.duration_ms,
+            }
+          : null,
         recent: recent?.items?.[0]?.track ? trackData(recent.items[0].track) : null,
         artists: (artists?.items ?? []).map(sanitizeArtist),
         tracks: (tracks?.items ?? []).map(trackData),
