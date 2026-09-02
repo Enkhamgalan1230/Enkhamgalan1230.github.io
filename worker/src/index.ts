@@ -94,7 +94,13 @@ function setupRedirect(env: Env) {
     state,
   }).toString();
 
-  return Response.redirect(authorize.toString(), 302);
+  return new Response(null, {
+    status: 302,
+    headers: {
+      Location: authorize.toString(),
+      "Set-Cookie": `spotify_oauth_state=${state}; HttpOnly; Secure; SameSite=Lax; Max-Age=600; Path=/`,
+    },
+  });
 }
 
 async function exchangeAuthorizationCode(code: string, env: Env) {
@@ -132,7 +138,13 @@ export default {
 
     if (url.pathname === "/oauth/callback" && request.method === "GET") {
       const code = url.searchParams.get("code");
+      const state = url.searchParams.get("state");
       if (!code) return new Response("Missing Spotify authorization code.", { status: 400 });
+
+      const savedState = request.headers.get("Cookie")?.match(/(?:^|; )spotify_oauth_state=([^;]+)/)?.[1];
+      if (!state || !savedState || state !== savedState) {
+        return new Response("Invalid Spotify authorization state.", { status: 400 });
+      }
 
       try {
         const token = await exchangeAuthorizationCode(code, env);
