@@ -30,6 +30,7 @@
   const siteHeader = document.querySelector<HTMLElement>(".site-header");
   const musicButton = document.querySelector<HTMLButtonElement>(".music-button");
   const dropdown = document.querySelector<HTMLElement>(".now-playing-dropdown");
+  const card = document.querySelector<HTMLElement>(".now-playing-card");
   const label = document.querySelector<HTMLElement>("[data-now-playing-label]");
   const wave = document.querySelector<HTMLElement>("[data-now-playing-wave]");
   const link = document.querySelector<HTMLAnchorElement>("[data-now-playing-link]");
@@ -130,6 +131,7 @@
     dropdown.setAttribute("aria-hidden", "false");
     musicButton.setAttribute("aria-expanded", "true");
     siteHeader?.classList.add("music-open");
+    positionPointer();
     loadSpotifyData();
     if (refreshTimer) window.clearInterval(refreshTimer);
     if (closeTimer) window.clearTimeout(closeTimer);
@@ -150,6 +152,15 @@
     closeTimer = undefined;
   }
 
+  function positionPointer() {
+    if (!dropdown || !musicButton || !card || window.innerWidth > 640) return;
+
+    const buttonRect = musicButton.getBoundingClientRect();
+    const dropdownRect = dropdown.getBoundingClientRect();
+    const pointerLeft = buttonRect.left + buttonRect.width / 2 - dropdownRect.left - 5.5;
+    card.style.setProperty("--pointer-left", `${pointerLeft}px`);
+  }
+
   musicButton?.addEventListener("click", () => {
     if (dropdown?.classList.contains("is-open")) closeDropdown();
     else openDropdown();
@@ -167,6 +178,8 @@
       musicButton?.focus();
     }
   });
+
+  window.addEventListener("resize", positionPointer);
 </script>
 
 <style>
@@ -225,7 +238,7 @@
   .now-playing-card::before {
     position: absolute;
     top: -6px;
-    right: 12px;
+    left: var(--pointer-left, calc(100% - 23px));
     width: 11px;
     height: 11px;
     border-top: 1px solid rgba(17, 17, 17, 0.14);
@@ -301,7 +314,7 @@
     .music-button { width: 28px; height: 28px; }
     .music-button span { font-size: 1.5rem; }
     .now-playing-dropdown {
-      position: fixed;
+      position: absolute;
       top: 58px;
       right: 16px;
       left: 16px;
@@ -311,6 +324,10 @@
 
     :global(.site-header.music-open) {
       padding-bottom: 142px;
+    }
+
+    :global(.site-header) .music-control {
+      position: static;
     }
   }
 
