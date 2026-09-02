@@ -65,8 +65,6 @@
 
 <script>
   const SPOTIFY_API_URL = "https://enkhamgalan-spotify-api.zaecisama.workers.dev/api/spotify";
-  const CLIENT_ID = "6bd736a9430548439ee34db856d03858";
-  const SCOPES = "";
   const musicButton = document.querySelector<HTMLButtonElement>(".music-button");
   const overlay = document.querySelector<HTMLElement>(".music-overlay");
   const closeButton = document.querySelector<HTMLButtonElement>(".music-card-close");
@@ -89,49 +87,6 @@
   let searchTimer: number | undefined;
   let selectedSongUrl = "";
 
-  const redirectUri = () => `${window.location.origin}${window.location.pathname}`;
-  const toBase64Url = (buffer: ArrayBuffer) => btoa(String.fromCharCode(...new Uint8Array(buffer))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-  const randomVerifier = () => toBase64Url(crypto.getRandomValues(new Uint8Array(64)).buffer);
-
-  async function login() {
-    const verifier = randomVerifier();
-    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier));
-    const state = toBase64Url(crypto.getRandomValues(new Uint8Array(16)).buffer);
-    sessionStorage.setItem("spotify_verifier", verifier);
-    sessionStorage.setItem("spotify_state", state);
-    const params = new URLSearchParams({ client_id: CLIENT_ID, response_type: "code", redirect_uri: redirectUri(), scope: SCOPES, code_challenge_method: "S256", code_challenge: toBase64Url(digest), state });
-    window.location.href = `https://accounts.spotify.com/authorize?${params}`;
-  }
-
-  async function exchangeCode(code: string, state: string | null) {
-    if (state !== sessionStorage.getItem("spotify_state")) return false;
-    const verifier = sessionStorage.getItem("spotify_verifier");
-    if (!verifier) return false;
-    const response = await fetch("https://accounts.spotify.com/api/token", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ client_id: CLIENT_ID, grant_type: "authorization_code", code, redirect_uri: redirectUri(), code_verifier: verifier }) });
-    if (!response.ok) return false;
-    const token = await response.json();
-    localStorage.setItem("spotify_access_token", token.access_token);
-    localStorage.setItem("spotify_expires_at", String(Date.now() + token.expires_in * 1000));
-    if (token.refresh_token) localStorage.setItem("spotify_refresh_token", token.refresh_token);
-    sessionStorage.removeItem("spotify_verifier");
-    sessionStorage.removeItem("spotify_state");
-    return true;
-  }
-
-  async function accessToken() {
-    const access = localStorage.getItem("spotify_access_token");
-    if (access && Date.now() < Number(localStorage.getItem("spotify_expires_at") ?? 0) - 60000) return access;
-    const refresh = localStorage.getItem("spotify_refresh_token");
-    if (!refresh) return null;
-    const response = await fetch("https://accounts.spotify.com/api/token", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ client_id: CLIENT_ID, grant_type: "refresh_token", refresh_token: refresh }) });
-    if (!response.ok) return null;
-    const token = await response.json();
-    localStorage.setItem("spotify_access_token", token.access_token);
-    localStorage.setItem("spotify_expires_at", String(Date.now() + token.expires_in * 1000));
-    if (token.refresh_token) localStorage.setItem("spotify_refresh_token", token.refresh_token);
-    return token.access_token;
-  }
-
   async function spotify(type: string, query = "") {
     const url = new URL(SPOTIFY_API_URL);
     url.searchParams.set("type", type);
@@ -147,7 +102,15 @@
   function renderListening(current: any, recent: any) {
     const track = current ?? recent;
     const playing = Boolean(current?.isPlaying);
-    if (!track) { if (label) label.textContent = "SPOTIFY OFFLINE"; if (heading) heading.textContent = "Nothing playing right now."; if (placeholder) placeholder.textContent = "Start a song on Spotify and it will appear here."; return; }
+    if (!track) {
+      if (label) label.textContent = "SPOTIFY OFFLINE";
+      if (heading) heading.textContent = "Nothing playing right now.";
+      if (placeholder) { placeholder.hidden = false; placeholder.textContent = "Start a song on Spotify and it will appear here."; }
+      if (nowImage) { nowImage.hidden = true; nowImage.removeAttribute("src"); }
+      if (nowCopy) nowCopy.hidden = true;
+      if (nowPlaying) nowPlaying.href = "#";
+      return;
+    }
     if (label) label.textContent = playing ? "CURRENTLY LISTENING TO" : "LAST LISTENED";
     if (heading) heading.textContent = playing ? "What am I listening to?" : "The last thing I played.";
     if (placeholder) placeholder.hidden = true;
@@ -169,11 +132,26 @@
   }
 
   async function loadData() {
-    if (connectButton) connectButton.hidden = false;
-    const data = await spotify("all");
-    renderListening(data?.current, data?.recent);
-    renderArtists(data?.artists);
-    renderTracks(data?.tracks);
+    if (connectButton) { connectButton.hidden = false; connectButton.disabled = true; connectButton.textContent = "LOADING..."; }
+    try {
+      const data = await spotify("all");
+      if (!data) throw new Error("The Spotify service is unavailable.");
+      renderListening(data.current, data.recent);
+      renderArtists(data.artists);
+      renderTracks(data.tracks);
+      if (data.errors?.some((item: any) => item.section === "currentlyPlaying")) {
+        if (label) label.textContent = "SPOTIFY NEEDS ATTENTION";
+        if (heading) heading.textContent = "Playback is temporarily unavailable.";
+        if (placeholder) { placeholder.hidden = false; placeholder.textContent = "The Spotify Worker needs to be re-authorized."; }
+      }
+    } catch (error) {
+      if (label) label.textContent = "SPOTIFY UNAVAILABLE";
+      if (heading) heading.textContent = "I cannot check Spotify right now.";
+      if (placeholder) { placeholder.hidden = false; placeholder.textContent = "Please try refreshing in a moment."; }
+      console.error("Could not load Spotify data", error);
+    } finally {
+      if (connectButton) { connectButton.disabled = false; connectButton.textContent = "REFRESH"; }
+    }
   }
 
   async function search(query: string) {
@@ -182,12 +160,7 @@
     searchResults.innerHTML = (result?.tracks ?? []).map((item: any) => `<button type="button" class="search-result" data-song-url="${item.url}" data-song-label="${item.name} — ${item.artists}"><img src="${item.image}" alt="" /><span><strong>${item.name}</strong><small>${item.artists}</small></span></button>`).join("");
   }
 
-  async function callback() {
-    const params = new URLSearchParams(window.location.search);
-    if (params.has("code")) { await exchangeCode(params.get("code")!, params.get("state")); window.history.replaceState({}, document.title, window.location.pathname); }
-  }
-
-  function open() { if (!overlay) return; overlay.classList.add("is-open"); overlay.setAttribute("aria-hidden", "false"); document.body.style.overflow = "hidden"; closeButton?.focus(); loadData(); refreshTimer = window.setInterval(loadData, 30000); }
+  function open() { if (!overlay) return; overlay.classList.add("is-open"); overlay.setAttribute("aria-hidden", "false"); document.body.style.overflow = "hidden"; closeButton?.focus(); loadData(); refreshTimer = window.setInterval(loadData, 15000); }
   function close() { if (!overlay) return; overlay.classList.remove("is-open"); overlay.setAttribute("aria-hidden", "true"); document.body.style.overflow = ""; if (refreshTimer) window.clearInterval(refreshTimer); musicButton?.focus(); }
   connectButton?.addEventListener("click", loadData);
   musicButton?.addEventListener("click", open);

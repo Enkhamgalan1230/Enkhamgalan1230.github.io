@@ -10,8 +10,16 @@ const SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token";
 const SPOTIFY_API_URL = "https://api.spotify.com/v1";
 
 function corsHeaders(origin: string, allowedOrigin: string) {
+  const allowedOrigins = allowedOrigin
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
+  const requestOrigin = allowedOrigins.includes(origin)
+    ? origin
+    : allowedOrigins[0] ?? "";
+
   return {
-    "Access-Control-Allow-Origin": origin === allowedOrigin ? origin : allowedOrigin,
+    "Access-Control-Allow-Origin": requestOrigin,
     "Access-Control-Allow-Methods": "GET, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Cache-Control": "no-store",
