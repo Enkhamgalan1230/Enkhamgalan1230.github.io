@@ -65,7 +65,23 @@ import ProjectModal from "../components/ProjectModal.astro";
          ========================= -->
 
     <section class="demo-section">
-      <div class="demo-placeholder">
+      <div class="demo-placeholder demo-video-frame">
+        <video
+          class="demo-video"
+          autoplay
+          loop
+          muted
+          playsinline
+          preload="metadata"
+          aria-label="Receipt project demo"
+        >
+          <source
+            src="/videos/reciept/receipt_portfolio_demo.mp4"
+            type="video/mp4"
+          />
+        </video>
+
+        <div class="demo-video-wash" aria-hidden="true"></div>
         <div>
           <span class="demo-label">
             PROJECT DEMO
@@ -780,6 +796,79 @@ import ProjectModal from "../components/ProjectModal.astro";
     font-size: 1.5rem;
   }
 
+  .demo-video-frame {
+    position: relative;
+    isolation: isolate;
+    background: rgba(229, 213, 210, 0.28);
+  }
+
+  .demo-video-frame > div:not(:first-of-type) {
+    display: none;
+  }
+
+  .demo-video {
+    position: absolute;
+    inset: -3%;
+    z-index: 0;
+    width: 106%;
+    height: 106%;
+    object-fit: cover;
+    opacity: 0.92;
+    filter: saturate(0.96) contrast(1.02) brightness(1.01);
+    mix-blend-mode: normal;
+    -webkit-mask-image: radial-gradient(
+      ellipse at center,
+      #000 66%,
+      rgba(0, 0, 0, 0.9) 83%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      ellipse at center,
+      #000 66%,
+      rgba(0, 0, 0, 0.9) 83%,
+      transparent 100%
+    );
+  }
+
+  .demo-video-wash {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: block !important;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        90deg,
+        rgba(214, 195, 199, 0.28),
+        transparent 18%,
+        transparent 82%,
+        rgba(214, 195, 199, 0.28)
+      ),
+      linear-gradient(
+        180deg,
+        rgba(229, 213, 210, 0.22),
+        transparent 18%,
+        transparent 82%,
+        rgba(199, 177, 186, 0.28)
+      );
+    box-shadow: inset 0 0 54px 10px rgba(214, 195, 199, 0.3);
+  }
+
+  /* Keep the footage crisp; soften only the four corners. */
+  .demo-video {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .demo-video-wash {
+    background:
+      radial-gradient(circle at 0 0, rgba(214, 195, 199, 0.38), transparent 18%),
+      radial-gradient(circle at 100% 0, rgba(214, 195, 199, 0.38), transparent 18%),
+      radial-gradient(circle at 0 100%, rgba(199, 177, 186, 0.38), transparent 18%),
+      radial-gradient(circle at 100% 100%, rgba(199, 177, 186, 0.38), transparent 18%);
+    box-shadow: none;
+  }
+
   /* =========================
      INTRO
      ========================= */
@@ -938,7 +1027,7 @@ import ProjectModal from "../components/ProjectModal.astro";
   }
 
   .architecture-node {
-    min-height: 180px;
+    min-height: 205px;
 
     display: flex;
 
@@ -949,7 +1038,7 @@ import ProjectModal from "../components/ProjectModal.astro";
 
     gap: 18px;
 
-    padding: 20px;
+    padding: 23px;
 
     border:
       1px solid
@@ -981,7 +1070,7 @@ import ProjectModal from "../components/ProjectModal.astro";
       "Instrument Serif",
       serif;
 
-    font-size: 1.65rem;
+    font-size: 1.82rem;
 
     font-weight: 400;
 
@@ -991,7 +1080,7 @@ import ProjectModal from "../components/ProjectModal.astro";
   }
 
   .architecture-node small {
-    max-width: 155px;
+    max-width: 170px;
 
     font-size: 0.78rem;
 
@@ -1047,7 +1136,7 @@ import ProjectModal from "../components/ProjectModal.astro";
     display: grid;
 
     grid-template-columns:
-      0.8fr 1.4fr;
+      minmax(250px, 0.68fr) minmax(0, 1.72fr);
 
     gap: 60px;
 
@@ -1120,7 +1209,7 @@ import ProjectModal from "../components/ProjectModal.astro";
   .scraping-detail-image {
     overflow: hidden;
 
-    padding: 20px;
+    padding: 12px;
 
     border:
       1px solid
@@ -1486,7 +1575,7 @@ import ProjectModal from "../components/ProjectModal.astro";
       "Courier Prime",
       monospace;
 
-    font-size: 0.78rem;
+    font-size: 0.82rem;
 
     line-height: 1.5;
 
