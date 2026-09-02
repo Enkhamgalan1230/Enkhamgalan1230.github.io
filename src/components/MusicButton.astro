@@ -27,6 +27,7 @@
 <script>
   const SPOTIFY_API_URL = "https://enkhamgalan-spotify-api.zaecisama.workers.dev/api/spotify";
   const musicControl = document.querySelector<HTMLElement>(".music-control");
+  const siteHeader = document.querySelector<HTMLElement>(".site-header");
   const musicButton = document.querySelector<HTMLButtonElement>(".music-button");
   const dropdown = document.querySelector<HTMLElement>(".now-playing-dropdown");
   const label = document.querySelector<HTMLElement>("[data-now-playing-label]");
@@ -39,6 +40,9 @@
 
   let refreshTimer: number | undefined;
   let closeTimer: number | undefined;
+  let progressTimer: number | undefined;
+  let displayedProgress = 0;
+  let displayedDuration = 0;
 
   async function loadSpotifyData() {
     try {
@@ -52,6 +56,7 @@
       const isPlaying = Boolean(data.current?.isPlaying && track === data.current);
 
       if (!track) {
+        stopProgressTimer();
         if (label) label.textContent = "NOT PLAYING";
         if (wave) wave.classList.remove("is-playing");
         if (title) title.textContent = "Nothing played recently";
@@ -69,11 +74,10 @@
       if (wave) wave.classList.toggle("is-playing", isPlaying);
       if (title) title.textContent = track.name;
       if (artist) artist.textContent = `${track.artists} · ${track.album}`;
-      if (time) {
-        time.textContent = track.progress != null && track.duration != null
-          ? `${formatTime(track.progress)} / ${formatTime(track.duration)}`
-          : "";
-      }
+      displayedProgress = track.progress ?? 0;
+      displayedDuration = track.duration ?? 0;
+      updateProgressText();
+      startProgressTimer(isPlaying);
       if (image) {
         image.hidden = !track.image;
         image.src = track.image;
@@ -82,6 +86,7 @@
       if (link) link.href = track.url || "#";
     } catch (error) {
       if (label) label.textContent = "SPOTIFY UNAVAILABLE";
+      stopProgressTimer();
       if (wave) wave.classList.remove("is-playing");
       if (title) title.textContent = "Unable to load listening activity";
       if (artist) artist.textContent = "Please try again later";
@@ -97,11 +102,34 @@
     return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
   }
 
+  function updateProgressText() {
+    if (!time) return;
+    time.textContent = displayedDuration
+      ? `${formatTime(displayedProgress)} / ${formatTime(displayedDuration)}`
+      : "";
+  }
+
+  function stopProgressTimer() {
+    if (progressTimer) window.clearInterval(progressTimer);
+    progressTimer = undefined;
+  }
+
+  function startProgressTimer(isPlaying: boolean) {
+    stopProgressTimer();
+    if (!isPlaying || !displayedDuration) return;
+
+    progressTimer = window.setInterval(() => {
+      displayedProgress = Math.min(displayedProgress + 1000, displayedDuration);
+      updateProgressText();
+    }, 1000);
+  }
+
   function openDropdown() {
     if (!dropdown || !musicButton) return;
     dropdown.classList.add("is-open");
     dropdown.setAttribute("aria-hidden", "false");
     musicButton.setAttribute("aria-expanded", "true");
+    siteHeader?.classList.add("music-open");
     loadSpotifyData();
     if (refreshTimer) window.clearInterval(refreshTimer);
     if (closeTimer) window.clearTimeout(closeTimer);
@@ -114,8 +142,10 @@
     dropdown.classList.remove("is-open");
     dropdown.setAttribute("aria-hidden", "true");
     musicButton.setAttribute("aria-expanded", "false");
+    siteHeader?.classList.remove("music-open");
     if (refreshTimer) window.clearInterval(refreshTimer);
     refreshTimer = undefined;
+    stopProgressTimer();
     if (closeTimer) window.clearTimeout(closeTimer);
     closeTimer = undefined;
   }
@@ -277,6 +307,10 @@
       left: 16px;
       width: auto;
       transform-origin: top center;
+    }
+
+    :global(.site-header.music-open) {
+      padding-bottom: 142px;
     }
   }
 
