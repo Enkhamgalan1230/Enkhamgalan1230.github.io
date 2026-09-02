@@ -53,8 +53,31 @@ async function spotify(path: string, token: string) {
   });
 
   if (response.status === 204) return null;
-  if (!response.ok) throw new Error(`Spotify request failed: ${response.status}`);
+  if (!response.ok) {
+    const error = new Error(`Spotify request failed: ${response.status}`) as Error & {
+      path: string;
+      status: number;
+    };
+    error.path = path;
+    error.status = response.status;
+    throw error;
+  }
   return response.json();
+}
+
+function safeEndpointError(
+  section: string,
+  path: string,
+  scope: string,
+  error: unknown
+) {
+  const spotifyError = error as { status?: number };
+  return {
+    section,
+    endpoint: path,
+    status: spotifyError.status ?? 502,
+    requiredScope: scope,
+  };
 }
 
 function artistNames(artists: Array<{ name: string }> = []) {
@@ -174,18 +197,55 @@ export default {
         return json({ tracks: (result.tracks?.items ?? []).map(trackData) }, 200, origin, env);
       }
 
-      const [current, recent, artists, tracks] = await Promise.all([
-        spotify("/me/player", token),
-        spotify("/me/player/recently-played?limit=1", token),
-        spotify("/me/top/artists?limit=5&time_range=medium_term", token),
-        spotify("/me/top/tracks?limit=5&time_range=medium_term", token),
-      ]);
+      const endpoints = [
+        {
+          section: "currentlyPlaying",
+          path: "/me/player",
+          scope: "user-read-currently-playing",
+        },
+        {
+          section: "recentlyPlayed",
+          path: "/me/player/recently-played?limit=1",
+          scope: "user-read-recently-played",
+        },
+        {
+          section: "topArtists",
+          path: "/me/top/artists?limit=5&time_range=medium_term",
+          scope: "user-top-read",
+        },
+        {
+          section: "topTracks",
+          path: "/me/top/tracks?limit=5&time_range=medium_term",
+          scope: "user-top-read",
+        },
+      ];
+
+      const settled = await Promise.allSettled(
+        endpoints.map((endpoint) => spotify(endpoint.path, token))
+      );
+
+      const [currentResult, recentResult, artistsResult, tracksResult] = settled;
+      const current = currentResult.status === "fulfilled" ? currentResult.value : null;
+      const recent = recentResult.status === "fulfilled" ? recentResult.value : null;
+      const artists = artistsResult.status === "fulfilled" ? artistsResult.value : null;
+      const tracks = tracksResult.status === "fulfilled" ? tracksResult.value : null;
+      const errors = settled.flatMap((result, index) =>
+        result.status === "rejected"
+          ? [safeEndpointError(
+              endpoints[index].section,
+              endpoints[index].path,
+              endpoints[index].scope,
+              result.reason
+            )]
+          : []
+      );
 
       return json({
         current: current?.item ? { ...trackData(current.item), isPlaying: current.is_playing } : null,
         recent: recent?.items?.[0]?.track ? trackData(recent.items[0].track) : null,
         artists: (artists?.items ?? []).map(sanitizeArtist),
         tracks: (tracks?.items ?? []).map(trackData),
+        errors,
       }, 200, origin, env);
     } catch (error) {
       return json({ error: error instanceof Error ? error.message : "Spotify request failed" }, 502, origin, env);
