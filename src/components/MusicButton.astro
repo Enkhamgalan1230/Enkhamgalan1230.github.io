@@ -70,7 +70,7 @@
         return;
       }
 
-      if (label) label.textContent = isPlaying ? "NOW PLAYING" : "LAST LISTENED";
+      if (label) label.textContent = isPlaying ? "RIGHT NOW I'M LISTENING TO .." : "LAST LISTENED";
       if (wave) wave.classList.toggle("is-playing", isPlaying);
       if (title) title.textContent = track.name;
       if (artist) artist.textContent = `${track.artists} · ${track.album}`;
