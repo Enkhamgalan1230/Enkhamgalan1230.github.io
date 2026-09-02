@@ -13,7 +13,6 @@
           <span class="music-card-label" data-listening-label>NOW PLAYING</span>
           <h2 data-listening-heading>What I’m listening to</h2>
         </div>
-        <button class="spotify-connect" type="button" data-spotify-connect>UPDATE</button>
       </div>
 
       <a class="current-track" data-now-playing href="#" target="_blank" rel="noreferrer">
@@ -24,10 +23,9 @@
             <small data-now-playing-artist></small>
             <small class="now-playing-status"><i data-now-playing-dot></i><span data-now-playing-state>PLAYING NOW</span><span data-now-playing-time></span></small>
           </span>
-        <span class="music-track-arrow" aria-hidden="true">&#8599;</span>
       </a>
 
-      <h3 class="music-section-title">MY TOP ARTISTS</h3>
+      <h3 class="music-section-title">CURRENT TOP ARTISTS</h3>
       <div class="music-artists" data-top-artists><p class="music-muted">Your top artists will appear here.</p></div>
 
       <p class="music-taste">
@@ -69,7 +67,6 @@
   const musicButton = document.querySelector<HTMLButtonElement>(".music-button");
   const overlay = document.querySelector<HTMLElement>(".music-overlay");
   const closeButton = document.querySelector<HTMLButtonElement>(".music-card-close");
-  const connectButton = document.querySelector<HTMLButtonElement>("[data-spotify-connect]");
   const label = document.querySelector<HTMLElement>("[data-listening-label]");
   const heading = document.querySelector<HTMLElement>("[data-listening-heading]");
   const nowPlaying = document.querySelector<HTMLAnchorElement>("[data-now-playing]");
@@ -137,16 +134,15 @@
 
   function renderArtists(items: any[] = []) {
     if (!artistsContainer) return;
-    artistsContainer.innerHTML = items.length ? items.map((artist) => `<article class="artist-card"><img src="${escapeHtml(artist.image)}" alt="" loading="lazy" /><a href="${escapeHtml(artist.url)}" target="_blank" rel="noreferrer"><span>${escapeHtml(artist.name)}</span></a><small>OPEN &#8599;</small></article>`).join("") : `<p class="music-muted">No top artist data available yet.</p>`;
+    artistsContainer.innerHTML = items.length ? items.map((artist) => `<article class="artist-card"><a href="${escapeHtml(artist.url)}" target="_blank" rel="noreferrer"><img src="${escapeHtml(artist.image)}" alt="${escapeHtml(artist.name)}" loading="lazy" /><span>${escapeHtml(artist.name)}</span></a></article>`).join("") : `<p class="music-muted">No top artist data available yet.</p>`;
   }
 
   function renderTracks(items: any[] = []) {
     if (!tracksContainer) return;
-    tracksContainer.innerHTML = items.length ? items.map((item, index) => `<li><a class="music-track" href="${item.url}" target="_blank" rel="noreferrer"><span class="music-track-number">${String(index + 1).padStart(2, "0")}</span><img src="${item.image}" alt="" loading="lazy" /><span class="music-track-copy"><strong>${item.name}</strong><small>${item.artists} · ${item.album}</small></span><span class="music-track-arrow" aria-hidden="true">&#8599;</span></a></li>`).join("") : `<li class="music-muted">No top track data available yet.</li>`;
+    tracksContainer.innerHTML = items.length ? items.map((item, index) => `<li><a class="music-track" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer"><span class="music-track-number">${String(index + 1).padStart(2, "0")}</span><img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)} album art" loading="lazy" /><span class="music-track-copy"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.artists)} · ${escapeHtml(item.album)}</small></span></a></li>`).join("") : `<li class="music-muted">No top track data available yet.</li>`;
   }
 
   async function loadData() {
-    if (connectButton) { connectButton.hidden = false; connectButton.disabled = true; connectButton.textContent = "LOADING..."; }
     try {
       const data = await spotify("all");
       if (!data) throw new Error("The Spotify service is unavailable.");
@@ -157,14 +153,16 @@
         if (label) label.textContent = "SPOTIFY NEEDS ATTENTION";
         if (heading) heading.textContent = "Playback is temporarily unavailable.";
         if (placeholder) { placeholder.hidden = false; placeholder.textContent = "The Spotify Worker needs to be re-authorized."; }
+      } else if (data.errors?.some((item: any) => item.status === 429)) {
+        if (label) label.textContent = "SPOTIFY RATE LIMITED";
+        if (heading) heading.textContent = "Spotify needs a moment.";
+        if (placeholder) { placeholder.hidden = false; placeholder.textContent = "The listening data will refresh automatically."; }
       }
     } catch (error) {
       if (label) label.textContent = "SPOTIFY UNAVAILABLE";
       if (heading) heading.textContent = "I cannot check Spotify right now.";
       if (placeholder) { placeholder.hidden = false; placeholder.textContent = "Please try refreshing in a moment."; }
       console.error("Could not load Spotify data", error);
-    } finally {
-      if (connectButton) { connectButton.disabled = false; connectButton.textContent = "REFRESH"; }
     }
   }
 
@@ -174,9 +172,8 @@
     searchResults.innerHTML = (result?.tracks ?? []).map((item: any) => `<button type="button" class="search-result" data-song-url="${item.url}" data-song-label="${item.name} — ${item.artists}"><img src="${item.image}" alt="" /><span><strong>${item.name}</strong><small>${item.artists}</small></span></button>`).join("");
   }
 
-  function open() { if (!overlay) return; overlay.classList.add("is-open"); overlay.setAttribute("aria-hidden", "false"); document.body.style.overflow = "hidden"; closeButton?.focus(); loadData(); refreshTimer = window.setInterval(loadData, 15000); }
-  function close() { if (!overlay) return; overlay.classList.remove("is-open"); overlay.setAttribute("aria-hidden", "true"); document.body.style.overflow = ""; if (refreshTimer) window.clearInterval(refreshTimer); musicButton?.focus(); }
-  connectButton?.addEventListener("click", loadData);
+  function open() { if (!overlay) return; overlay.classList.add("is-open"); overlay.setAttribute("aria-hidden", "false"); document.body.style.overflow = "hidden"; closeButton?.focus(); loadData(); if (refreshTimer) window.clearInterval(refreshTimer); refreshTimer = window.setInterval(loadData, 300000); }
+  function close() { if (!overlay) return; overlay.classList.remove("is-open"); overlay.setAttribute("aria-hidden", "true"); document.body.style.overflow = ""; if (refreshTimer) window.clearInterval(refreshTimer); refreshTimer = undefined; musicButton?.focus(); }
   musicButton?.addEventListener("click", open);
   closeButton?.addEventListener("click", close);
   overlay?.addEventListener("click", (event) => { if (event.target === overlay) close(); });
@@ -184,7 +181,6 @@
   searchResults?.addEventListener("click", (event) => { const result = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-song-url]"); if (!result || !songInput) return; songInput.value = result.dataset.songLabel ?? ""; selectedSongUrl = result.dataset.songUrl ?? ""; searchResults.innerHTML = ""; });
   form?.addEventListener("submit", (event) => { event.preventDefault(); const data = new FormData(form); const song = String(data.get("song") ?? "").trim(); const name = String(data.get("name") ?? "").trim(); if (!song || !name) return; const subject = encodeURIComponent(`Music recommendation from ${name}`); const body = encodeURIComponent(`${name} recommended this song:\n\n${song}\n${selectedSongUrl}`); window.location.href = `mailto:enkhamgalan.entwan@outlook.com?subject=${subject}&body=${body}`; if (status) status.textContent = "Opening your email app..."; });
   document.addEventListener("keydown", (event) => { if (event.key === "Escape" && overlay?.classList.contains("is-open")) close(); });
-  loadData();
 </script>
 
 <style>
@@ -331,32 +327,6 @@
     letter-spacing: -0.025em;
   }
 
-  .spotify-connect {
-    flex-shrink: 0;
-    padding: 10px 13px;
-    border: 1px solid #4d7657;
-    border-radius: 999px;
-    background: transparent;
-    color: #4d7657;
-    font: 0.68rem "Courier Prime", monospace;
-    cursor: pointer;
-    transition:
-      background 0.2s ease,
-      color 0.2s ease,
-      transform 0.2s ease;
-  }
-
-  .spotify-connect:hover {
-    background: #4d7657;
-    color: #fff;
-    transform: translateY(-1px);
-  }
-
-  .spotify-connect:disabled {
-    cursor: wait;
-    opacity: 0.55;
-  }
-
   .current-track {
     display: grid;
     grid-template-columns: 72px minmax(0, 1fr) auto;
@@ -388,9 +358,7 @@
     object-fit: cover;
   }
 
-  .current-track > span:not(.music-track-arrow):not(
-      .current-track-placeholder
-    ) {
+  .current-track > span:not(.current-track-placeholder) {
     display: flex;
     min-width: 0;
     flex-direction: column;
@@ -454,30 +422,29 @@
     display: none !important;
   }
 
-  .music-track-arrow {
-    color: #777;
-    font: 0.9rem "Courier Prime", monospace;
-  }
-
   .music-section-title {
     margin: 0 0 12px;
   }
 
   .music-artists {
     display: grid;
+    width: 100%;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 10px;
-    margin: 0 0 26px;
+    gap: 8px;
+    margin: 0 0 22px;
+    overflow: hidden;
   }
 
-  .artist-card {
+  :global(.artist-card) {
     display: flex;
+    box-sizing: border-box;
+    width: 100%;
     min-width: 0;
-    flex-direction: column;
-    gap: 7px;
-    padding: 10px;
+    min-height: 0;
+    overflow: hidden;
+    padding: 7px;
     border: 1px solid rgba(17, 17, 17, 0.09);
-    border-radius: 12px;
+    border-radius: 13px;
     background: rgba(255, 255, 255, 0.7);
     color: #111;
     transition:
@@ -486,41 +453,52 @@
       box-shadow 0.2s ease;
   }
 
-  .artist-card:hover {
+  :global(.artist-card:hover) {
     transform: translateY(-2px);
     background: #fff;
     box-shadow: 0 8px 20px rgba(64, 54, 64, 0.08);
   }
 
-  .artist-card img {
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
+  :global(.artist-card img) {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 8px;
     object-fit: cover;
     opacity: 0.9;
   }
 
-  .artist-card a {
+  :global(.artist-card a) {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 5px;
     overflow: hidden;
     color: #111;
-    text-decoration: underline;
-    text-decoration-color: rgba(17, 17, 17, 0.3);
-    text-underline-offset: 3px;
+    text-decoration: none;
   }
 
-  .artist-card a:hover {
-    text-decoration-color: currentColor;
+  :global(.artist-card a:hover) {
+    text-decoration: none;
   }
 
-  .artist-card span {
-    display: block;
+  :global(.artist-card span) {
+    min-width: 0;
     overflow: hidden;
-    font: 0.7rem "Courier Prime", monospace;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    color: #222;
+    font: 700 0.64rem/1.2 "Courier Prime", monospace;
+    text-align: center;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    white-space: normal;
   }
 
-  .artist-card small {
+  :global(.artist-card small) {
     color: #777;
     font: 0.6rem "Courier Prime", monospace;
   }
@@ -539,23 +517,31 @@
 
   .music-track-list {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    margin: 0 0 28px;
+    width: 100%;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0 0 24px;
     padding: 0;
     list-style: none;
+    overflow: hidden;
   }
 
-  .music-track-list li {
+  :global(.music-track-list li) {
+    width: 100%;
     min-width: 0;
+    min-height: 0;
   }
 
-  .music-track {
+  :global(.music-track) {
+    position: relative;
     display: grid;
-    grid-template-columns: 18px 46px minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 9px;
-    min-height: 64px;
+    box-sizing: border-box;
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 5px;
+    min-height: 0;
+    overflow: hidden;
     padding: 8px;
     border: 1px solid rgba(17, 17, 17, 0.09);
     border-radius: 12px;
@@ -568,46 +554,62 @@
       box-shadow 0.2s ease;
   }
 
-  .music-track:hover {
+  :global(.music-track:hover) {
     transform: translateY(-2px);
     background: #fff;
     box-shadow: 0 8px 20px rgba(64, 54, 64, 0.09);
   }
 
-  .music-track-number {
+  :global(.music-track-number) {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 1;
     color: #999;
     font: 0.65rem "Courier Prime", monospace;
   }
 
-  .music-track img {
-    width: 46px;
-    height: 46px;
-    border-radius: 6px;
+  :global(.music-track img) {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 8px;
     object-fit: cover;
   }
 
-  .music-track-copy {
+  :global(.music-track-copy) {
     display: flex;
     min-width: 0;
     flex-direction: column;
     gap: 3px;
+    overflow: hidden;
+    text-align: center;
   }
 
-  .music-track-copy strong,
-  .music-track-copy small {
+  :global(.music-track-copy strong),
+  :global(.music-track-copy small) {
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: normal;
   }
 
-  .music-track-copy strong {
+  :global(.music-track-copy strong) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
     color: #111;
-    font: 700 0.7rem "Courier Prime", monospace;
+    font: 700 0.64rem/1.2 "Courier Prime", monospace;
   }
 
-  .music-track-copy small {
+  :global(.music-track-copy small) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
     color: #777;
-    font: 0.65rem "Courier Prime", monospace;
+    font: 0.59rem/1.25 "Courier Prime", monospace;
+    line-height: 1.35;
   }
 
   .recommendation-heading {
@@ -803,11 +805,11 @@
     }
 
     .music-artists {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
     }
 
     .music-track-list {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
     }
   }
 
@@ -855,11 +857,6 @@
       align-items: flex-start;
     }
 
-    .spotify-connect {
-      margin-right: 42px;
-      padding: 9px 11px;
-    }
-
     .music-card-content h2 {
       margin-bottom: 20px;
       font-size: clamp(2.35rem, 12vw, 3.25rem);
@@ -885,11 +882,11 @@
     }
 
     .music-artists {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
     }
 
     .music-track-list {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
     }
 
     .recommendation-form {
@@ -911,12 +908,8 @@
       display: block;
     }
 
-    .spotify-connect {
-      margin: 0 0 18px;
-    }
-
     .music-artists {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
     }
   }
 
@@ -925,10 +918,9 @@
     .music-card,
     .music-button,
     .current-track,
-    .artist-card,
-    .music-track,
+    :global(.artist-card),
+    :global(.music-track),
     .music-card-close,
-    .spotify-connect,
     .recommendation-form button {
       transition: none;
     }
