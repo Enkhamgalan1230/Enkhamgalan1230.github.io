@@ -200,7 +200,7 @@ export default {
       const endpoints = [
         {
           section: "currentlyPlaying",
-          path: "/me/player",
+          path: "/me/player/currently-playing",
           scope: "user-read-currently-playing",
         },
         {
