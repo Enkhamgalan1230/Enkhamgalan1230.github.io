@@ -270,7 +270,14 @@
   @media (max-width: 640px) {
     .music-button { width: 28px; height: 28px; }
     .music-button span { font-size: 1.5rem; }
-    .now-playing-dropdown { right: -4px; }
+    .now-playing-dropdown {
+      position: fixed;
+      top: 58px;
+      right: 16px;
+      left: 16px;
+      width: auto;
+      transform-origin: top center;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -3,5 +3,5 @@ main = "src/index.ts"
 compatibility_date = "2026-09-02"
 
 [vars]
-ALLOWED_ORIGIN = "https://enkhamgalan1230.github.io,http://localhost:4321,http://127.0.0.1:4321"
+ALLOWED_ORIGIN = "https://enkhamgalan1230.github.io,https://entwan.dev,https://www.entwan.dev,http://localhost:4321,http://127.0.0.1:4321"
 SPOTIFY_REDIRECT_URI = "https://enkhamgalan-spotify-api.zaecisama.workers.dev/oauth/callback"
