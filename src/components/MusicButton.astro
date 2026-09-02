@@ -188,85 +188,749 @@
 </script>
 
 <style>
-  .music-button { display:flex; align-items:center; justify-content:center; width:32px; height:32px; flex-shrink:0; border:0; padding:0; background:transparent; color:inherit; font:inherit; cursor:pointer; transition:opacity .2s ease; }
-  .music-button:hover { opacity:.55; }
-  .music-button:focus-visible { outline:2px solid currentColor; outline-offset:4px; }
-  .music-button span { font-family:Georgia,serif; font-size:1.75rem; line-height:1; }
-  .music-overlay { position:fixed; inset:0; z-index:1000; display:flex; align-items:center; justify-content:center; padding:30px; background:rgba(64,54,64,.56); opacity:0; visibility:hidden; pointer-events:none; transition:opacity .35s ease,visibility .35s ease; }
-  .music-overlay.is-open { opacity:1; visibility:visible; pointer-events:auto; }
-  .music-card { position:relative; display:grid; grid-template-columns:20% 80%; width:min(1000px,94vw); height:min(760px,calc(100vh - 60px)); min-height:0; overflow:hidden; border-radius:22px; background:#f7f6f4; box-shadow:0 24px 80px rgba(28,20,29,.28); transform:translateY(-90px); transition:transform .65s cubic-bezier(.22,1,.36,1); }
-  .music-overlay.is-open .music-card { transform:translateY(0); }
-  .music-card-note { display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 30% 25%,#e5d5d2,transparent 40%),linear-gradient(145deg,#d6c3c7,#93788f); color:#403640; font-family:Georgia,serif; font-size:clamp(8rem,18vw,14rem); }
-  .music-card-content { min-width:0; min-height:0; overflow-y:auto; overscroll-behavior:contain; scrollbar-color:#b4a4ac transparent; padding:48px 54px 54px; }
-  .music-heading-row { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; }
-  .music-card-label,.music-section-title { color:#777; font:0.7rem "Courier Prime",monospace; letter-spacing:.08em; }
-  .music-card-content h2 { margin:12px 0 22px; color:#111; font:400 clamp(2.8rem,5vw,4.8rem)/.92 "Instrument Serif",serif; letter-spacing:-.025em; }
-  .spotify-connect { flex-shrink:0; padding:10px 13px; border:1px solid #4d7657; border-radius:999px; background:transparent; color:#4d7657; font:.68rem "Courier Prime",monospace; cursor:pointer; }
-  .spotify-connect:hover { background:#4d7657; color:#fff; }
-  .current-track { display:grid; grid-template-columns:64px minmax(0,1fr) auto; align-items:center; gap:12px; min-height:64px; margin:0 0 32px; padding:10px 12px; border:1px solid rgba(17,17,17,.13); border-radius:12px; background:#fff; color:#111; text-decoration:none; box-shadow:4px 4px 0 rgba(64,54,64,.08); }
-  .current-track img { width:64px; height:64px; object-fit:cover; border-radius:7px; }
-  .current-track > span:not(.music-track-arrow):not(.current-track-placeholder) { display:flex; min-width:0; flex-direction:column; gap:4px; }
-  .current-track strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:400 1.45rem "Instrument Serif",serif; }
-  .current-track small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#777; font:.7rem "Courier Prime",monospace; }
-  .now-playing-status { display:flex; align-items:center; gap:7px; margin-top:7px; color:#4d7657 !important; font-size:.6rem !important; letter-spacing:.04em; }
-  .now-playing-status i { width:6px; height:6px; border-radius:50%; background:#aaa; }
-  .now-playing-status i.is-playing { background:#4d7657; box-shadow:0 0 0 4px rgba(77,118,87,.12); }
-  [data-now-playing-time] { margin-left:auto; }
-  .current-track-placeholder,.music-muted { color:#777; font:.76rem "Courier Prime",monospace; }
-  .current-track-placeholder { grid-column:1 / -1; }
-  .current-track [hidden] { display:none !important; }
-  .music-track-arrow { color:#777; font:.9rem "Courier Prime",monospace; }
-  .music-section-title { margin:0 0 10px; }
-  .music-artists { display:flex; gap:10px; margin:0 -8px 28px; padding:4px 8px 10px; overflow-x:auto; scrollbar-color:#b4a4ac transparent; }
-  .artist-card { display:flex; flex:0 0 126px; min-width:0; flex-direction:column; gap:6px; padding:10px; border:1px solid rgba(17,17,17,.1); border-radius:10px; background:#fff; color:#111; box-shadow:3px 3px 0 rgba(64,54,64,.08); }
-  .artist-card img { width:42px; height:42px; object-fit:cover; border-radius:50%; opacity:.88; }
-  .artist-card a { overflow:hidden; color:#111; text-decoration:underline; text-decoration-color:rgba(17,17,17,.3); text-underline-offset:3px; }
-  .artist-card a:hover { text-decoration-color:currentColor; }
-  .artist-card span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:.7rem "Courier Prime",monospace; }
-  .artist-card small { color:#777; font:.6rem "Courier Prime",monospace; }
-  .music-taste,.recommendation-note { margin:0; color:#777; font:.75rem/1.5 "Courier Prime",monospace; }
-  .top-tracks-heading { margin-top:26px; }
-  .music-track-list { display:flex; gap:10px; margin:0 -8px 25px; padding:4px 8px 10px; overflow-x:auto; list-style:none; scrollbar-color:#b4a4ac transparent; }
-  .music-track-list li { flex:0 0 220px; }
-  .music-track { display:grid; grid-template-columns:20px 46px minmax(0,1fr) auto; align-items:center; gap:9px; min-height:58px; padding:8px; border:1px solid rgba(17,17,17,.1); border-radius:9px; background:#fff; color:#111; text-decoration:none; box-shadow:3px 3px 0 rgba(64,54,64,.08); }
-  .music-track:hover { transform:translateY(-2px); background:#fff; box-shadow:5px 5px 0 rgba(64,54,64,.13); }
-  .music-track-number { color:#999; font:.65rem "Courier Prime",monospace; }
-  .music-track img { width:46px; height:46px; object-fit:cover; border-radius:5px; }
-  .music-track-copy { display:flex; min-width:0; flex-direction:column; gap:3px; }
-  .music-track-copy strong,.music-track-copy small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .music-track-copy strong { font:700 .7rem "Courier Prime",monospace; }
-  .music-track-copy small { color:#777; font:.65rem "Courier Prime",monospace; }
-  .recommendation-heading { margin-top:8px; margin-bottom:8px; }
-  .recommendation-note em { display:block; margin-top:3px; color:#403640; }
-  .recommendation-form { display:grid; grid-template-columns:minmax(0,1fr) 130px; gap:8px; margin-top:14px; }
-  .song-search-wrap { position:relative; grid-column:1 / -1; }
-  .recommendation-form input,.recommendation-form button { min-width:0; min-height:38px; border:1px solid rgba(17,17,17,.18); border-radius:4px; font:.7rem "Courier Prime",monospace; }
-  .recommendation-form input { width:100%; padding:0 10px; background:rgba(255,255,255,.55); color:#111; }
-  .recommendation-form input:focus { outline:2px solid #4d7657; outline-offset:2px; }
-  .recommendation-form button { padding:0 10px; background:#4d7657; color:#fff; cursor:pointer; }
-  .recommendation-form button:hover { opacity:.78; }
-  .recommendation-status { align-self:center; margin:0; color:#4d7657; font:.66rem "Courier Prime",monospace; }
-  .song-search-results { position:absolute; top:calc(100% + 4px); right:0; left:0; z-index:4; overflow:hidden; border-radius:5px; background:#fff; box-shadow:0 12px 30px rgba(28,20,29,.16); }
-  .search-result { display:grid; grid-template-columns:38px minmax(0,1fr); align-items:center; gap:10px; width:100%; padding:6px 8px; border:0; background:#fff; color:#111; text-align:left; cursor:pointer; }
-  .search-result:hover { background:#edecea; }
-  .search-result img { width:38px; height:38px; object-fit:cover; border-radius:3px; }
-  .search-result span { display:flex; min-width:0; flex-direction:column; gap:2px; }
-  .search-result strong,.search-result small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .search-result strong { font:700 .72rem "Courier Prime",monospace; }
-  .search-result small { color:#777; font:.65rem "Courier Prime",monospace; }
-  .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
-  .music-card-close { position:absolute; top:16px; right:16px; z-index:2; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border:0; border-radius:50%; background:rgba(247,246,244,.72); color:#111; font-size:1.8rem; cursor:pointer; }
-  .music-card-close:hover { background:#edecea; transform:rotate(5deg); }
-  @media (max-width:640px) {
-    .music-button { width:28px; height:28px; }
-    .music-button span { font-size:1.5rem; }
-    .music-overlay { padding:18px; }
-    .music-card { display:flex; flex-direction:column; width:100%; height:calc(100vh - 36px); max-height:none; overflow:hidden; }
-    .music-card-note { min-height:150px; font-size:8rem; }
-    .music-card-content { flex:1; padding:34px 28px 40px; }
-    .music-heading-row { display:block; }
-    .spotify-connect { margin-bottom:18px; }
-    .artist-card { flex-basis:116px; }
-    .music-track-list li { flex-basis:205px; }
+  .music-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .music-button:hover {
+    opacity: 0.65;
+    transform: scale(1.08);
+  }
+
+  .music-button:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+
+  .music-button span {
+    font-family: Georgia, serif;
+    font-size: 1.75rem;
+    line-height: 1;
+  }
+
+  .music-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(37, 30, 37, 0.62);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 0.3s ease,
+      visibility 0.3s ease;
+  }
+
+  .music-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .music-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(220px, 28%) minmax(0, 1fr);
+    width: min(1120px, 96vw);
+    height: min(780px, calc(100dvh - 48px));
+    min-height: 0;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.42);
+    border-radius: 28px;
+    background: #f7f6f4;
+    box-shadow: 0 28px 90px rgba(28, 20, 29, 0.32);
+    transform: translateY(34px) scale(0.985);
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .music-overlay.is-open .music-card {
+    transform: translateY(0) scale(1);
+  }
+
+  .music-card-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background:
+      radial-gradient(
+        circle at 24% 20%,
+        rgba(255, 255, 255, 0.62),
+        transparent 34%
+      ),
+      linear-gradient(155deg, #decfd0 0%, #b99da8 52%, #745d72 100%);
+    color: rgba(64, 54, 64, 0.82);
+    font-family: Georgia, serif;
+    font-size: clamp(9rem, 17vw, 15rem);
+    text-shadow: 0 8px 30px rgba(64, 54, 64, 0.14);
+  }
+
+  .music-card-content {
+    min-width: 0;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #b9acb2 transparent;
+    padding: 46px 52px 52px;
+  }
+
+  .music-card-content::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .music-card-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .music-card-content::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: #b9acb2;
+  }
+
+  .music-heading-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .music-card-label,
+  .music-section-title {
+    color: #777;
+    font: 0.7rem "Courier Prime", monospace;
+    letter-spacing: 0.08em;
+  }
+
+  .music-card-content h2 {
+    max-width: 620px;
+    margin: 10px 0 24px;
+    color: #111;
+    font:
+      400 clamp(2.7rem, 4.5vw, 4.5rem) / 0.92 "Instrument Serif",
+      serif;
+    letter-spacing: -0.025em;
+  }
+
+  .spotify-connect {
+    flex-shrink: 0;
+    padding: 10px 13px;
+    border: 1px solid #4d7657;
+    border-radius: 999px;
+    background: transparent;
+    color: #4d7657;
+    font: 0.68rem "Courier Prime", monospace;
+    cursor: pointer;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .spotify-connect:hover {
+    background: #4d7657;
+    color: #fff;
+    transform: translateY(-1px);
+  }
+
+  .spotify-connect:disabled {
+    cursor: wait;
+    opacity: 0.55;
+  }
+
+  .current-track {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 15px;
+    min-height: 72px;
+    margin: 0 0 34px;
+    padding: 11px;
+    border: 1px solid rgba(17, 17, 17, 0.1);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.72);
+    color: #111;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(64, 54, 64, 0.07);
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .current-track:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(64, 54, 64, 0.11);
+  }
+
+  .current-track img {
+    width: 72px;
+    height: 72px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+
+  .current-track > span:not(.music-track-arrow):not(
+      .current-track-placeholder
+    ) {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .current-track strong {
+    overflow: hidden;
+    color: #111;
+    font: 400 1.45rem "Instrument Serif", serif;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .current-track small {
+    overflow: hidden;
+    color: #777;
+    font: 0.7rem "Courier Prime", monospace;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .now-playing-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 7px;
+    color: #4d7657 !important;
+    font-size: 0.6rem !important;
+    letter-spacing: 0.04em;
+  }
+
+  .now-playing-status i {
+    width: 6px;
+    height: 6px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #aaa;
+  }
+
+  .now-playing-status i.is-playing {
+    background: #4d7657;
+    box-shadow: 0 0 0 4px rgba(77, 118, 87, 0.12);
+  }
+
+  [data-now-playing-time] {
+    margin-left: auto;
+  }
+
+  .current-track-placeholder,
+  .music-muted {
+    color: #777;
+    font: 0.76rem "Courier Prime", monospace;
+  }
+
+  .current-track-placeholder {
+    grid-column: 1 / -1;
+  }
+
+  .current-track [hidden] {
+    display: none !important;
+  }
+
+  .music-track-arrow {
+    color: #777;
+    font: 0.9rem "Courier Prime", monospace;
+  }
+
+  .music-section-title {
+    margin: 0 0 12px;
+  }
+
+  .music-artists {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0 0 26px;
+  }
+
+  .artist-card {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 7px;
+    padding: 10px;
+    border: 1px solid rgba(17, 17, 17, 0.09);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.7);
+    color: #111;
+    transition:
+      transform 0.2s ease,
+      background 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .artist-card:hover {
+    transform: translateY(-2px);
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(64, 54, 64, 0.08);
+  }
+
+  .artist-card img {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    object-fit: cover;
+    opacity: 0.9;
+  }
+
+  .artist-card a {
+    overflow: hidden;
+    color: #111;
+    text-decoration: underline;
+    text-decoration-color: rgba(17, 17, 17, 0.3);
+    text-underline-offset: 3px;
+  }
+
+  .artist-card a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .artist-card span {
+    display: block;
+    overflow: hidden;
+    font: 0.7rem "Courier Prime", monospace;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .artist-card small {
+    color: #777;
+    font: 0.6rem "Courier Prime", monospace;
+  }
+
+  .music-taste,
+  .recommendation-note {
+    max-width: 760px;
+    margin: 0;
+    color: #696569;
+    font: 0.75rem/1.55 "Courier Prime", monospace;
+  }
+
+  .top-tracks-heading {
+    margin-top: 26px;
+  }
+
+  .music-track-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0 0 28px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .music-track-list li {
+    min-width: 0;
+  }
+
+  .music-track {
+    display: grid;
+    grid-template-columns: 18px 46px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 9px;
+    min-height: 64px;
+    padding: 8px;
+    border: 1px solid rgba(17, 17, 17, 0.09);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.7);
+    color: #111;
+    text-decoration: none;
+    transition:
+      transform 0.2s ease,
+      background 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .music-track:hover {
+    transform: translateY(-2px);
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(64, 54, 64, 0.09);
+  }
+
+  .music-track-number {
+    color: #999;
+    font: 0.65rem "Courier Prime", monospace;
+  }
+
+  .music-track img {
+    width: 46px;
+    height: 46px;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+
+  .music-track-copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .music-track-copy strong,
+  .music-track-copy small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .music-track-copy strong {
+    color: #111;
+    font: 700 0.7rem "Courier Prime", monospace;
+  }
+
+  .music-track-copy small {
+    color: #777;
+    font: 0.65rem "Courier Prime", monospace;
+  }
+
+  .recommendation-heading {
+    margin-top: 4px;
+    margin-bottom: 8px;
+  }
+
+  .recommendation-note em {
+    display: block;
+    margin-top: 3px;
+    color: #403640;
+  }
+
+  .recommendation-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 150px;
+    gap: 9px;
+    max-width: 760px;
+    margin-top: 16px;
+  }
+
+  .song-search-wrap {
+    position: relative;
+    grid-column: 1 / -1;
+  }
+
+  .recommendation-form input,
+  .recommendation-form button {
+    min-width: 0;
+    min-height: 42px;
+    border: 1px solid rgba(17, 17, 17, 0.15);
+    border-radius: 9px;
+    font: 0.7rem "Courier Prime", monospace;
+  }
+
+  .recommendation-form input {
+    width: 100%;
+    padding: 0 12px;
+    background: rgba(255, 255, 255, 0.7);
+    color: #111;
+  }
+
+  .recommendation-form input::placeholder {
+    color: #8b8589;
+  }
+
+  .recommendation-form input:focus {
+    outline: 2px solid #4d7657;
+    outline-offset: 2px;
+  }
+
+  .recommendation-form button {
+    padding: 0 12px;
+    border-color: #4d7657;
+    background: #4d7657;
+    color: #fff;
+    cursor: pointer;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .recommendation-form button:hover {
+    opacity: 0.82;
+    transform: translateY(-1px);
+  }
+
+  .recommendation-status {
+    align-self: center;
+    margin: 0;
+    color: #4d7657;
+    font: 0.66rem "Courier Prime", monospace;
+  }
+
+  .song-search-results {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    left: 0;
+    z-index: 6;
+    max-height: 220px;
+    overflow-y: auto;
+    border: 1px solid rgba(17, 17, 17, 0.08);
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 12px 30px rgba(28, 20, 29, 0.16);
+  }
+
+  .song-search-results:empty {
+    display: none;
+  }
+
+  .search-result {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 7px 8px;
+    border: 0;
+    border-bottom: 1px solid rgba(17, 17, 17, 0.06);
+    border-radius: 0;
+    background: #fff;
+    color: #111;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .search-result:last-child {
+    border-bottom: 0;
+  }
+
+  .search-result:hover {
+    background: #edecea;
+  }
+
+  .search-result img {
+    width: 38px;
+    height: 38px;
+    border-radius: 5px;
+    object-fit: cover;
+  }
+
+  .search-result span {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .search-result strong,
+  .search-result small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .search-result strong {
+    font: 700 0.72rem "Courier Prime", monospace;
+  }
+
+  .search-result small {
+    color: #777;
+    font: 0.65rem "Courier Prime", monospace;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .music-card-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(17, 17, 17, 0.09);
+    border-radius: 50%;
+    background: rgba(247, 246, 244, 0.82);
+    color: #111;
+    font-size: 1.65rem;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition:
+      transform 0.2s ease,
+      background 0.2s ease;
+  }
+
+  .music-card-close:hover {
+    background: #edecea;
+    transform: rotate(5deg) scale(1.04);
+  }
+
+  @media (max-width: 900px) {
+    .music-card {
+      grid-template-columns: 180px minmax(0, 1fr);
+    }
+
+    .music-card-content {
+      padding: 42px 36px 44px;
+    }
+
+    .music-artists {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .music-track-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .music-button {
+      width: 28px;
+      height: 28px;
+    }
+
+    .music-button span {
+      font-size: 1.5rem;
+    }
+
+    .music-overlay {
+      align-items: flex-end;
+      padding: 0;
+    }
+
+    .music-card {
+      display: flex;
+      width: 100%;
+      height: min(92dvh, 820px);
+      flex-direction: column;
+      border-right: 0;
+      border-bottom: 0;
+      border-left: 0;
+      border-radius: 24px 24px 0 0;
+      transform: translateY(50px);
+    }
+
+    .music-card-note {
+      min-height: 86px;
+      flex: 0 0 86px;
+      justify-content: flex-start;
+      padding-left: 24px;
+      font-size: 5.2rem;
+    }
+
+    .music-card-content {
+      flex: 1;
+      padding: 28px 20px 38px;
+    }
+
+    .music-heading-row {
+      align-items: flex-start;
+    }
+
+    .spotify-connect {
+      margin-right: 42px;
+      padding: 9px 11px;
+    }
+
+    .music-card-content h2 {
+      margin-bottom: 20px;
+      font-size: clamp(2.35rem, 12vw, 3.25rem);
+    }
+
+    .current-track {
+      grid-template-columns: 58px minmax(0, 1fr) auto;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .current-track img {
+      width: 58px;
+      height: 58px;
+    }
+
+    .current-track strong {
+      font-size: 1.2rem;
+    }
+
+    [data-now-playing-time] {
+      display: none;
+    }
+
+    .music-artists {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .music-track-list {
+      grid-template-columns: 1fr;
+    }
+
+    .recommendation-form {
+      grid-template-columns: 1fr;
+    }
+
+    .song-search-wrap {
+      grid-column: 1;
+    }
+
+    .music-card-close {
+      top: 20px;
+      right: 18px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .music-heading-row {
+      display: block;
+    }
+
+    .spotify-connect {
+      margin: 0 0 18px;
+    }
+
+    .music-artists {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .music-overlay,
+    .music-card,
+    .music-button,
+    .current-track,
+    .artist-card,
+    .music-track,
+    .music-card-close,
+    .spotify-connect,
+    .recommendation-form button {
+      transition: none;
+    }
   }
 </style>
