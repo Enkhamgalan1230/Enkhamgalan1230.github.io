@@ -1,5 +1,6 @@
 interface Env {
   ALLOWED_ORIGIN: string;
+  SPOTIFY_REDIRECT_URI: string;
   SPOTIFY_CLIENT_ID: string;
   SPOTIFY_CLIENT_SECRET: string;
   SPOTIFY_REFRESH_TOKEN: string;
@@ -78,6 +79,43 @@ function sanitizeArtist(artist: any) {
   };
 }
 
+function redirectUri(env: Env) {
+  return env.SPOTIFY_REDIRECT_URI;
+}
+
+function setupRedirect(env: Env) {
+  const state = crypto.randomUUID();
+  const authorize = new URL("https://accounts.spotify.com/authorize");
+  authorize.search = new URLSearchParams({
+    client_id: env.SPOTIFY_CLIENT_ID,
+    response_type: "code",
+    redirect_uri: redirectUri(env),
+    scope: "user-read-currently-playing user-read-recently-played user-top-read",
+    state,
+  }).toString();
+
+  return Response.redirect(authorize.toString(), 302);
+}
+
+async function exchangeAuthorizationCode(code: string, env: Env) {
+  const basic = btoa(`${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`);
+  const response = await fetch(SPOTIFY_TOKEN_URL, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${basic}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      grant_type: "authorization_code",
+      code,
+      redirect_uri: redirectUri(env),
+    }),
+  });
+
+  if (!response.ok) throw new Error("Spotify authorization code exchange failed");
+  return response.json<{ refresh_token?: string }>();
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const origin = request.headers.get("Origin") ?? "";
@@ -87,6 +125,28 @@ export default {
 
     const url = new URL(request.url);
     if (url.pathname === "/health") return json({ ok: true }, 200, origin, env);
+
+    if (url.pathname === "/oauth/start" && request.method === "GET") {
+      return setupRedirect(env);
+    }
+
+    if (url.pathname === "/oauth/callback" && request.method === "GET") {
+      const code = url.searchParams.get("code");
+      if (!code) return new Response("Missing Spotify authorization code.", { status: 400 });
+
+      try {
+        const token = await exchangeAuthorizationCode(code, env);
+        return new Response(
+          token.refresh_token
+            ? `Spotify authorization complete. Copy this refresh token into the Cloudflare secret named SPOTIFY_REFRESH_TOKEN:\n\n${token.refresh_token}\n\nThen delete this browser tab.`
+            : "Spotify did not return a refresh token. Revoke the app and authorize again.",
+          { headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" } }
+        );
+      } catch (error) {
+        return new Response(error instanceof Error ? error.message : "Spotify authorization failed.", { status: 502 });
+      }
+    }
+
     if (url.pathname !== "/api/spotify" || request.method !== "GET") {
       return json({ error: "Not found" }, 404, origin, env);
     }

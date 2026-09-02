@@ -4,3 +4,4 @@ compatibility_date = "2026-09-02"
 
 [vars]
 ALLOWED_ORIGIN = "https://enkhamgalan1230.github.io"
+SPOTIFY_REDIRECT_URI = "https://enkhamgalan-spotify-api.zaecisama.workers.dev/oauth/callback"

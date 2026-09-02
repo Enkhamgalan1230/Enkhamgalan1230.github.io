@@ -13,7 +13,7 @@
           <span class="music-card-label" data-listening-label>CONNECT SPOTIFY</span>
           <h2 data-listening-heading>What am I listening to?</h2>
         </div>
-        <button class="spotify-connect" type="button" data-spotify-connect>CONNECT</button>
+        <button class="spotify-connect" type="button" data-spotify-connect>REFRESH</button>
       </div>
 
       <a class="current-track" data-now-playing href="#" target="_blank" rel="noreferrer">
@@ -64,8 +64,9 @@
 </div>
 
 <script>
+  const SPOTIFY_API_URL = "https://enkhamgalan-spotify-api.zaecisama.workers.dev/api/spotify";
   const CLIENT_ID = "6bd736a9430548439ee34db856d03858";
-  const SCOPES = "user-read-currently-playing user-read-recently-played user-top-read";
+  const SCOPES = "";
   const musicButton = document.querySelector<HTMLButtonElement>(".music-button");
   const overlay = document.querySelector<HTMLElement>(".music-overlay");
   const closeButton = document.querySelector<HTMLButtonElement>(".music-card-close");
@@ -131,11 +132,12 @@
     return token.access_token;
   }
 
-  async function spotify(path: string) {
-    const token = await accessToken();
-    if (!token) return null;
-    const response = await fetch(`https://api.spotify.com/v1${path}`, { headers: { Authorization: `Bearer ${token}` } });
-    if (response.status === 204 || !response.ok) return null;
+  async function spotify(type: string, query = "") {
+    const url = new URL(SPOTIFY_API_URL);
+    url.searchParams.set("type", type);
+    if (query) url.searchParams.set("q", query);
+    const response = await fetch(url);
+    if (!response.ok) return null;
     return response.json();
   }
 
@@ -143,8 +145,8 @@
   const trackInfo = (track: any) => ({ name: track.name, artists: names(track.artists), album: track.album?.name ?? "", image: track.album?.images?.[1]?.url ?? track.album?.images?.[0]?.url ?? "", url: track.external_urls?.spotify ?? "#" });
 
   function renderListening(current: any, recent: any) {
-    const track = current?.item ? trackInfo(current.item) : recent?.items?.[0]?.track ? trackInfo(recent.items[0].track) : null;
-    const playing = Boolean(current?.is_playing && current?.item);
+    const track = current ?? recent;
+    const playing = Boolean(current?.isPlaying);
     if (!track) { if (label) label.textContent = "SPOTIFY OFFLINE"; if (heading) heading.textContent = "Nothing playing right now."; if (placeholder) placeholder.textContent = "Start a song on Spotify and it will appear here."; return; }
     if (label) label.textContent = playing ? "CURRENTLY LISTENING TO" : "LAST LISTENED";
     if (heading) heading.textContent = playing ? "What am I listening to?" : "The last thing I played.";
@@ -158,28 +160,26 @@
 
   function renderArtists(items: any[] = []) {
     if (!artistsContainer) return;
-    artistsContainer.innerHTML = items.length ? items.map((artist) => `<a class="artist-card" href="${artist.external_urls.spotify}" target="_blank" rel="noreferrer"><img src="${artist.images?.[1]?.url ?? artist.images?.[0]?.url ?? ""}" alt="" loading="lazy" /><span>${artist.name}</span><small>OPEN &#8599;</small></a>`).join("") : `<p class="music-muted">No top artist data available yet.</p>`;
+    artistsContainer.innerHTML = items.length ? items.map((artist) => `<a class="artist-card" href="${artist.url}" target="_blank" rel="noreferrer"><img src="${artist.image}" alt="" loading="lazy" /><span>${artist.name}</span><small>OPEN &#8599;</small></a>`).join("") : `<p class="music-muted">No top artist data available yet.</p>`;
   }
 
   function renderTracks(items: any[] = []) {
     if (!tracksContainer) return;
-    tracksContainer.innerHTML = items.length ? items.map((track, index) => { const item = trackInfo(track); return `<li><a class="music-track" href="${item.url}" target="_blank" rel="noreferrer"><span class="music-track-number">${String(index + 1).padStart(2, "0")}</span><img src="${item.image}" alt="" loading="lazy" /><span class="music-track-copy"><strong>${item.name}</strong><small>${item.artists} · ${item.album}</small></span><span class="music-track-arrow" aria-hidden="true">&#8599;</span></a></li>`; }).join("") : `<li class="music-muted">No top track data available yet.</li>`;
+    tracksContainer.innerHTML = items.length ? items.map((item, index) => `<li><a class="music-track" href="${item.url}" target="_blank" rel="noreferrer"><span class="music-track-number">${String(index + 1).padStart(2, "0")}</span><img src="${item.image}" alt="" loading="lazy" /><span class="music-track-copy"><strong>${item.name}</strong><small>${item.artists} · ${item.album}</small></span><span class="music-track-arrow" aria-hidden="true">&#8599;</span></a></li>`).join("") : `<li class="music-muted">No top track data available yet.</li>`;
   }
 
   async function loadData() {
-    const token = await accessToken();
-    if (!token) { if (connectButton) connectButton.hidden = false; return; }
-    if (connectButton) connectButton.hidden = true;
-    const [current, recent, artists, tracks] = await Promise.all([spotify("/me/player"), spotify("/me/player/recently-played?limit=1"), spotify("/me/top/artists?limit=5&time_range=medium_term"), spotify("/me/top/tracks?limit=5&time_range=medium_term")]);
-    renderListening(current, recent);
-    renderArtists(artists?.items);
-    renderTracks(tracks?.items);
+    if (connectButton) connectButton.hidden = false;
+    const data = await spotify("all");
+    renderListening(data?.current, data?.recent);
+    renderArtists(data?.artists);
+    renderTracks(data?.tracks);
   }
 
   async function search(query: string) {
     if (!searchResults || query.trim().length < 2) { if (searchResults) searchResults.innerHTML = ""; return; }
-    const result = await spotify(`/search?type=track&limit=6&q=${encodeURIComponent(query)}`);
-    searchResults.innerHTML = (result?.tracks?.items ?? []).map((track: any) => { const item = trackInfo(track); return `<button type="button" class="search-result" data-song-url="${item.url}" data-song-label="${item.name} — ${item.artists}"><img src="${item.image}" alt="" /><span><strong>${item.name}</strong><small>${item.artists}</small></span></button>`; }).join("");
+    const result = await spotify("search", query);
+    searchResults.innerHTML = (result?.tracks ?? []).map((item: any) => `<button type="button" class="search-result" data-song-url="${item.url}" data-song-label="${item.name} — ${item.artists}"><img src="${item.image}" alt="" /><span><strong>${item.name}</strong><small>${item.artists}</small></span></button>`).join("");
   }
 
   async function callback() {
@@ -189,7 +189,7 @@
 
   function open() { if (!overlay) return; overlay.classList.add("is-open"); overlay.setAttribute("aria-hidden", "false"); document.body.style.overflow = "hidden"; closeButton?.focus(); loadData(); refreshTimer = window.setInterval(loadData, 30000); }
   function close() { if (!overlay) return; overlay.classList.remove("is-open"); overlay.setAttribute("aria-hidden", "true"); document.body.style.overflow = ""; if (refreshTimer) window.clearInterval(refreshTimer); musicButton?.focus(); }
-  connectButton?.addEventListener("click", login);
+  connectButton?.addEventListener("click", loadData);
   musicButton?.addEventListener("click", open);
   closeButton?.addEventListener("click", close);
   overlay?.addEventListener("click", (event) => { if (event.target === overlay) close(); });
@@ -197,7 +197,7 @@
   searchResults?.addEventListener("click", (event) => { const result = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-song-url]"); if (!result || !songInput) return; songInput.value = result.dataset.songLabel ?? ""; selectedSongUrl = result.dataset.songUrl ?? ""; searchResults.innerHTML = ""; });
   form?.addEventListener("submit", (event) => { event.preventDefault(); const data = new FormData(form); const song = String(data.get("song") ?? "").trim(); const name = String(data.get("name") ?? "").trim(); if (!song || !name) return; const subject = encodeURIComponent(`Music recommendation from ${name}`); const body = encodeURIComponent(`${name} recommended this song:\n\n${song}\n${selectedSongUrl}`); window.location.href = `mailto:enkhamgalan.entwan@outlook.com?subject=${subject}&body=${body}`; if (status) status.textContent = "Opening your email app..."; });
   document.addEventListener("keydown", (event) => { if (event.key === "Escape" && overlay?.classList.contains("is-open")) close(); });
-  callback().then(loadData);
+  loadData();
 </script>
 
 <style>

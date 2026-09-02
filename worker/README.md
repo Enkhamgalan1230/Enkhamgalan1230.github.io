@@ -12,9 +12,9 @@ under **Settings → Variables and Secrets**:
 - `SPOTIFY_CLIENT_SECRET` — the Spotify Client Secret
 - `SPOTIFY_REFRESH_TOKEN` — the long-lived refresh token
 
-The Worker needs the Spotify redirect URI configured as:
+The Worker needs the Spotify redirect URI configured in Spotify as:
 
-`https://enkhamgalan1230.github.io/`
+`https://enkhamgalan-spotify-api.zaecisama.workers.dev/oauth/callback`
 
 The frontend endpoint will be:
 
