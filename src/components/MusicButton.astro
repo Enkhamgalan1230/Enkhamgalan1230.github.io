@@ -42,7 +42,9 @@
 
   async function loadSpotifyData() {
     try {
-      const response = await fetch(`${SPOTIFY_API_URL}?type=all`);
+      const response = await fetch(`${SPOTIFY_API_URL}?type=all&ts=${Date.now()}`, {
+        cache: "no-store",
+      });
       if (!response.ok) throw new Error("Spotify unavailable");
 
       const data = await response.json();
