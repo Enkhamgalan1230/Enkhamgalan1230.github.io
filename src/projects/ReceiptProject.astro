@@ -72,7 +72,7 @@ import ProjectModal from "../components/ProjectModal.astro";
           loop
           muted
           playsinline
-          preload="metadata"
+          preload="auto"
           aria-label="Receipt project demo"
         >
           <source
@@ -81,7 +81,9 @@ import ProjectModal from "../components/ProjectModal.astro";
           />
         </video>
 
-        <div>
+        <!-- Legacy placeholder retained only in source history; never render it. -->
+        <!--
+        <div class="demo-video-placeholder">
           <span class="demo-label">
             PROJECT DEMO
           </span>
@@ -94,6 +96,7 @@ import ProjectModal from "../components/ProjectModal.astro";
             ▶
           </span>
         </div>
+        -->
       </div>
     </section>
 
@@ -804,15 +807,19 @@ import ProjectModal from "../components/ProjectModal.astro";
     display: none;
   }
 
+  .demo-video-placeholder {
+    display: none;
+  }
+
   .demo-video {
     position: absolute;
-    inset: -3%;
+    inset: 0;
     z-index: 0;
-    width: 106%;
-    height: 106%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    opacity: 0.92;
-    filter: saturate(0.96) contrast(1.02) brightness(1.01);
+    opacity: 1;
+    filter: none;
     mix-blend-mode: normal;
     -webkit-mask-image: radial-gradient(
       ellipse at center,
@@ -1574,6 +1581,8 @@ import ProjectModal from "../components/ProjectModal.astro";
       monospace;
 
     font-size: 0.82rem;
+
+    font-weight: 700;
 
     line-height: 1.5;
 

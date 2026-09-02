@@ -1,5 +1,6 @@
 ---
 import FaceButton from "./FaceButton.astro";
+import MusicButton from "./MusicButton.astro";
 ---
 
 <header class="site-header">
@@ -30,6 +31,8 @@ import FaceButton from "./FaceButton.astro";
 
     <div class="header-right">
       <div class="social-links">
+        <MusicButton />
+
         <a
           href="https://www.linkedin.com/in/entwan"
           target="_blank"
@@ -55,6 +58,7 @@ import FaceButton from "./FaceButton.astro";
             />
           </svg>
         </a>
+
       </div>
 
       <a
@@ -328,6 +332,18 @@ import FaceButton from "./FaceButton.astro";
 
     flex-shrink: 0;
 
+    border: 0;
+
+    padding: 0;
+
+    background: transparent;
+
+    color: inherit;
+
+    font: inherit;
+
+    cursor: pointer;
+
     transition: opacity 0.2s ease;
   }
 
@@ -380,6 +396,7 @@ import FaceButton from "./FaceButton.astro";
       width: 26px;
       height: 26px;
     }
+
   }
 
   /*

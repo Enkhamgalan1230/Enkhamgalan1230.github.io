@@ -1,0 +1,6 @@
+name = "enkhamgalan-spotify-api"
+main = "src/index.ts"
+compatibility_date = "2026-09-02"
+
+[vars]
+ALLOWED_ORIGIN = "https://enkhamgalan1230.github.io"
