@@ -40,7 +40,7 @@
         regular play — I know, quite the combination.
       </p>
 
-      <h3 class="music-section-title top-tracks-heading">MY TOP TRACKS</h3>
+      <h3 class="music-section-title top-tracks-heading">LATELY I LISTENED TO</h3>
       <ol class="music-track-list" data-top-tracks><li class="music-muted">Your top tracks will appear here.</li></ol>
 
       <h3 class="music-section-title recommendation-heading">RECOMMEND SOMETHING</h3>
@@ -203,35 +203,38 @@
   .music-card-content h2 { margin:12px 0 22px; color:#111; font:400 clamp(2.8rem,5vw,4.8rem)/.92 "Instrument Serif",serif; letter-spacing:-.025em; }
   .spotify-connect { flex-shrink:0; padding:10px 13px; border:1px solid #4d7657; border-radius:999px; background:transparent; color:#4d7657; font:.68rem "Courier Prime",monospace; cursor:pointer; }
   .spotify-connect:hover { background:#4d7657; color:#fff; }
-  .current-track { display:grid; grid-template-columns:76px minmax(0,1fr) auto; align-items:center; gap:16px; min-height:76px; margin:0 0 32px; padding:12px; border:1px solid rgba(17,17,17,.13); border-radius:12px; background:#fff; color:#111; text-decoration:none; box-shadow:4px 4px 0 rgba(64,54,64,.08); }
-  .current-track img { width:76px; height:76px; object-fit:cover; border-radius:8px; }
-  .current-track > span:not(.music-track-arrow) { display:flex; min-width:0; flex-direction:column; gap:4px; }
-  .current-track strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:400 1.9rem "Instrument Serif",serif; }
+  .current-track { display:grid; grid-template-columns:64px minmax(0,1fr) auto; align-items:center; gap:12px; min-height:64px; margin:0 0 32px; padding:10px 12px; border:1px solid rgba(17,17,17,.13); border-radius:12px; background:#fff; color:#111; text-decoration:none; box-shadow:4px 4px 0 rgba(64,54,64,.08); }
+  .current-track img { width:64px; height:64px; object-fit:cover; border-radius:7px; }
+  .current-track > span:not(.music-track-arrow):not(.current-track-placeholder) { display:flex; min-width:0; flex-direction:column; gap:4px; }
+  .current-track strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:400 1.45rem "Instrument Serif",serif; }
   .current-track small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#777; font:.7rem "Courier Prime",monospace; }
   .now-playing-status { display:flex; align-items:center; gap:7px; margin-top:7px; color:#4d7657 !important; font-size:.6rem !important; letter-spacing:.04em; }
   .now-playing-status i { width:6px; height:6px; border-radius:50%; background:#aaa; }
   .now-playing-status i.is-playing { background:#4d7657; box-shadow:0 0 0 4px rgba(77,118,87,.12); }
   [data-now-playing-time] { margin-left:auto; }
   .current-track-placeholder,.music-muted { color:#777; font:.76rem "Courier Prime",monospace; }
+  .current-track-placeholder { grid-column:1 / -1; }
+  .current-track [hidden] { display:none !important; }
   .music-track-arrow { color:#777; font:.9rem "Courier Prime",monospace; }
   .music-section-title { margin:0 0 10px; }
-  .music-artists { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:14px; margin-bottom:28px; }
-  .artist-card { display:flex; min-width:0; flex-direction:column; gap:6px; color:#111; }
-  .artist-card img { width:56px; height:56px; object-fit:cover; border-radius:50%; opacity:.88; }
+  .music-artists { display:flex; gap:10px; margin:0 -8px 28px; padding:4px 8px 10px; overflow-x:auto; scrollbar-color:#b4a4ac transparent; }
+  .artist-card { display:flex; flex:0 0 126px; min-width:0; flex-direction:column; gap:6px; padding:10px; border:1px solid rgba(17,17,17,.1); border-radius:10px; background:#fff; color:#111; box-shadow:3px 3px 0 rgba(64,54,64,.08); }
+  .artist-card img { width:42px; height:42px; object-fit:cover; border-radius:50%; opacity:.88; }
   .artist-card a { overflow:hidden; color:#111; text-decoration:underline; text-decoration-color:rgba(17,17,17,.3); text-underline-offset:3px; }
   .artist-card a:hover { text-decoration-color:currentColor; }
   .artist-card span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:.7rem "Courier Prime",monospace; }
   .artist-card small { color:#777; font:.6rem "Courier Prime",monospace; }
   .music-taste,.recommendation-note { margin:0; color:#777; font:.75rem/1.5 "Courier Prime",monospace; }
   .top-tracks-heading { margin-top:26px; }
-  .music-track-list { display:grid; gap:5px; margin:0 0 25px; padding:0; list-style:none; }
-  .music-track { display:grid; grid-template-columns:24px 42px minmax(0,1fr) auto; align-items:center; gap:10px; padding:5px 7px 5px 0; border-bottom:1px solid rgba(17,17,17,.1); color:#111; text-decoration:none; }
-  .music-track:hover { background:rgba(214,195,199,.25); }
+  .music-track-list { display:flex; gap:10px; margin:0 -8px 25px; padding:4px 8px 10px; overflow-x:auto; list-style:none; scrollbar-color:#b4a4ac transparent; }
+  .music-track-list li { flex:0 0 220px; }
+  .music-track { display:grid; grid-template-columns:20px 46px minmax(0,1fr) auto; align-items:center; gap:9px; min-height:58px; padding:8px; border:1px solid rgba(17,17,17,.1); border-radius:9px; background:#fff; color:#111; text-decoration:none; box-shadow:3px 3px 0 rgba(64,54,64,.08); }
+  .music-track:hover { transform:translateY(-2px); background:#fff; box-shadow:5px 5px 0 rgba(64,54,64,.13); }
   .music-track-number { color:#999; font:.65rem "Courier Prime",monospace; }
-  .music-track img { width:42px; height:42px; object-fit:cover; border-radius:4px; }
+  .music-track img { width:46px; height:46px; object-fit:cover; border-radius:5px; }
   .music-track-copy { display:flex; min-width:0; flex-direction:column; gap:3px; }
   .music-track-copy strong,.music-track-copy small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .music-track-copy strong { font:700 .78rem "Courier Prime",monospace; }
+  .music-track-copy strong { font:700 .7rem "Courier Prime",monospace; }
   .music-track-copy small { color:#777; font:.65rem "Courier Prime",monospace; }
   .recommendation-heading { margin-top:8px; margin-bottom:8px; }
   .recommendation-note em { display:block; margin-top:3px; color:#403640; }
@@ -263,6 +266,7 @@
     .music-card-content { flex:1; padding:34px 28px 40px; }
     .music-heading-row { display:block; }
     .spotify-connect { margin-bottom:18px; }
-    .music-artists { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .artist-card { flex-basis:116px; }
+    .music-track-list li { flex-basis:205px; }
   }
 </style>
