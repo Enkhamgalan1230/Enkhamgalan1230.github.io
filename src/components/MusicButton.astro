@@ -1,928 +1,278 @@
-<button class="music-button" type="button" aria-label="Open music" title="Music">
-  <span aria-hidden="true">&#9834;</span>
-</button>
+<div class="music-control">
+  <button class="music-button" type="button" aria-label="Show what Entwan is listening to" aria-expanded="false" aria-controls="now-playing-dropdown" title="What I am listening to">
+    <span aria-hidden="true">&#9834;</span>
+  </button>
 
-<div class="music-overlay" aria-hidden="true">
-  <div class="music-card" role="dialog" aria-modal="true" aria-label="Music">
-    <button class="music-card-close" type="button" aria-label="Close music dialog">&times;</button>
-    <div class="music-card-note" aria-hidden="true">&#9834;</div>
-
-    <div class="music-card-content">
-      <div class="music-heading-row">
-        <div>
-          <span class="music-card-label" data-listening-label>NOW PLAYING</span>
-          <h2 data-listening-heading>What I’m listening to</h2>
-        </div>
+  <div class="now-playing-dropdown" id="now-playing-dropdown" aria-hidden="true">
+    <div class="now-playing-card" role="status" aria-live="polite">
+      <div class="now-playing-card-topline">
+        <span data-now-playing-label>NOW PLAYING</span>
+        <span class="now-playing-wave" data-now-playing-wave aria-hidden="true">
+          <i></i><i></i><i></i><i></i>
+        </span>
       </div>
 
-      <a class="current-track" data-now-playing href="#" target="_blank" rel="noreferrer">
-        <span class="current-track-placeholder" data-now-playing-placeholder>Loading my listening activity...</span>
+      <a class="now-playing-content" data-now-playing-link href="#" target="_blank" rel="noreferrer">
         <img data-now-playing-image alt="" hidden />
-          <span data-now-playing-copy hidden>
-            <strong data-now-playing-title></strong>
-            <small data-now-playing-artist></small>
-            <small class="now-playing-status"><i data-now-playing-dot></i><span data-now-playing-state>PLAYING NOW</span><span data-now-playing-time></span></small>
-          </span>
+        <span class="now-playing-copy">
+          <strong data-now-playing-title>Loading...</strong>
+          <small data-now-playing-artist></small>
+          <small data-now-playing-time></small>
+        </span>
       </a>
-
-      <h3 class="music-section-title">CURRENT TOP ARTISTS</h3>
-      <div class="music-artists" data-top-artists><p class="music-muted">Your top artists will appear here.</p></div>
-
-      <p class="music-taste">
-        My music taste is wonderfully unpredictable. It changes with the weather,
-        what I am doing and whatever mood I happen to be in. Soft rock can
-        soundtrack a gym session, while an evening at home might call for drill.
-        Hip hop, pop and indie rock are always in the mix, with Brazilian phonk
-        for intense workouts and Mongolian music making up a surprisingly large
-        part of my playlists. Biggie Smalls and Ariana Grande also both get
-        regular play — I know, quite the combination.
-      </p>
-
-      <h3 class="music-section-title top-tracks-heading">LATELY I LISTENED TO</h3>
-      <ol class="music-track-list" data-top-tracks><li class="music-muted">Your top tracks will appear here.</li></ol>
-
-      <h3 class="music-section-title recommendation-heading">RECOMMEND SOMETHING</h3>
-      <p class="recommendation-note">
-        I am getting tired of my playlist, so send me a recommendation.
-        <em>I hate techno, so please do not send that.</em>
-      </p>
-
-      <form class="recommendation-form" data-recommendation-form>
-        <label class="sr-only" for="recommended-song">Song recommendation</label>
-        <div class="song-search-wrap">
-          <input id="recommended-song" name="song" type="search" autocomplete="off" placeholder="Search Spotify for a song..." required />
-          <div class="song-search-results" data-search-results></div>
-        </div>
-        <label class="sr-only" for="recommender-name">Your name</label>
-        <input id="recommender-name" name="name" type="text" placeholder="Your name" required />
-        <button type="submit">SEND IT TO ME &#8599;</button>
-        <p class="recommendation-status" data-recommendation-status role="status" aria-live="polite"></p>
-      </form>
     </div>
   </div>
 </div>
 
 <script>
   const SPOTIFY_API_URL = "https://enkhamgalan-spotify-api.zaecisama.workers.dev/api/spotify";
+  const musicControl = document.querySelector<HTMLElement>(".music-control");
   const musicButton = document.querySelector<HTMLButtonElement>(".music-button");
-  const overlay = document.querySelector<HTMLElement>(".music-overlay");
-  const closeButton = document.querySelector<HTMLButtonElement>(".music-card-close");
-  const label = document.querySelector<HTMLElement>("[data-listening-label]");
-  const heading = document.querySelector<HTMLElement>("[data-listening-heading]");
-  const nowPlaying = document.querySelector<HTMLAnchorElement>("[data-now-playing]");
-  const placeholder = document.querySelector<HTMLElement>("[data-now-playing-placeholder]");
-  const nowImage = document.querySelector<HTMLImageElement>("[data-now-playing-image]");
-  const nowCopy = document.querySelector<HTMLElement>("[data-now-playing-copy]");
-  const nowTitle = document.querySelector<HTMLElement>("[data-now-playing-title]");
-  const nowArtist = document.querySelector<HTMLElement>("[data-now-playing-artist]");
-  const nowDot = document.querySelector<HTMLElement>("[data-now-playing-dot]");
-  const nowState = document.querySelector<HTMLElement>("[data-now-playing-state]");
-  const nowTime = document.querySelector<HTMLElement>("[data-now-playing-time]");
-  const artistsContainer = document.querySelector<HTMLElement>("[data-top-artists]");
-  const tracksContainer = document.querySelector<HTMLOListElement>("[data-top-tracks]");
-  const form = document.querySelector<HTMLFormElement>("[data-recommendation-form]");
-  const status = document.querySelector<HTMLElement>("[data-recommendation-status]");
-  const songInput = document.querySelector<HTMLInputElement>("#recommended-song");
-  const searchResults = document.querySelector<HTMLElement>("[data-search-results]");
+  const dropdown = document.querySelector<HTMLElement>(".now-playing-dropdown");
+  const label = document.querySelector<HTMLElement>("[data-now-playing-label]");
+  const wave = document.querySelector<HTMLElement>("[data-now-playing-wave]");
+  const link = document.querySelector<HTMLAnchorElement>("[data-now-playing-link]");
+  const image = document.querySelector<HTMLImageElement>("[data-now-playing-image]");
+  const title = document.querySelector<HTMLElement>("[data-now-playing-title]");
+  const artist = document.querySelector<HTMLElement>("[data-now-playing-artist]");
+  const time = document.querySelector<HTMLElement>("[data-now-playing-time]");
+
   let refreshTimer: number | undefined;
-  let searchTimer: number | undefined;
-  let selectedSongUrl = "";
+  let closeTimer: number | undefined;
 
-  async function spotify(type: string, query = "") {
-    const url = new URL(SPOTIFY_API_URL);
-    url.searchParams.set("type", type);
-    if (query) url.searchParams.set("q", query);
-    const response = await fetch(url);
-    if (!response.ok) return null;
-    return response.json();
-  }
-
-  const names = (items: Array<{ name: string }> = []) => items.map((item) => item.name).join(", ");
-  const escapeHtml = (value: unknown) => String(value ?? "").replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[character] ?? character);
-  const formatTime = (milliseconds: number) => {
-    const seconds = Math.max(0, Math.floor(milliseconds / 1000));
-    return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
-  };
-
-  function renderListening(current: any, recent: any) {
-    const track = current ?? recent;
-    const playing = Boolean(current?.isPlaying);
-    if (!track) {
-      if (label) label.textContent = "SPOTIFY OFFLINE";
-      if (heading) heading.textContent = "Nothing playing right now.";
-      if (placeholder) { placeholder.hidden = false; placeholder.textContent = "Start a song on Spotify and it will appear here."; }
-      if (nowImage) { nowImage.hidden = true; nowImage.removeAttribute("src"); }
-      if (nowCopy) nowCopy.hidden = true;
-      if (nowDot) nowDot.classList.remove("is-playing");
-      if (nowState) nowState.textContent = "NOT PLAYING";
-      if (nowTime) nowTime.textContent = "";
-      if (nowPlaying) nowPlaying.href = "#";
-      return;
-    }
-    if (label) label.textContent = playing ? "CURRENTLY LISTENING TO" : "LAST LISTENED";
-    if (heading) heading.textContent = playing ? "What am I listening to?" : "The last thing I played.";
-    if (placeholder) placeholder.hidden = true;
-    if (nowImage) { nowImage.hidden = false; nowImage.src = track.image; nowImage.alt = `${track.name} album art`; }
-    if (nowCopy) nowCopy.hidden = false;
-    if (nowTitle) nowTitle.textContent = track.name;
-    if (nowArtist) nowArtist.textContent = `${track.artists} · ${track.album}`;
-    if (nowDot) nowDot.classList.toggle("is-playing", playing);
-    if (nowState) nowState.textContent = playing ? "PLAYING NOW" : "LAST PLAYED";
-    if (nowTime) nowTime.textContent = track.progress != null && track.duration != null ? `${formatTime(track.progress)} / ${formatTime(track.duration)}` : "";
-    if (nowPlaying) nowPlaying.href = track.url;
-  }
-
-  function renderArtists(items: any[] = []) {
-    if (!artistsContainer) return;
-    artistsContainer.innerHTML = items.length ? items.map((artist) => `<article class="artist-card"><a href="${escapeHtml(artist.url)}" target="_blank" rel="noreferrer"><img src="${escapeHtml(artist.image)}" alt="${escapeHtml(artist.name)}" loading="lazy" /><span>${escapeHtml(artist.name)}</span></a></article>`).join("") : `<p class="music-muted">No top artist data available yet.</p>`;
-  }
-
-  function renderTracks(items: any[] = []) {
-    if (!tracksContainer) return;
-    tracksContainer.innerHTML = items.length ? items.map((item, index) => `<li><a class="music-track" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer"><span class="music-track-number">${String(index + 1).padStart(2, "0")}</span><img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)} album art" loading="lazy" /><span class="music-track-copy"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.artists)} · ${escapeHtml(item.album)}</small></span></a></li>`).join("") : `<li class="music-muted">No top track data available yet.</li>`;
-  }
-
-  async function loadData() {
+  async function loadSpotifyData() {
     try {
-      const data = await spotify("all");
-      if (!data) throw new Error("The Spotify service is unavailable.");
-      renderListening(data.current, data.recent);
-      renderArtists(data.artists);
-      renderTracks(data.tracks);
-      if (data.errors?.some((item: any) => item.section === "currentlyPlaying")) {
-        if (label) label.textContent = "SPOTIFY NEEDS ATTENTION";
-        if (heading) heading.textContent = "Playback is temporarily unavailable.";
-        if (placeholder) { placeholder.hidden = false; placeholder.textContent = "The Spotify Worker needs to be re-authorized."; }
-      } else if (data.errors?.some((item: any) => item.status === 429)) {
-        if (label) label.textContent = "SPOTIFY RATE LIMITED";
-        if (heading) heading.textContent = "Spotify needs a moment.";
-        if (placeholder) { placeholder.hidden = false; placeholder.textContent = "The listening data will refresh automatically."; }
+      const response = await fetch(`${SPOTIFY_API_URL}?type=all`);
+      if (!response.ok) throw new Error("Spotify unavailable");
+
+      const data = await response.json();
+      const track = data.current?.isPlaying ? data.current : data.recent ?? data.current;
+      const isPlaying = Boolean(data.current?.isPlaying && track === data.current);
+
+      if (!track) {
+        if (label) label.textContent = "NOT PLAYING";
+        if (wave) wave.classList.remove("is-playing");
+        if (title) title.textContent = "Nothing played recently";
+        if (artist) artist.textContent = "Start a song on Spotify";
+        if (time) time.textContent = "";
+        if (image) {
+          image.hidden = true;
+          image.removeAttribute("src");
+        }
+        if (link) link.href = "#";
+        return;
       }
+
+      if (label) label.textContent = isPlaying ? "NOW PLAYING" : "LAST LISTENED";
+      if (wave) wave.classList.toggle("is-playing", isPlaying);
+      if (title) title.textContent = track.name;
+      if (artist) artist.textContent = `${track.artists} · ${track.album}`;
+      if (time) {
+        time.textContent = track.progress != null && track.duration != null
+          ? `${formatTime(track.progress)} / ${formatTime(track.duration)}`
+          : "";
+      }
+      if (image) {
+        image.hidden = !track.image;
+        image.src = track.image;
+        image.alt = `${track.name} album art`;
+      }
+      if (link) link.href = track.url || "#";
     } catch (error) {
       if (label) label.textContent = "SPOTIFY UNAVAILABLE";
-      if (heading) heading.textContent = "I cannot check Spotify right now.";
-      if (placeholder) { placeholder.hidden = false; placeholder.textContent = "Please try refreshing in a moment."; }
+      if (wave) wave.classList.remove("is-playing");
+      if (title) title.textContent = "Unable to load listening activity";
+      if (artist) artist.textContent = "Please try again later";
+      if (time) time.textContent = "";
+      if (image) image.hidden = true;
+      if (link) link.href = "#";
       console.error("Could not load Spotify data", error);
     }
   }
 
-  async function search(query: string) {
-    if (!searchResults || query.trim().length < 2) { if (searchResults) searchResults.innerHTML = ""; return; }
-    const result = await spotify("search", query);
-    searchResults.innerHTML = (result?.tracks ?? []).map((item: any) => `<button type="button" class="search-result" data-song-url="${item.url}" data-song-label="${item.name} — ${item.artists}"><img src="${item.image}" alt="" /><span><strong>${item.name}</strong><small>${item.artists}</small></span></button>`).join("");
+  function formatTime(milliseconds: number) {
+    const seconds = Math.max(0, Math.floor(milliseconds / 1000));
+    return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
   }
 
-  function open() { if (!overlay) return; overlay.classList.add("is-open"); overlay.setAttribute("aria-hidden", "false"); document.body.style.overflow = "hidden"; closeButton?.focus(); loadData(); if (refreshTimer) window.clearInterval(refreshTimer); refreshTimer = window.setInterval(loadData, 300000); }
-  function close() { if (!overlay) return; overlay.classList.remove("is-open"); overlay.setAttribute("aria-hidden", "true"); document.body.style.overflow = ""; if (refreshTimer) window.clearInterval(refreshTimer); refreshTimer = undefined; musicButton?.focus(); }
-  musicButton?.addEventListener("click", open);
-  closeButton?.addEventListener("click", close);
-  overlay?.addEventListener("click", (event) => { if (event.target === overlay) close(); });
-  songInput?.addEventListener("input", () => { selectedSongUrl = ""; if (searchTimer) window.clearTimeout(searchTimer); searchTimer = window.setTimeout(() => search(songInput.value), 350); });
-  searchResults?.addEventListener("click", (event) => { const result = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-song-url]"); if (!result || !songInput) return; songInput.value = result.dataset.songLabel ?? ""; selectedSongUrl = result.dataset.songUrl ?? ""; searchResults.innerHTML = ""; });
-  form?.addEventListener("submit", (event) => { event.preventDefault(); const data = new FormData(form); const song = String(data.get("song") ?? "").trim(); const name = String(data.get("name") ?? "").trim(); if (!song || !name) return; const subject = encodeURIComponent(`Music recommendation from ${name}`); const body = encodeURIComponent(`${name} recommended this song:\n\n${song}\n${selectedSongUrl}`); window.location.href = `mailto:enkhamgalan.entwan@outlook.com?subject=${subject}&body=${body}`; if (status) status.textContent = "Opening your email app..."; });
-  document.addEventListener("keydown", (event) => { if (event.key === "Escape" && overlay?.classList.contains("is-open")) close(); });
+  function openDropdown() {
+    if (!dropdown || !musicButton) return;
+    dropdown.classList.add("is-open");
+    dropdown.setAttribute("aria-hidden", "false");
+    musicButton.setAttribute("aria-expanded", "true");
+    loadSpotifyData();
+    if (refreshTimer) window.clearInterval(refreshTimer);
+    if (closeTimer) window.clearTimeout(closeTimer);
+    refreshTimer = window.setInterval(loadSpotifyData, 30000);
+    closeTimer = window.setTimeout(closeDropdown, 5000);
+  }
+
+  function closeDropdown() {
+    if (!dropdown || !musicButton) return;
+    dropdown.classList.remove("is-open");
+    dropdown.setAttribute("aria-hidden", "true");
+    musicButton.setAttribute("aria-expanded", "false");
+    if (refreshTimer) window.clearInterval(refreshTimer);
+    refreshTimer = undefined;
+    if (closeTimer) window.clearTimeout(closeTimer);
+    closeTimer = undefined;
+  }
+
+  musicButton?.addEventListener("click", () => {
+    if (dropdown?.classList.contains("is-open")) closeDropdown();
+    else openDropdown();
+  });
+
+  document.addEventListener("click", (event) => {
+    if (dropdown?.classList.contains("is-open") && musicControl && !musicControl.contains(event.target as Node)) {
+      closeDropdown();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && dropdown?.classList.contains("is-open")) {
+      closeDropdown();
+      musicButton?.focus();
+    }
+  });
 </script>
 
 <style>
+  .music-control { position: relative; flex-shrink: 0; }
+
   .music-button {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 32px;
     height: 32px;
-    flex-shrink: 0;
     padding: 0;
     border: 0;
     background: transparent;
     color: inherit;
     font: inherit;
     cursor: pointer;
-    transition:
-      opacity 0.2s ease,
-      transform 0.2s ease;
+    transition: opacity 0.2s ease, transform 0.2s ease;
   }
 
-  .music-button:hover {
-    opacity: 0.65;
-    transform: scale(1.08);
-  }
+  .music-button:hover { opacity: 0.65; transform: scale(1.08); }
+  .music-button:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+  .music-button span { font-family: Georgia, serif; font-size: 1.75rem; line-height: 1; }
 
-  .music-button:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 4px;
-  }
-
-  .music-button span {
-    font-family: Georgia, serif;
-    font-size: 1.75rem;
-    line-height: 1;
-  }
-
-  .music-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    background: rgba(37, 30, 37, 0.62);
-    backdrop-filter: blur(10px);
+  .now-playing-dropdown {
+    position: absolute;
+    top: calc(100% + 14px);
+    right: 0;
+    z-index: 1001;
+    width: min(320px, calc(100vw - 32px));
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition:
-      opacity 0.3s ease,
-      visibility 0.3s ease;
+    transform: translateY(-8px) scale(0.98);
+    transform-origin: top right;
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
   }
 
-  .music-overlay.is-open {
+  .now-playing-dropdown.is-open {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-  }
-
-  .music-card {
-    position: relative;
-    display: grid;
-    grid-template-columns: minmax(220px, 28%) minmax(0, 1fr);
-    width: min(1120px, 96vw);
-    height: min(780px, calc(100dvh - 48px));
-    min-height: 0;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.42);
-    border-radius: 28px;
-    background: #f7f6f4;
-    box-shadow: 0 28px 90px rgba(28, 20, 29, 0.32);
-    transform: translateY(34px) scale(0.985);
-    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .music-overlay.is-open .music-card {
     transform: translateY(0) scale(1);
   }
 
-  .music-card-note {
+  .now-playing-card {
+    position: relative;
+    padding: 16px;
+    border: 1px solid rgba(17, 17, 17, 0.14);
+    border-radius: 16px;
+    background: rgba(247, 246, 244, 0.96);
+    box-shadow: 0 16px 38px rgba(17, 17, 17, 0.16);
+    backdrop-filter: blur(14px);
+  }
+
+  .now-playing-card::before {
+    position: absolute;
+    top: -6px;
+    right: 12px;
+    width: 11px;
+    height: 11px;
+    border-top: 1px solid rgba(17, 17, 17, 0.14);
+    border-left: 1px solid rgba(17, 17, 17, 0.14);
+    background: #f7f6f4;
+    content: "";
+    transform: rotate(45deg);
+  }
+
+  .now-playing-card-topline {
     display: flex;
     align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    background:
-      radial-gradient(
-        circle at 24% 20%,
-        rgba(255, 255, 255, 0.62),
-        transparent 34%
-      ),
-      linear-gradient(155deg, #decfd0 0%, #b99da8 52%, #745d72 100%);
-    color: rgba(64, 54, 64, 0.82);
-    font-family: Georgia, serif;
-    font-size: clamp(9rem, 17vw, 15rem);
-    text-shadow: 0 8px 30px rgba(64, 54, 64, 0.14);
-  }
-
-  .music-card-content {
-    min-width: 0;
-    min-height: 0;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
-    scrollbar-color: #b9acb2 transparent;
-    padding: 46px 52px 52px;
-  }
-
-  .music-card-content::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .music-card-content::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .music-card-content::-webkit-scrollbar-thumb {
-    border-radius: 999px;
-    background: #b9acb2;
-  }
-
-  .music-heading-row {
-    display: flex;
-    align-items: flex-start;
     justify-content: space-between;
-    gap: 20px;
-  }
-
-  .music-card-label,
-  .music-section-title {
+    margin-bottom: 11px;
     color: #777;
-    font: 0.7rem "Courier Prime", monospace;
+    font: 0.62rem "Courier Prime", monospace;
     letter-spacing: 0.08em;
   }
 
-  .music-card-content h2 {
-    max-width: 620px;
-    margin: 10px 0 24px;
-    color: #111;
-    font:
-      400 clamp(2.7rem, 4.5vw, 4.5rem) / 0.92 "Instrument Serif",
-      serif;
-    letter-spacing: -0.025em;
-  }
-
-  .current-track {
-    display: grid;
-    grid-template-columns: 72px minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 15px;
-    min-height: 72px;
-    margin: 0 0 34px;
-    padding: 11px;
-    border: 1px solid rgba(17, 17, 17, 0.1);
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.72);
-    color: #111;
-    text-decoration: none;
-    box-shadow: 0 8px 24px rgba(64, 54, 64, 0.07);
-    transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
-  }
-
-  .current-track:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(64, 54, 64, 0.11);
-  }
-
-  .current-track img {
-    width: 72px;
-    height: 72px;
-    border-radius: 10px;
-    object-fit: cover;
-  }
-
-  .current-track > span:not(.current-track-placeholder) {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .current-track strong {
-    overflow: hidden;
-    color: #111;
-    font: 400 1.45rem "Instrument Serif", serif;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .current-track small {
-    overflow: hidden;
-    color: #777;
-    font: 0.7rem "Courier Prime", monospace;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .now-playing-status {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    margin-top: 7px;
-    color: #4d7657 !important;
-    font-size: 0.6rem !important;
-    letter-spacing: 0.04em;
-  }
-
-  .now-playing-status i {
-    width: 6px;
-    height: 6px;
-    flex-shrink: 0;
-    border-radius: 50%;
-    background: #aaa;
-  }
-
-  .now-playing-status i.is-playing {
-    background: #4d7657;
-    box-shadow: 0 0 0 4px rgba(77, 118, 87, 0.12);
-  }
-
-  [data-now-playing-time] {
-    margin-left: auto;
-  }
-
-  .current-track-placeholder,
-  .music-muted {
-    color: #777;
-    font: 0.76rem "Courier Prime", monospace;
-  }
-
-  .current-track-placeholder {
-    grid-column: 1 / -1;
-  }
-
-  .current-track [hidden] {
-    display: none !important;
-  }
-
-  .music-section-title {
-    margin: 0 0 12px;
-  }
-
-  .music-artists {
-    display: grid;
-    width: 100%;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 8px;
-    margin: 0 0 22px;
-    overflow: hidden;
-  }
-
-  :global(.artist-card) {
-    display: flex;
-    box-sizing: border-box;
-    width: 100%;
-    min-width: 0;
-    min-height: 0;
-    overflow: hidden;
-    padding: 7px;
-    border: 1px solid rgba(17, 17, 17, 0.09);
-    border-radius: 13px;
-    background: rgba(255, 255, 255, 0.7);
-    color: #111;
-    transition:
-      transform 0.2s ease,
-      background 0.2s ease,
-      box-shadow 0.2s ease;
-  }
-
-  :global(.artist-card:hover) {
-    transform: translateY(-2px);
-    background: #fff;
-    box-shadow: 0 8px 20px rgba(64, 54, 64, 0.08);
-  }
-
-  :global(.artist-card img) {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    aspect-ratio: 1;
-    border-radius: 8px;
-    object-fit: cover;
-    opacity: 0.9;
-  }
-
-  :global(.artist-card a) {
-    display: flex;
-    box-sizing: border-box;
-    width: 100%;
-    min-width: 0;
-    flex-direction: column;
-    gap: 5px;
-    overflow: hidden;
-    color: #111;
-    text-decoration: none;
-  }
-
-  :global(.artist-card a:hover) {
-    text-decoration: none;
-  }
-
-  :global(.artist-card span) {
-    min-width: 0;
-    overflow: hidden;
-    color: #222;
-    font: 700 0.64rem/1.2 "Courier Prime", monospace;
-    text-align: center;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    white-space: normal;
-  }
-
-  :global(.artist-card small) {
-    color: #777;
-    font: 0.6rem "Courier Prime", monospace;
-  }
-
-  .music-taste,
-  .recommendation-note {
-    max-width: 760px;
-    margin: 0;
-    color: #696569;
-    font: 0.75rem/1.55 "Courier Prime", monospace;
-  }
-
-  .top-tracks-heading {
-    margin-top: 26px;
-  }
-
-  .music-track-list {
-    display: grid;
-    width: 100%;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 8px;
-    margin: 0 0 24px;
-    padding: 0;
-    list-style: none;
-    overflow: hidden;
-  }
-
-  :global(.music-track-list li) {
-    width: 100%;
-    min-width: 0;
-    min-height: 0;
-  }
-
-  :global(.music-track) {
-    position: relative;
-    display: grid;
-    box-sizing: border-box;
-    width: 100%;
-    grid-template-columns: minmax(0, 1fr);
-    align-content: start;
-    gap: 5px;
-    min-height: 0;
-    overflow: hidden;
-    padding: 8px;
-    border: 1px solid rgba(17, 17, 17, 0.09);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.7);
-    color: #111;
-    text-decoration: none;
-    transition:
-      transform 0.2s ease,
-      background 0.2s ease,
-      box-shadow 0.2s ease;
-  }
-
-  :global(.music-track:hover) {
-    transform: translateY(-2px);
-    background: #fff;
-    box-shadow: 0 8px 20px rgba(64, 54, 64, 0.09);
-  }
-
-  :global(.music-track-number) {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    z-index: 1;
-    color: #999;
-    font: 0.65rem "Courier Prime", monospace;
-  }
-
-  :global(.music-track img) {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    aspect-ratio: 1;
-    border-radius: 8px;
-    object-fit: cover;
-  }
-
-  :global(.music-track-copy) {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    gap: 3px;
-    overflow: hidden;
-    text-align: center;
-  }
-
-  :global(.music-track-copy strong),
-  :global(.music-track-copy small) {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-  }
-
-  :global(.music-track-copy strong) {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    color: #111;
-    font: 700 0.64rem/1.2 "Courier Prime", monospace;
-  }
-
-  :global(.music-track-copy small) {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    color: #777;
-    font: 0.59rem/1.25 "Courier Prime", monospace;
-    line-height: 1.35;
-  }
-
-  .recommendation-heading {
-    margin-top: 4px;
-    margin-bottom: 8px;
-  }
-
-  .recommendation-note em {
-    display: block;
-    margin-top: 3px;
-    color: #403640;
-  }
-
-  .recommendation-form {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 150px;
-    gap: 9px;
-    max-width: 760px;
-    margin-top: 16px;
-  }
-
-  .song-search-wrap {
-    position: relative;
-    grid-column: 1 / -1;
-  }
-
-  .recommendation-form input,
-  .recommendation-form button {
-    min-width: 0;
-    min-height: 42px;
-    border: 1px solid rgba(17, 17, 17, 0.15);
-    border-radius: 9px;
-    font: 0.7rem "Courier Prime", monospace;
-  }
-
-  .recommendation-form input {
-    width: 100%;
-    padding: 0 12px;
-    background: rgba(255, 255, 255, 0.7);
-    color: #111;
-  }
-
-  .recommendation-form input::placeholder {
-    color: #8b8589;
-  }
-
-  .recommendation-form input:focus {
-    outline: 2px solid #4d7657;
-    outline-offset: 2px;
-  }
-
-  .recommendation-form button {
-    padding: 0 12px;
-    border-color: #4d7657;
-    background: #4d7657;
-    color: #fff;
-    cursor: pointer;
-    transition:
-      opacity 0.2s ease,
-      transform 0.2s ease;
-  }
-
-  .recommendation-form button:hover {
-    opacity: 0.82;
-    transform: translateY(-1px);
-  }
-
-  .recommendation-status {
-    align-self: center;
-    margin: 0;
-    color: #4d7657;
-    font: 0.66rem "Courier Prime", monospace;
-  }
-
-  .song-search-results {
-    position: absolute;
-    top: calc(100% + 6px);
-    right: 0;
-    left: 0;
-    z-index: 6;
-    max-height: 220px;
-    overflow-y: auto;
-    border: 1px solid rgba(17, 17, 17, 0.08);
-    border-radius: 10px;
-    background: #fff;
-    box-shadow: 0 12px 30px rgba(28, 20, 29, 0.16);
-  }
-
-  .song-search-results:empty {
-    display: none;
-  }
-
-  .search-result {
-    display: grid;
-    grid-template-columns: 38px minmax(0, 1fr);
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 7px 8px;
-    border: 0;
-    border-bottom: 1px solid rgba(17, 17, 17, 0.06);
-    border-radius: 0;
-    background: #fff;
-    color: #111;
-    text-align: left;
-    cursor: pointer;
-  }
-
-  .search-result:last-child {
-    border-bottom: 0;
-  }
-
-  .search-result:hover {
-    background: #edecea;
-  }
-
-  .search-result img {
-    width: 38px;
-    height: 38px;
-    border-radius: 5px;
-    object-fit: cover;
-  }
-
-  .search-result span {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .search-result strong,
-  .search-result small {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .search-result strong {
-    font: 700 0.72rem "Courier Prime", monospace;
-  }
-
-  .search-result small {
-    color: #777;
-    font: 0.65rem "Courier Prime", monospace;
-  }
-
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  .music-card-close {
-    position: absolute;
-    top: 18px;
-    right: 18px;
-    z-index: 5;
+  .now-playing-wave {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 42px;
-    height: 42px;
-    border: 1px solid rgba(17, 17, 17, 0.09);
-    border-radius: 50%;
-    background: rgba(247, 246, 244, 0.82);
+    gap: 2px;
+    width: 18px;
+    height: 16px;
+  }
+
+  .now-playing-wave i {
+    display: block;
+    width: 3px;
+    height: 5px;
+    border-radius: 999px;
+    background: #aaa;
+  }
+
+  .now-playing-wave i:nth-child(1) { height: 7px; }
+  .now-playing-wave i:nth-child(2) { height: 12px; }
+  .now-playing-wave i:nth-child(3) { height: 9px; }
+  .now-playing-wave i:nth-child(4) { height: 6px; }
+
+  .now-playing-wave.is-playing i {
+    background: #4d7657;
+    animation: now-playing-wave 0.9s ease-in-out infinite alternate;
+  }
+
+  .now-playing-wave.is-playing i:nth-child(2) { animation-delay: -0.45s; }
+  .now-playing-wave.is-playing i:nth-child(3) { animation-delay: -0.25s; }
+  .now-playing-wave.is-playing i:nth-child(4) { animation-delay: -0.6s; }
+
+  @keyframes now-playing-wave {
+    from { transform: scaleY(0.45); }
+    to { transform: scaleY(1.15); }
+  }
+
+  .now-playing-content {
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
     color: #111;
-    font-size: 1.65rem;
-    cursor: pointer;
-    backdrop-filter: blur(8px);
-    transition:
-      transform 0.2s ease,
-      background 0.2s ease;
   }
 
-  .music-card-close:hover {
-    background: #edecea;
-    transform: rotate(5deg) scale(1.04);
-  }
-
-  @media (max-width: 900px) {
-    .music-card {
-      grid-template-columns: 180px minmax(0, 1fr);
-    }
-
-    .music-card-content {
-      padding: 42px 36px 44px;
-    }
-
-    .music-artists {
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
-
-    .music-track-list {
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
-  }
+  .now-playing-content img { width: 58px; height: 58px; border-radius: 9px; object-fit: cover; }
+  .now-playing-content img[hidden] { display: none; }
+  .now-playing-copy { display: flex; min-width: 0; flex-direction: column; gap: 4px; }
+  .now-playing-copy strong, .now-playing-copy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .now-playing-copy strong { font: 400 1.25rem/1.05 "Instrument Serif", serif; }
+  .now-playing-copy small { color: #777; font: 0.66rem/1.3 "Courier Prime", monospace; }
+  [data-now-playing-time] { color: #4d7657; }
 
   @media (max-width: 640px) {
-    .music-button {
-      width: 28px;
-      height: 28px;
-    }
-
-    .music-button span {
-      font-size: 1.5rem;
-    }
-
-    .music-overlay {
-      align-items: flex-end;
-      padding: 0;
-    }
-
-    .music-card {
-      display: flex;
-      width: 100%;
-      height: min(92dvh, 820px);
-      flex-direction: column;
-      border-right: 0;
-      border-bottom: 0;
-      border-left: 0;
-      border-radius: 24px 24px 0 0;
-      transform: translateY(50px);
-    }
-
-    .music-card-note {
-      min-height: 86px;
-      flex: 0 0 86px;
-      justify-content: flex-start;
-      padding-left: 24px;
-      font-size: 5.2rem;
-    }
-
-    .music-card-content {
-      flex: 1;
-      padding: 28px 20px 38px;
-    }
-
-    .music-heading-row {
-      align-items: flex-start;
-    }
-
-    .music-card-content h2 {
-      margin-bottom: 20px;
-      font-size: clamp(2.35rem, 12vw, 3.25rem);
-    }
-
-    .current-track {
-      grid-template-columns: 58px minmax(0, 1fr) auto;
-      gap: 10px;
-      margin-bottom: 28px;
-    }
-
-    .current-track img {
-      width: 58px;
-      height: 58px;
-    }
-
-    .current-track strong {
-      font-size: 1.2rem;
-    }
-
-    [data-now-playing-time] {
-      display: none;
-    }
-
-    .music-artists {
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
-
-    .music-track-list {
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
-
-    .recommendation-form {
-      grid-template-columns: 1fr;
-    }
-
-    .song-search-wrap {
-      grid-column: 1;
-    }
-
-    .music-card-close {
-      top: 20px;
-      right: 18px;
-    }
-  }
-
-  @media (max-width: 380px) {
-    .music-heading-row {
-      display: block;
-    }
-
-    .music-artists {
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
+    .music-button { width: 28px; height: 28px; }
+    .music-button span { font-size: 1.5rem; }
+    .now-playing-dropdown { right: -4px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .music-overlay,
-    .music-card,
-    .music-button,
-    .current-track,
-    :global(.artist-card),
-    :global(.music-track),
-    .music-card-close,
-    .recommendation-form button {
-      transition: none;
-    }
+    .music-button, .now-playing-dropdown { transition: none; }
+    .now-playing-wave.is-playing i { animation: none; }
   }
 </style>

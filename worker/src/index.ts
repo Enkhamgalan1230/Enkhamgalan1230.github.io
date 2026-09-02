@@ -195,8 +195,9 @@ export default {
     }
 
     try {
-      const token = await getAccessToken(env);
       const type = url.searchParams.get("type") ?? "all";
+
+      const token = await getAccessToken(env);
 
       if (type === "search") {
         const query = url.searchParams.get("q")?.trim();
@@ -248,7 +249,7 @@ export default {
           : []
       );
 
-      return json({
+      const payload = {
         current: current?.item
           ? {
               ...trackData(current.item),
@@ -261,7 +262,9 @@ export default {
         artists: (artists?.items ?? []).map(sanitizeArtist),
         tracks: (tracks?.items ?? []).map(trackData),
         errors,
-      }, 200, origin, env);
+      };
+
+      return json(payload, 200, origin, env);
     } catch (error) {
       return json({ error: error instanceof Error ? error.message : "Spotify request failed" }, 502, origin, env);
     }
