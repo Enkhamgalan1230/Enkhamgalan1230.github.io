@@ -26,6 +26,7 @@
 
 <script>
   const SPOTIFY_API_URL = "https://enkhamgalan-spotify-api.zaecisama.workers.dev/api/spotify";
+  const SPOTIFY_CACHE_KEY = "enkhamgalan-spotify-music";
   const musicControl = document.querySelector<HTMLElement>(".music-control");
   const siteHeader = document.querySelector<HTMLElement>(".site-header");
   const musicButton = document.querySelector<HTMLButtonElement>(".music-button");
@@ -44,8 +45,67 @@
   let progressTimer: number | undefined;
   let displayedProgress = 0;
   let displayedDuration = 0;
+  let cachedData: any = null;
+  let hasFetchedThisVisit = false;
 
-  async function loadSpotifyData() {
+  try {
+    const savedData = window.sessionStorage.getItem(SPOTIFY_CACHE_KEY);
+    if (savedData) cachedData = JSON.parse(savedData);
+  } catch (error) {
+    console.warn("Could not restore cached Spotify data", error);
+  }
+  hasFetchedThisVisit = Boolean(cachedData);
+
+  function saveSpotifyData(data: any) {
+    cachedData = data;
+    try {
+      window.sessionStorage.setItem(SPOTIFY_CACHE_KEY, JSON.stringify(data));
+    } catch (error) {
+      console.warn("Could not cache Spotify data", error);
+    }
+  }
+
+  function renderSpotifyData(data: any) {
+    const currentTrack = data.current?.isPlaying ? data.current : null;
+    const track = currentTrack || data.recent || data.current || data.lastTrack;
+    const isPlaying = Boolean(currentTrack);
+
+    if (!track) {
+      stopProgressTimer();
+      if (label) label.textContent = "I'M NOT LISTENING TO MUSIC RN";
+      if (wave) wave.classList.remove("is-playing");
+      if (title) title.textContent = "Nothing played recently";
+      if (artist) artist.textContent = "Start a song on Spotify";
+      if (time) time.textContent = "";
+      if (image) {
+        image.hidden = true;
+        image.removeAttribute("src");
+      }
+      if (link) link.href = "#";
+      return;
+    }
+
+    if (label) label.textContent = isPlaying
+      ? "RIGHT NOW I'M LISTENING TO .."
+      : "I'M NOT LISTENING TO MUSIC RN. HERE IS WHAT I LISTENED LAST TIME:";
+    if (wave) wave.classList.toggle("is-playing", isPlaying);
+    if (title) title.textContent = track.name;
+    if (artist) artist.textContent = `${track.artists} · ${track.album}`;
+    displayedProgress = track.progress ?? 0;
+    displayedDuration = track.duration ?? 0;
+    updateProgressText();
+    startProgressTimer(isPlaying);
+    if (image) {
+      image.hidden = !track.image;
+      image.src = track.image;
+      image.alt = `${track.name} album art`;
+    }
+    if (link) link.href = track.url || "#";
+  }
+
+  async function loadSpotifyData(force = false) {
+    if (hasFetchedThisVisit && !force) return;
+    hasFetchedThisVisit = true;
     try {
       const response = await fetch(`${SPOTIFY_API_URL}?type=all&ts=${Date.now()}`, {
         cache: "no-store",
@@ -53,6 +113,14 @@
       if (!response.ok) throw new Error("Spotify unavailable");
 
       const data = await response.json();
+      const lastTrack = data.current?.isPlaying
+        ? data.current
+        : data.recent || data.current || cachedData?.lastTrack;
+      saveSpotifyData({ ...data, lastTrack });
+      renderSpotifyData(cachedData);
+      return;
+      /* Legacy rendering path retained in git history; rendering now happens through renderSpotifyData.
+
       const track = data.current?.isPlaying ? data.current : data.recent ?? data.current;
       const isPlaying = Boolean(data.current?.isPlaying && track === data.current);
 
@@ -85,7 +153,12 @@
         image.alt = `${track.name} album art`;
       }
       if (link) link.href = track.url || "#";
+      */
     } catch (error) {
+      if (cachedData) {
+        renderSpotifyData(cachedData);
+        return;
+      }
       if (label) label.textContent = "SPOTIFY UNAVAILABLE";
       stopProgressTimer();
       if (wave) wave.classList.remove("is-playing");
@@ -97,6 +170,8 @@
       console.error("Could not load Spotify data", error);
     }
   }
+
+  if (cachedData) renderSpotifyData(cachedData);
 
   function formatTime(milliseconds: number) {
     const seconds = Math.max(0, Math.floor(milliseconds / 1000));
@@ -132,10 +207,11 @@
     musicButton.setAttribute("aria-expanded", "true");
     siteHeader?.classList.add("music-open");
     positionPointer();
-    loadSpotifyData();
+    renderSpotifyData(cachedData || { current: null, recent: null });
+    if (!hasFetchedThisVisit) loadSpotifyData();
     if (refreshTimer) window.clearInterval(refreshTimer);
     if (closeTimer) window.clearTimeout(closeTimer);
-    refreshTimer = window.setInterval(loadSpotifyData, 30000);
+    refreshTimer = window.setInterval(() => loadSpotifyData(true), 30000);
     closeTimer = window.setTimeout(closeDropdown, 5000);
   }
 

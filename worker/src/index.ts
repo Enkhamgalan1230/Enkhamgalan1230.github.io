@@ -217,27 +217,15 @@ export default {
           path: "/me/player/recently-played?limit=1",
           scope: "user-read-recently-played",
         },
-        {
-          section: "topArtists",
-          path: "/me/top/artists?limit=5&time_range=medium_term",
-          scope: "user-top-read",
-        },
-        {
-          section: "topTracks",
-          path: "/me/top/tracks?limit=5&time_range=medium_term",
-          scope: "user-top-read",
-        },
       ];
 
       const settled = await Promise.allSettled(
         endpoints.map((endpoint) => spotify(endpoint.path, token))
       );
 
-      const [currentResult, recentResult, artistsResult, tracksResult] = settled;
+      const [currentResult, recentResult] = settled;
       const current = currentResult.status === "fulfilled" ? currentResult.value : null;
       const recent = recentResult.status === "fulfilled" ? recentResult.value : null;
-      const artists = artistsResult.status === "fulfilled" ? artistsResult.value : null;
-      const tracks = tracksResult.status === "fulfilled" ? tracksResult.value : null;
       const errors = settled.flatMap((result, index) =>
         result.status === "rejected"
           ? [safeEndpointError(
@@ -257,10 +245,10 @@ export default {
               progress: current.progress_ms,
               duration: current.item.duration_ms,
             }
-          : null,
+        : null,
         recent: recent?.items?.[0]?.track ? trackData(recent.items[0].track) : null,
-        artists: (artists?.items ?? []).map(sanitizeArtist),
-        tracks: (tracks?.items ?? []).map(trackData),
+        artists: [],
+        tracks: [],
         errors,
       };
 
