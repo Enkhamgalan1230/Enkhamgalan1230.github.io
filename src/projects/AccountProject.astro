@@ -1,0 +1,231 @@
+---
+import ProjectModal from "../components/ProjectModal.astro";
+---
+
+<ProjectModal
+  id="account-project"
+  ariaLabel="Accountancy project"
+>
+  <article class="account-project">
+    <section class="project-hero">
+      <div class="project-hero-top">
+        <span>02 / SELECTED WORK</span>
+        <span>2025 → 2026</span>
+      </div>
+
+      <h1>Accountancy</h1>
+
+      <p class="project-tagline">
+        Finding the transactions
+        worth a closer look.
+      </p>
+
+      <p class="project-supporting">
+        As part of my work, I had the opportunity to work on a financial
+        data review and reconciliation system in response to a client's
+        request: help their team make sense of customer files and find
+        the transactions that need attention.
+      </p>
+
+      <div class="project-meta">
+        <span>CLIENT PRESENTATION</span>
+        <span>LLM API Gateway</span>
+        <span>SCIKIT-LEARN</span>
+        <span>LLM CLASSIFICATION</span>
+        <span>NUMPY</span>
+        <span>OLLAMA</span>
+        <span>PYTHON</span>
+      </div>
+
+    </section>
+
+    <section class="demo-section">
+      <div class="demo-video-frame">
+        <video
+          class="demo-video"
+          data-project-autoplay
+          loop
+          muted
+          playsinline
+          preload="metadata"
+          aria-label="Accountancy project demo"
+        >
+          <source src="/videos/accountancy/accountancy.mp4" type="video/mp4" />
+          Your browser does not support embedded video.
+        </video>
+      </div>
+    </section>
+
+    <section class="intro-grid">
+      <div class="intro-block">
+        <span class="section-number">01</span>
+        <h2>What the client said.</h2>
+        <p>
+          The client said their customers often send all their files at once,
+          leaving the team with a mix of transaction exports, bank statements
+          and other records. It can be hard to know which files to look at
+          first, what to look for, or whether there are any outliers in the
+          data. They wanted help organising those files and identifying
+          the items worth a closer look.
+        </p>
+      </div>
+
+      <div class="intro-block">
+        <span class="section-number">02</span>
+        <h2>What I worked on.</h2>
+        <p>
+          My work focused on a reusable financial data pipeline that prepares files,
+          identifies important columns, converts them into canonical schemas,
+          runs deterministic review checks and presents the resulting signals
+          in a Streamlit workspace. The system helps an accountant decide what
+          deserves attention without pretending that a signal is proof of an error.
+        </p>
+      </div>
+    </section>
+
+    <section class="architecture-section">
+      <div class="section-heading">
+        <span>UNDER THE HOOD</span>
+        <h2>From raw export<br />to useful review.</h2>
+      </div>
+
+      <div class="architecture-flow">
+        <div class="architecture-node"><span>01</span><strong>Raw files</strong><small>Transaction exports and bank statements from different sources</small></div>
+        <div class="architecture-arrow">→</div>
+        <div class="architecture-node"><span>02</span><strong>Preparation</strong><small>CSV reading, inspection and source-column profiling</small></div>
+        <div class="architecture-arrow">→</div>
+        <div class="architecture-node"><span>03</span><strong>Identification</strong><small>Dates, amounts, descriptions and balances mapped by evidence</small></div>
+        <div class="architecture-arrow">→</div>
+        <div class="architecture-node"><span>04</span><strong>Normalisation</strong><small>Different source layouts converted into canonical datasets</small></div>
+        <div class="architecture-arrow">→</div>
+        <div class="architecture-node"><span>05</span><strong>Review logic</strong><small>Anomaly, recurring and behavioural checks with evidence</small></div>
+        <div class="architecture-arrow">→</div>
+        <div class="architecture-node"><span>06</span><strong>Accountant UI</strong><small>Prioritised signals, affected rows, charts and decisions</small></div>
+      </div>
+
+      <div class="architecture-detail">
+        <div>
+          <span>DESIGN PRINCIPLE</span>
+          <h3>A signal should explain itself.</h3>
+          <p>
+            Every review item is designed to answer three questions: what was
+            unusual, why was it highlighted, and which rows should be checked?
+            Findings use plain-English explanations and supporting evidence so
+            the accountant stays in control of the final judgement.
+          </p>
+        </div>
+        <div class="principle-card">
+          <span>REVIEW SIGNAL</span>
+          <strong>“A supplier normally receives around £2,000. This payment is £10,000.”</strong>
+          <small>Contextual comparison · affected rows · accountant decision</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="features-section">
+      <div class="section-heading">
+        <span>SOME USEFUL THINGS</span>
+        <h2>What Accountancy actually does.</h2>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card"><span>01</span><h3>Explainable anomaly review</h3><p>Highlights unusually large transactions, unusual daily activity, round numbers, repeated amounts, weak descriptions and other patterns that may deserve investigation.</p></article>
+        <article class="feature-card"><span>02</span><h3>Behavioural context</h3><p>Compares activity within meaningful groups such as business categories or counterparties, so a payment is judged against the population where it actually belongs.</p></article>
+        <article class="feature-card"><span>03</span><h3>Recurring payment analysis</h3><p>Learns repeated monthly or quarterly activity and surfaces missing payments, sharp amount changes and possible duplicate recurring transactions.</p></article>
+        <article class="feature-card"><span>04</span><h3>Transaction reconciliation</h3><p>Compares transaction data with bank movements using exact, tolerant and split matching, while preserving ambiguous and unmatched cases for human review.</p></article>
+        <article class="feature-card"><span>05</span><h3>Evidence-first interface</h3><p>The Items to review table gives every signal a priority, analysis type, plain-English explanation and affected-row count before opening the underlying evidence.</p></article>
+        <article class="feature-card"><span>06</span><h3>Failure-aware pipeline</h3><p>Each file, review check and reconciliation service is isolated, allowing usable results to survive partial failures and making limitations visible instead of hiding them.</p></article>
+      </div>
+    </section>
+
+    <section class="decision-section">
+      <span class="decision-number">03</span>
+      <div>
+        <span class="decision-label">THE ACCOUNTANT STAYS IN CONTROL</span>
+        <h2>Different does not automatically mean wrong.</h2>
+        <p>
+          The interface is deliberately built around investigation rather than
+          automatic conclusions. An accountant can open a signal, inspect its
+          affected transactions, compare it with normal historical activity,
+          review charts and supporting evidence, and mark it as expected when
+          the explanation is satisfactory.
+        </p>
+        <p class="testing-note">
+          The current synthetic demo includes clear examples of an unusually
+          large payment, missing monthly and quarterly payments, a recurring
+          supplier payment that increases sharply, and a possible duplicate payment.
+        </p>
+      </div>
+    </section>
+
+    <section class="project-ending">
+      <p class="ending-label">Built as a foundation for a wider accounting SaaS platform and built Streamlit front end for a client presentation.</p>
+      <h2>Messy records in.<br />Clearer reviews out.</h2>
+      <p class="ending-supporting">
+        Designed around reusable data contracts, explainable checks and an
+        accountant-led review workflow.
+      </p>
+    </section>
+  </article>
+</ProjectModal>
+
+<style>
+  .account-project { width: 100%; background: radial-gradient(circle at 8% 8%, #D2D9E1 0%, transparent 34%), radial-gradient(circle at 94% 18%, #93A7C1 0%, transparent 32%), radial-gradient(circle at 72% 74%, #B5C2D1 0%, transparent 38%), radial-gradient(circle at 18% 88%, #A8B7C9 0%, transparent 30%), linear-gradient(135deg, #D2D9E1 0%, #C6D0DB 48%, #D2D9E1 100%); color: #111; }
+  .account-project strong { color: inherit; }
+  .project-hero { position: relative; min-height: 88vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 70px; }
+  .project-hero-top { position: absolute; top: 28px; left: 70px; right: 90px; display: flex; justify-content: space-between; font: .74rem "Courier Prime", monospace; letter-spacing: .06em; color: #475569; }
+  .project-hero h1 { margin: 0; font: 400 clamp(4rem, 11vw, 10rem)/.9 "Instrument Serif", serif; letter-spacing: -.05em; }
+  .project-tagline { max-width: 800px; margin: 42px 0 20px; font: 400 clamp(2rem, 3.4vw, 3.6rem)/.98 "Instrument Serif", serif; }
+  .project-supporting, .intro-block p, .architecture-detail p, .feature-card p, .decision-section p, .ending-supporting { max-width: 720px; font: 1rem/1.6 "Courier Prime", monospace; color: #3E4E63; }
+  .project-supporting { margin: 0; }
+  .project-meta { display: flex; flex-wrap: wrap; gap: 9px; }
+  .project-meta { margin-top: 28px; }
+  .project-meta span { padding: 10px 14px; border: 1px solid #1113; border-radius: 999px; font: .72rem "Courier Prime", monospace; letter-spacing: .025em; }
+  .demo-section { padding: 0 70px 110px; }
+  .demo-video-frame { overflow: hidden; border-radius: 22px; background: #23354C; }
+  .demo-video { display: block; width: 100%; height: auto; }
+  .section-heading > span, .architecture-detail span, .decision-label, .ending-label { font: .74rem "Courier Prime", monospace; letter-spacing: .08em; }
+  .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; padding: 20px 70px 130px; }
+  .intro-block { padding-top: 20px; border-top: 1px solid #1113; }
+  .section-number { font: .74rem "Courier Prime", monospace; color: #475569; }
+  .intro-block h2, .section-heading h2, .architecture-detail h3, .decision-section h2, .project-ending h2 { font-family: "Instrument Serif", serif; font-weight: 400; letter-spacing: -.025em; }
+  .intro-block h2 { margin: 20px 0; font-size: clamp(2.7rem, 4vw, 4.6rem); line-height: .95; }
+  .intro-block p { margin: 0; }
+  .architecture-section { padding: 110px 70px; background: linear-gradient(135deg, #23354C, #344B68 52%, #475F7D); color: #EAE6DF; }
+  .architecture-section .section-heading > span, .architecture-detail span { color: #C6D0DB; }
+  .section-heading { margin-bottom: 54px; }
+  .section-heading h2 { max-width: 900px; margin: 14px 0 0; font-size: clamp(3.4rem, 6vw, 7rem); line-height: .9; }
+  .architecture-flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr) auto) minmax(0, 1fr); align-items: center; gap: 14px; }
+  .architecture-node { min-width: 0; overflow-wrap: anywhere; min-height: 205px; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; padding: 23px; border: 1px solid #fff3; border-radius: 14px; }
+  .architecture-node span, .architecture-node small { font-family: "Courier Prime", monospace; }
+  .architecture-node span { font-size: .7rem; color: #A8B7C9; }
+  .architecture-node strong { font: 400 1.82rem/1 "Instrument Serif", serif; color: #EAE6DF; }
+  .architecture-node small { max-width: 170px; font-size: .78rem; line-height: 1.45; color: #B5C2D1; }
+  .architecture-arrow { color: #C6D0DB; }
+  .architecture-detail { display: grid; grid-template-columns: .9fr 1.1fr; gap: 60px; align-items: center; margin-top: 100px; padding-top: 80px; border-top: 1px solid #fff3; }
+  .architecture-detail h3 { margin: 16px 0 24px; font-size: clamp(2.5rem, 4vw, 4.5rem); line-height: .93; }
+  .architecture-detail p { margin: 0; color: #D2D9E1; }
+  .principle-card { display: flex; flex-direction: column; gap: 24px; padding: 32px; border: 1px solid #fff3; border-radius: 18px; background: #ffffff0d; }
+  .principle-card strong { font: 400 clamp(2rem, 3.5vw, 4rem)/.98 "Instrument Serif", serif; }
+  .principle-card small { color: #C6D0DB; font: .78rem/1.5 "Courier Prime", monospace; }
+  .features-section { padding: 130px 70px; background: #EAE6DFaa; }
+  .features-section .section-heading h2 { max-width: 950px; }
+  .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .feature-card { min-height: 300px; display: flex; flex-direction: column; padding: 27px; border: 1px solid #1112; border-radius: 18px; background: #EAE6DFbb; }
+  .feature-card:nth-child(even) { background: #C6D0DBaa; }
+  .feature-card > span { font: .72rem "Courier Prime", monospace; color: #475569; }
+  .feature-card h3 { margin: auto 0 20px; font: 400 clamp(2rem, 3vw, 3.7rem)/.95 "Instrument Serif", serif; }
+  .feature-card p { margin: 0; font-size: .95rem; }
+  .decision-section { display: grid; grid-template-columns: 120px 1fr; gap: 40px; padding: 130px 70px; background: #B5C2D1; }
+  .decision-number { font: .74rem "Courier Prime", monospace; color: #475569; }
+  .decision-section h2 { max-width: 900px; margin: 18px 0 28px; font-size: clamp(3.5rem, 7vw, 7.5rem); line-height: .88; }
+  .decision-section p { margin: 0; color: #3E4E63; }
+  .testing-note { max-width: 720px; margin-top: 28px !important; padding-top: 20px; border-top: 1px solid #1112; font-size: .82rem !important; }
+  .project-ending { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; padding: 120px 70px; background: #EAE6DF99; }
+  .project-ending h2 { max-width: 1000px; margin: 24px 0 28px; font-size: clamp(4rem, 8vw, 8rem); line-height: .84; }
+  .ending-supporting { margin: 0 0 44px; }
+  @media (min-width: 641px) and (max-width: 1350px) { .architecture-flow { grid-template-columns: repeat(3, 1fr); gap: 18px; } .architecture-arrow { display: none; } .architecture-node { min-height: 170px; } .architecture-node small { max-width: none; } }
+  @media (max-width: 640px) {
+    .project-hero { min-height: 88dvh; padding: 90px 20px 40px; } .project-hero-top { top: 20px; left: 20px; right: 72px; gap: 12px; flex-wrap: wrap; font-size: .6rem; } .project-hero h1 { font-size: clamp(2.75rem, 15vw, 6rem); } .project-tagline { margin: 30px 0 18px; font-size: clamp(2rem, 10vw, 2.8rem); } .project-supporting, .intro-block p, .feature-card p, .decision-section p { font-size: .9rem; } .project-meta { gap: 7px; margin-top: 22px; } .project-meta span { padding: 8px 10px; font-size: .62rem; } .demo-section { padding: 0 16px 80px; } .demo-video-frame { border-radius: 16px; } .intro-grid { grid-template-columns: 1fr; gap: 60px; padding: 20px 20px 90px; } .architecture-section, .features-section, .decision-section, .project-ending { padding: 90px 20px; } .section-heading h2 { font-size: clamp(3rem, 14vw, 5rem); } .architecture-flow { grid-template-columns: 1fr; gap: 12px; } .architecture-arrow { text-align: center; transform: rotate(90deg); } .architecture-node { min-height: 145px; } .architecture-node small { max-width: none; } .architecture-detail { grid-template-columns: 1fr; gap: 34px; margin-top: 70px; padding-top: 60px; } .feature-grid { grid-template-columns: 1fr; } .feature-card { min-height: 285px; padding: 23px; } .decision-section { grid-template-columns: 1fr; gap: 30px; } .project-ending { min-height: 70dvh; } .project-ending h2 { font-size: clamp(3.5rem, 17vw, 5.5rem); }
+  }
+</style>

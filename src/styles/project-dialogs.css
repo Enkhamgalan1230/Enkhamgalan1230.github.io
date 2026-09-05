@@ -1,0 +1,84 @@
+/* Shared typography for project sheets; leave the rest of the portfolio alone. */
+.project-sheet :is(.receipt-project, .account-project) {
+  --project-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-family: var(--project-sans);
+}
+
+.project-sheet :is(.receipt-project, .account-project) .project-hero h1 {
+  font-weight: 400;
+  line-height: 0.98;
+}
+
+.project-sheet :is(.receipt-project, .account-project) .project-tagline {
+  max-width: 24ch;
+  font-family: var(--project-sans);
+  font-size: clamp(1.65rem, 3vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1.18;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.project-sheet :is(.receipt-project, .account-project) :is(h2, h3) {
+  font-family: var(--project-sans);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.project-sheet :is(.receipt-project, .account-project) h2 {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+}
+
+.project-sheet :is(.receipt-project, .account-project) h3 {
+  font-size: clamp(1.45rem, 2.3vw, 2rem);
+}
+
+.project-sheet :is(.receipt-project, .account-project) :is(
+  .project-supporting,
+  .intro-block p,
+  .scraping-detail-text p,
+  .architecture-detail p,
+  .feature-card p,
+  .decision-section p,
+  .ending-supporting
+) {
+  max-width: 65ch;
+  font-family: var(--project-sans);
+  font-size: clamp(1rem, 1.15vw, 1.125rem);
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+.project-sheet :is(.receipt-project, .account-project) p strong {
+  font-weight: 600;
+}
+
+.project-sheet :is(.receipt-project, .account-project) .architecture-node strong {
+  font-family: var(--project-sans);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.project-sheet :is(.receipt-project, .account-project) .architecture-node small {
+  font-family: var(--project-sans);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.project-sheet :is(.receipt-project, .account-project) .principle-card strong {
+  font-family: var(--project-sans);
+  font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+}
+
+.project-sheet :is(.receipt-project, .account-project) .project-ending h2 {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+}

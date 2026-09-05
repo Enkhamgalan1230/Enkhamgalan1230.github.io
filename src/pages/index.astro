@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ReceiptProject from "../projects/ReceiptProject.astro";
+import AccountProject from "../projects/AccountProject.astro";
 ---
 
 <BaseLayout title="Entwan's Portfolio">
@@ -124,14 +125,15 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
             </div>
 
             <!-- =========================
-                 02 PLACEHOLDER
+                 02 ACCOUNTANCY
                  ========================= -->
 
             <div class="carousel-item">
-              <a
-                class="project-card project-card-video"
-                href="/projects"
-                aria-label="Open Project Two"
+              <button
+                class="project-card project-card-video project-card-account"
+                type="button"
+                data-project-open="account-project"
+                aria-label="Open Accountancy project"
               >
                 <div class="project-video-background">
                   <video
@@ -153,16 +155,16 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
                   <div class="video-card-content">
 
                     <span class="video-card-type">
-                      DATA / AUTOMATION
+                      DATA / FINANCE / AUTOMATION
                     </span>
 
                     <div class="video-card-main">
                       <strong>
-                        Project Two
+                        Accountancy
                       </strong>
 
                       <small>
-                        Another useful thing I built
+                        Explainable financial review
                       </small>
                     </div>
 
@@ -170,11 +172,11 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
                 </div>
 
                 <div class="project-card-footer video-card-footer">
-                  <span>Project Two</span>
+                  <span>Accountancy</span>
                   <span>02</span>
                 </div>
 
-              </a>
+              </button>
             </div>
 
             <!-- =========================
@@ -520,6 +522,7 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
   </section>
 
   <ReceiptProject />
+  <AccountProject />
 
 </BaseLayout>
 
@@ -2144,6 +2147,10 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
     transform: none;
 
     contain: strict;
+  }
+
+  .project-card-account .project-video-background {
+    background: linear-gradient(135deg, #D2D9E1 0%, #93A7C1 31.2%, #B5C2D1 56.2%, #C6D0DB 72.2%, #EAE6DF 82.7%, #A8B7C9 100%);
   }
 
   /* =========================

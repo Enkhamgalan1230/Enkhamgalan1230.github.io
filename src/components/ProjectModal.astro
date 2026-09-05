@@ -47,11 +47,23 @@ const {
     overlay.setAttribute("aria-hidden", "false");
 
     document.body.style.overflow = "hidden";
+
+    overlay.querySelectorAll<HTMLVideoElement>("video[data-project-autoplay]").forEach((video) => {
+      video.muted = true;
+      void video.play().catch(() => {
+        // Keep playback available if the browser blocks autoplay.
+        video.controls = true;
+      });
+    });
   }
 
   function closeProject(
     overlay: HTMLElement
   ) {
+    overlay.querySelectorAll<HTMLVideoElement>("video").forEach((video) => {
+      video.pause();
+    });
+
     overlay.classList.remove("is-open");
     overlay.setAttribute("aria-hidden", "true");
 

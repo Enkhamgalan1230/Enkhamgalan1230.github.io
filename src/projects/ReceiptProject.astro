@@ -41,23 +41,6 @@ import ProjectModal from "../components/ProjectModal.astro";
         <span>STREAMLIT</span>
       </div>
 
-      <div class="project-actions">
-        <a
-          href="https://receipt-entwan.streamlit.app/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          EXPLORE LIVE APP ↗
-        </a>
-
-        <a
-          href="https://github.com/Enkhamgalan1230/Reciept-Project"
-          target="_blank"
-          rel="noreferrer"
-        >
-          VIEW SOURCE CODE ↗
-        </a>
-      </div>
     </section>
 
     <!-- =========================
@@ -68,11 +51,11 @@ import ProjectModal from "../components/ProjectModal.astro";
       <div class="demo-placeholder demo-video-frame">
         <video
           class="demo-video"
-          autoplay
+          data-project-autoplay
           loop
           muted
           playsinline
-          preload="auto"
+          preload="metadata"
           aria-label="Receipt project demo"
         >
           <source
@@ -455,7 +438,7 @@ import ProjectModal from "../components/ProjectModal.astro";
           target="_blank"
           rel="noreferrer"
         >
-          OPEN LIVE PROJECT ↗
+          EXPLORE LIVE APP ↗
         </a>
 
         <a
@@ -463,7 +446,7 @@ import ProjectModal from "../components/ProjectModal.astro";
           target="_blank"
           rel="noreferrer"
         >
-          GITHUB ↗
+          VIEW SOURCE CODE ↗
         </a>
       </div>
     </section>
