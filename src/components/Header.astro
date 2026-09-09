@@ -101,55 +101,14 @@ import MusicButton from "./MusicButton.astro";
   function positionMobileClock() {
     if (!londonClock) return;
 
-    /*
-     * Desktop:
-     * clock belongs normally inside the header.
-     */
     if (window.innerWidth > 640) {
       londonClock.style.transform = "";
       londonClock.classList.remove("is-at-footer");
       return;
     }
 
-    const footer =
-      document.querySelector<HTMLElement>(".site-footer");
-
-    if (!footer) {
-      londonClock.style.transform = "translateX(-50%)";
-      londonClock.classList.remove("is-at-footer");
-      return;
-    }
-
-    const footerTop =
-      footer.getBoundingClientRect().top;
-
-    const normalBottom = 12;
-
-    /*
-     * Position of the bottom of the floating clock
-     * when it is sitting normally at bottom: 12px.
-     */
-    const normalClockBottom =
-      window.innerHeight - normalBottom;
-
-    /*
-     * Once the footer rises above that point,
-     * calculate how much the clock needs to move up.
-     */
-    const overlap =
-      normalClockBottom - footerTop;
-
-    if (overlap > 0) {
-      londonClock.style.transform =
-        `translate(-50%, -${overlap}px)`;
-
-      londonClock.classList.add("is-at-footer");
-    } else {
-      londonClock.style.transform =
-        "translateX(-50%)";
-
-      londonClock.classList.remove("is-at-footer");
-    }
+    londonClock.style.transform = "";
+    londonClock.classList.remove("is-at-footer");
   }
 
   updateLondonTime();
@@ -409,7 +368,10 @@ import MusicButton from "./MusicButton.astro";
     }
 
     .header-inner {
-      display: flex;
+      display: grid;
+
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-rows: auto auto;
 
       align-items: center;
 
@@ -418,6 +380,9 @@ import MusicButton from "./MusicButton.astro";
 
     .header-left {
       display: flex;
+
+      grid-column: 1;
+      grid-row: 1;
 
       align-items: center;
 
@@ -463,6 +428,9 @@ import MusicButton from "./MusicButton.astro";
     .header-right {
       margin-left: auto;
 
+      grid-column: 2;
+      grid-row: 1;
+
       display: flex;
 
       align-items: center;
@@ -489,22 +457,20 @@ import MusicButton from "./MusicButton.astro";
     }
 
     /*
-     * MOBILE FLOATING CLOCK
+     * MOBILE CLOCK UNDER THE HEADER ROW
      */
 
     .london-clock {
-      position: fixed;
+      display: none;
+      position: static;
 
-      left: 50%;
-      bottom: 12px;
-
-      justify-self: auto;
+      grid-column: 1 / -1;
+      grid-row: 2;
+      justify-self: center;
 
       gap: 7px;
 
-      padding: 8px 12px;
-
-      transform: translateX(-50%);
+      padding: 0;
 
       background: transparent;
 
@@ -512,21 +478,6 @@ import MusicButton from "./MusicButton.astro";
 
       white-space: nowrap;
 
-      z-index: 20;
-
-      border-top: 1px solid transparent;
-
-      transition:
-        border-color 0.2s ease;
-    }
-
-    /*
-     * Footer has reached the clock.
-     */
-
-    .london-clock.is-at-footer {
-      border-top-color:
-        rgba(17, 17, 17, 0.18);
     }
   }
 </style>

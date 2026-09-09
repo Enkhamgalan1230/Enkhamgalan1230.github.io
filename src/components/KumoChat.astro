@@ -47,7 +47,13 @@
           </span>
         </div>
 
-        <p>Entwan made Kumo.exe for his old cat, Kumo.</p>
+        <button
+          class="kumo__about"
+          type="button"
+          data-kumo-who
+        >
+          WHO IS KUMO?
+        </button>
       </div>
 
       <button
@@ -131,6 +137,42 @@
 </div>
 
 <script>
+  const kumoContainer =
+    document.querySelector<HTMLElement>(".kumo");
+
+  function positionKumoAwayFromFooter() {
+    if (!kumoContainer) return;
+
+    const footer =
+      document.querySelector<HTMLElement>(".site-footer");
+
+    if (!footer) return;
+
+    const footerTop = footer.getBoundingClientRect().top;
+    const normalBottom =
+      window.innerHeight -
+      (window.innerWidth <= 600 ? 16 : 24);
+    const overlap = Math.max(
+      0,
+      normalBottom - footerTop,
+    );
+
+    kumoContainer.style.transform = overlap > 0
+      ? `translateY(-${overlap + 12}px)`
+      : "";
+  }
+
+  positionKumoAwayFromFooter();
+  window.addEventListener(
+    "scroll",
+    positionKumoAwayFromFooter,
+    { passive: true },
+  );
+  window.addEventListener(
+    "resize",
+    positionKumoAwayFromFooter,
+  );
+
   const WORKER_URL =
     "https://enkhamgalan-spotify-api.zaecisama.workers.dev";
 
@@ -273,6 +315,16 @@
     mood: KumoMood = "neutral",
   ) {
     if (!messages) return null;
+
+    if (author === "kumo") {
+      messages
+        .querySelectorAll<HTMLImageElement>(
+          ".kumo-message--kumo .kumo-message__avatar",
+        )
+        .forEach((messageAvatar) => {
+          messageAvatar.remove();
+        });
+    }
 
     const wrapper =
       document.createElement("div");
@@ -785,9 +837,6 @@
   .kumo__header {
     display: flex;
 
-    justify-content:
-      space-between;
-
     align-items:
       flex-start;
 
@@ -831,6 +880,11 @@
       0.02em;
   }
 
+  .kumo__header > div {
+    flex: 1;
+    min-width: 0;
+  }
+
   .kumo__header p {
     margin:
       5px 0 0;
@@ -839,6 +893,33 @@
     line-height: 1.35;
 
     opacity: 0.62;
+  }
+
+  .kumo__about {
+    display: inline-flex;
+    align-items: center;
+    margin: 7px 0 0;
+    padding: 10px 14px;
+    border: 1px solid rgba(17, 17, 17, 0.35);
+    border-radius: 999px;
+    background: rgba(237, 236, 234, 0.5);
+    color: #333333;
+    font: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    text-align: left;
+    transition:
+      background 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease;
+  }
+
+  .kumo__about:hover {
+    border-color: #4d7657;
+    background: #4d7657;
+    color: #ffffff;
   }
 
   .kumo__status {
@@ -1085,6 +1166,8 @@
   .kumo__suggestion {
     flex-shrink: 0;
 
+    appearance: none;
+
     border:
       1px solid
       rgb(
@@ -1094,6 +1177,8 @@
 
     background:
       transparent;
+
+    color: #111111;
 
     padding:
       6px 9px;
@@ -1307,6 +1392,10 @@
     .kumo__launcher-copy small,
     .kumo__launcher-hint {
       display: none;
+    }
+
+    .kumo__input {
+      font-size: 16px;
     }
   }
 </style>
