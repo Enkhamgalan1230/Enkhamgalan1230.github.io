@@ -1,0 +1,886 @@
+---
+import ProjectModal from "../components/ProjectModal.astro";
+---
+
+<ProjectModal
+  id="kumo-project"
+  ariaLabel="Kumo project"
+>
+  <article class="kumo-project">
+    <section class="project-hero">
+      <div class="project-hero-top">
+        <span>03 / SELECTED WORK</span>
+        <span>2026</span>
+      </div>
+
+      <div class="kumo-status">
+        <span class="status-dot"></span>
+        <span>ONLINE</span>
+      </div>
+
+      <h1>KUMO AI.exe</h1>
+
+      <p class="project-tagline">
+        A suspiciously well-informed little AI
+        living inside my portfolio.
+      </p>
+
+      <p class="project-supporting">
+        Kumo is a retrieval-augmented portfolio assistant built to answer
+        questions about me, my work, projects, education, skills and interests
+        without pretending to know things that are not actually in the
+        knowledge base.
+      </p>
+
+      <div class="project-meta">
+        <span>RAG</span>
+        <span>CLOUDFLARE WORKERS AI</span>
+        <span>VECTORIZE</span>
+        <span>ASTRO</span>
+        <span>TYPESCRIPT</span>
+        <span>GEMMA</span>
+        <span>EMBEDDINGS</span>
+      </div>
+
+      <button
+        class="open-kumo-button"
+        type="button"
+        data-open-kumo
+      >
+        OPEN KUMO
+        <span aria-hidden="true">↗</span>
+      </button>
+    </section>
+
+    <section class="intro-grid">
+      <div class="intro-block">
+        <span class="section-number">01</span>
+        <h2>Why I built it.</h2>
+
+        <p>
+          I wanted the portfolio to do more than just show static text about me.
+          The idea was to let visitors ask questions naturally and explore the
+          person behind the projects, while keeping the answers grounded in
+          information I actually provided.
+        </p>
+      </div>
+
+      <div class="intro-block">
+        <span class="section-number">02</span>
+        <h2>What I wanted to learn.</h2>
+
+        <p>
+          Kumo became a practical way for me to learn how retrieval-augmented
+          generation works end to end, including knowledge chunking,
+          embeddings, vector search, retrieval quality, grounded generation
+          and connecting an AI backend to a real frontend.
+        </p>
+      </div>
+    </section>
+
+    <section class="architecture-section">
+      <div class="section-heading">
+        <span>UNDER THE HOOD</span>
+
+        <h2>
+          Question in.<br />
+          Relevant context out.
+        </h2>
+      </div>
+
+      <div class="architecture-flow">
+        <div class="architecture-node">
+          <span>01</span>
+          <strong>Visitor question</strong>
+          <small>
+            A natural-language question about me or my work.
+          </small>
+        </div>
+
+        <div class="architecture-arrow">→</div>
+
+        <div class="architecture-node">
+          <span>02</span>
+          <strong>Normalise</strong>
+          <small>
+            Aliases like Entwan and Enkh are mapped consistently for retrieval.
+          </small>
+        </div>
+
+        <div class="architecture-arrow">→</div>
+
+        <div class="architecture-node">
+          <span>03</span>
+          <strong>Embed</strong>
+          <small>
+            The question is converted into a vector using Workers AI.
+          </small>
+        </div>
+
+        <div class="architecture-arrow">→</div>
+
+        <div class="architecture-node">
+          <span>04</span>
+          <strong>Retrieve</strong>
+          <small>
+            Vectorize finds the most relevant chunks from the knowledge base.
+          </small>
+        </div>
+
+        <div class="architecture-arrow">→</div>
+
+        <div class="architecture-node">
+          <span>05</span>
+          <strong>Generate</strong>
+          <small>
+            Kumo answers using only the retrieved evidence.
+          </small>
+        </div>
+      </div>
+    </section>
+
+    <section class="feature-section">
+      <div class="section-heading">
+        <span>THE PART I CARE ABOUT</span>
+
+        <h2>
+          It should know when
+          it does not know.
+        </h2>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card">
+          <span>01</span>
+          <h3>Grounded answers</h3>
+          <p>
+            Kumo is instructed to answer from retrieved evidence rather than
+            filling gaps with invented details.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <span>02</span>
+          <h3>Dynamic knowledge</h3>
+          <p>
+            Projects, skills and interests live in a separate knowledge base,
+            so new topics can be added without rewriting Kumo's whole prompt.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <span>03</span>
+          <h3>Unknown-answer handling</h3>
+          <p>
+            Similarity alone is not treated as proof. If retrieved chunks do
+            not actually answer the question, Kumo simply says it does not know.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <span>04</span>
+          <h3>A bit of personality</h3>
+          <p>
+            The assistant is designed to feel familiar and slightly playful,
+            without inventing fake memories or turning into a generic chatbot.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="project-ending">
+      <span class="ending-label">CURRENTLY LIVING IN THIS PORTFOLIO</span>
+
+      <h2>
+        Ask the portfolio<br />
+        instead of reading it.
+      </h2>
+
+      <p class="ending-supporting">
+        Kumo is still evolving as I add more projects, topics and knowledge.
+      </p>
+
+      <button
+        class="open-kumo-button open-kumo-button-bottom"
+        type="button"
+        data-open-kumo
+      >
+        OPEN KUMO
+        <span aria-hidden="true">↗</span>
+      </button>
+    </section>
+  </article>
+</ProjectModal>
+
+<script>
+  const openKumoButtons =
+    document.querySelectorAll<HTMLButtonElement>(
+      "[data-open-kumo]",
+    );
+
+  openKumoButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const kumoWindow =
+        document.querySelector<HTMLElement>(
+          "#kumo-window",
+        );
+
+      if (!kumoWindow) return;
+
+      kumoWindow.setAttribute(
+        "aria-hidden",
+        "false",
+      );
+
+      const input =
+        document.querySelector<HTMLTextAreaElement>(
+          "#kumo-input",
+        );
+
+      requestAnimationFrame(() => {
+        input?.focus();
+      });
+    });
+  });
+</script>
+
+<style>
+  .kumo-project {
+    width: 100%;
+    color: #3b241c;
+
+    background:
+      radial-gradient(
+        circle at 12% 10%,
+        rgba(245, 164, 126, 0.42),
+        transparent 32%
+      ),
+      radial-gradient(
+        circle at 88% 22%,
+        rgba(250, 230, 211, 0.72),
+        transparent 30%
+      ),
+      linear-gradient(
+        135deg,
+        #fbdac2 0%,
+        #f9cbae 52%,
+        #fbdac2 100%
+      );
+  }
+
+  .project-hero {
+    position: relative;
+
+    min-height: 88vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    padding: 70px;
+  }
+
+  .project-hero-top {
+    position: absolute;
+    top: 28px;
+    left: 70px;
+    right: 90px;
+
+    display: flex;
+    justify-content: space-between;
+
+    font:
+      0.74rem "Courier Prime",
+      monospace;
+
+    letter-spacing: 0.06em;
+    color: #8c4c36;
+  }
+
+  .kumo-status {
+    display: inline-flex;
+
+    align-items: center;
+    gap: 8px;
+
+    width: fit-content;
+
+    margin-bottom: 20px;
+
+    padding: 8px 12px;
+
+    border: 1px solid
+      rgba(17, 17, 17, 0.18);
+
+    border-radius: 999px;
+
+    font:
+      0.7rem "Courier Prime",
+      monospace;
+
+    letter-spacing: 0.06em;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #ea8966;
+
+    box-shadow:
+      0 0 0 4px
+      rgba(102, 116, 92, 0.1);
+  }
+
+  .project-hero h1 {
+    margin: 0;
+
+    font:
+      400
+      clamp(5rem, 13vw, 12rem) /
+      0.82
+      "Instrument Serif",
+      serif;
+
+    letter-spacing: -0.055em;
+  }
+
+  .project-tagline {
+    max-width: 850px;
+
+    margin: 42px 0 20px;
+
+    font:
+      400
+      clamp(2rem, 3.6vw, 4rem) /
+      0.98
+      "Instrument Serif",
+      serif;
+  }
+
+  .project-supporting,
+  .intro-block p,
+  .feature-card p,
+  .ending-supporting {
+    max-width: 760px;
+
+    font:
+      1rem / 1.6
+      "Courier Prime",
+      monospace;
+
+    color: #6f4131;
+  }
+
+  .project-supporting {
+    margin: 0;
+  }
+
+  .project-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+
+    margin-top: 28px;
+  }
+
+  .project-meta span {
+    padding: 10px 14px;
+
+    border:
+      1px solid
+      rgba(17, 17, 17, 0.18);
+
+    border-radius: 999px;
+
+    font:
+      0.72rem
+      "Courier Prime",
+      monospace;
+  }
+
+  .open-kumo-button {
+    display: inline-flex;
+
+    align-items: center;
+    gap: 12px;
+
+    width: fit-content;
+
+    margin-top: 34px;
+
+    padding: 14px 18px;
+
+    border: 1px solid #3b241c;
+
+    background: #3b241c;
+    color: #fae6d3;
+
+    font:
+      0.78rem
+      "Courier Prime",
+      monospace;
+
+    letter-spacing: 0.05em;
+
+    cursor: pointer;
+
+    transition:
+      transform 0.18s ease,
+      background 0.18s ease,
+      color 0.18s ease;
+  }
+
+  .open-kumo-button:hover {
+    transform: translateY(-2px);
+
+    background: #ea8966;
+    color: #fff;
+  }
+
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 70px;
+
+    padding:
+      40px 70px 130px;
+  }
+
+  .intro-block {
+    padding-top: 20px;
+
+    border-top:
+      1px solid
+      rgba(17, 17, 17, 0.18);
+  }
+
+  .section-number {
+    font:
+      0.74rem
+      "Courier Prime",
+      monospace;
+
+    color: #c45f42;
+  }
+
+  .intro-block h2,
+  .section-heading h2,
+  .feature-card h3,
+  .project-ending h2 {
+    font-family:
+      "Instrument Serif",
+      serif;
+
+    font-weight: 400;
+    letter-spacing: -0.025em;
+  }
+
+  .intro-block h2 {
+    margin: 20px 0;
+
+    font-size:
+      clamp(
+        2.8rem,
+        4vw,
+        4.8rem
+      );
+
+    line-height: 0.95;
+  }
+
+  .intro-block p {
+    margin: 0;
+  }
+
+  .architecture-section {
+    padding:
+      110px 70px;
+
+    background:
+      linear-gradient(
+        135deg,
+        #6d3426,
+        #9b4f38 55%,
+        #c66a4c
+      );
+
+    color: #fae6d3;
+  }
+
+  .section-heading {
+    margin-bottom: 54px;
+  }
+
+  .section-heading > span,
+  .ending-label {
+    font:
+      0.74rem
+      "Courier Prime",
+      monospace;
+
+    letter-spacing: 0.08em;
+  }
+
+  .architecture-section
+    .section-heading
+    > span {
+    color: #f9cbae;
+  }
+
+  .section-heading h2 {
+    max-width: 900px;
+
+    margin: 14px 0 0;
+
+    font-size:
+      clamp(
+        3.4rem,
+        6vw,
+        7rem
+      );
+
+    line-height: 0.9;
+  }
+
+  .architecture-flow {
+    display: grid;
+
+    grid-template-columns:
+      repeat(
+        4,
+        minmax(0, 1fr)
+        auto
+      )
+      minmax(0, 1fr);
+
+    align-items: center;
+
+    gap: 14px;
+  }
+
+  .architecture-node {
+    min-width: 0;
+    min-height: 190px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    gap: 18px;
+
+    padding: 23px;
+
+    border:
+      1px solid
+      rgba(255, 255, 255, 0.18);
+
+    border-radius: 14px;
+  }
+
+  .architecture-node span,
+  .architecture-node small {
+    font-family:
+      "Courier Prime",
+      monospace;
+  }
+
+  .architecture-node span {
+    font-size: 0.7rem;
+    color: #f5a47e;
+  }
+
+  .architecture-node strong {
+    font:
+      400
+      1.8rem / 1
+      "Instrument Serif",
+      serif;
+
+    color: #fff4eb;
+  }
+
+  .architecture-node small {
+    font-size: 0.78rem;
+    line-height: 1.45;
+
+    color: #fbdac2;
+  }
+
+  .architecture-arrow {
+    color: #f5a47e;
+  }
+
+  .feature-section {
+    padding:
+      130px 70px;
+
+    background:
+      rgba(
+        250,
+        230,
+        211,
+        0.82
+      );
+  }
+
+  .feature-grid {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, 1fr);
+
+    gap: 18px;
+  }
+
+  .feature-card {
+    min-height: 280px;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 28px;
+
+    border:
+      1px solid
+      rgba(17, 17, 17, 0.12);
+
+    border-radius: 18px;
+
+    background:
+      rgba(
+        255,
+        255,
+        255,
+        0.32
+      );
+  }
+
+  .feature-card:nth-child(even) {
+    background:
+      rgba(
+        245,
+        164,
+        126,
+        0.28
+      );
+  }
+
+  .feature-card > span {
+    font:
+      0.72rem
+      "Courier Prime",
+      monospace;
+
+    color: #c45f42;
+  }
+
+  .feature-card h3 {
+    margin: auto 0 20px;
+
+    font-size:
+      clamp(
+        2rem,
+        3vw,
+        3.6rem
+      );
+
+    line-height: 0.95;
+  }
+
+  .feature-card p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .project-ending {
+    min-height: 75vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding:
+      120px 70px;
+
+    background:
+      linear-gradient(
+        135deg,
+        #f5a47e,
+        #fbdac2
+      );
+  }
+
+  .project-ending h2 {
+    max-width: 1000px;
+
+    margin: 24px 0 28px;
+
+    font-size:
+      clamp(
+        4rem,
+        8vw,
+        8rem
+      );
+
+    line-height: 0.84;
+  }
+
+  .ending-supporting {
+    margin: 0;
+  }
+
+  .open-kumo-button-bottom {
+    margin-top: 32px;
+  }
+
+  @media (
+    min-width: 641px
+  ) and (
+    max-width: 1350px
+  ) {
+    .architecture-flow {
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 18px;
+    }
+
+    .architecture-arrow {
+      display: none;
+    }
+
+    .architecture-node {
+      min-height: 165px;
+    }
+  }
+
+  @media (
+    max-width: 640px
+  ) {
+    .project-hero {
+      min-height: 88dvh;
+
+      padding:
+        90px 20px 40px;
+    }
+
+    .project-hero-top {
+      top: 20px;
+      left: 20px;
+      right: 72px;
+
+      gap: 12px;
+
+      flex-wrap: wrap;
+
+      font-size: 0.6rem;
+    }
+
+    .project-hero h1 {
+      font-size:
+        clamp(
+          4rem,
+          25vw,
+          7rem
+        );
+    }
+
+    .project-tagline {
+      margin:
+        30px 0 18px;
+
+      font-size:
+        clamp(
+          2rem,
+          10vw,
+          2.8rem
+        );
+    }
+
+    .project-supporting,
+    .intro-block p,
+    .feature-card p {
+      font-size: 0.9rem;
+    }
+
+    .project-meta {
+      gap: 7px;
+
+      margin-top: 22px;
+    }
+
+    .project-meta span {
+      padding:
+        8px 10px;
+
+      font-size: 0.62rem;
+    }
+
+    .intro-grid {
+      grid-template-columns: 1fr;
+
+      gap: 60px;
+
+      padding:
+        20px 20px 90px;
+    }
+
+    .architecture-section,
+    .feature-section,
+    .project-ending {
+      padding:
+        90px 20px;
+    }
+
+    .section-heading h2 {
+      font-size:
+        clamp(
+          3rem,
+          14vw,
+          5rem
+        );
+    }
+
+    .architecture-flow {
+      grid-template-columns: 1fr;
+
+      gap: 12px;
+    }
+
+    .architecture-arrow {
+      text-align: center;
+
+      transform:
+        rotate(90deg);
+    }
+
+    .architecture-node {
+      min-height: 140px;
+    }
+
+    .feature-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .feature-card {
+      min-height: 260px;
+    }
+
+    .project-ending {
+      min-height: 70dvh;
+    }
+
+    .project-ending h2 {
+      font-size:
+        clamp(
+          3.5rem,
+          17vw,
+          5.5rem
+        );
+    }
+  }
+</style>

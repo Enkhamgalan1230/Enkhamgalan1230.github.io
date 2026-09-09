@@ -1,7 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+
 import ReceiptProject from "../projects/ReceiptProject.astro";
 import AccountProject from "../projects/AccountProject.astro";
+import KumoProject from "../projects/KumoProject.astro";
+import KumoChat from "../components/KumoChat.astro";
 ---
 
 <BaseLayout title="Entwan's Portfolio">
@@ -192,14 +195,15 @@ import AccountProject from "../projects/AccountProject.astro";
             </div>
 
             <!-- =========================
-                 03 PLACEHOLDER
+                 03 KUMO AI
                  ========================= -->
 
             <div class="carousel-item">
-              <div
-                class="project-card project-card-video placeholder-project"
-                role="group"
-                aria-label="Project Three — in progress"
+              <button
+                class="project-card project-card-video project-card-kumo"
+                type="button"
+                data-project-open="kumo-project"
+                aria-label="Open Kumo AI project"
               >
                 <div class="project-video-background">
                   <video
@@ -226,11 +230,11 @@ import AccountProject from "../projects/AccountProject.astro";
 
                     <div class="video-card-main">
                       <strong>
-                        Project Three
+                        KUMO AI.exe
                       </strong>
 
                       <small>
-                        Machines doing clever things
+                        Retrieval-augmented portfolio assistant
                       </small>
                     </div>
 
@@ -238,17 +242,11 @@ import AccountProject from "../projects/AccountProject.astro";
                 </div>
 
                 <div class="project-card-footer video-card-footer">
-                  <span>Project Three</span>
+                  <span>KUMO AI.exe</span>
                   <span>03</span>
                 </div>
 
-                <div class="placeholder-overlay" aria-hidden="true">
-                  <span class="placeholder-status">
-                    <span class="placeholder-status-dot"></span>
-                    <span class="placeholder-badge">IN PROGRESS</span>
-                  </span>
-                </div>
-              </div>
+              </button>
             </div>
 
             <!-- =========================
@@ -565,6 +563,8 @@ import AccountProject from "../projects/AccountProject.astro";
 
   <ReceiptProject />
   <AccountProject />
+  <KumoProject />
+  <KumoChat />
 
 </BaseLayout>
 
