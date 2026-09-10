@@ -4,6 +4,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import ReceiptProject from "../projects/ReceiptProject.astro";
 import AccountProject from "../projects/AccountProject.astro";
 import KumoProject from "../projects/KumoProject.astro";
+import RecommendationProject from "../projects/RecommendationProject.astro";
 import KumoChat from "../components/KumoChat.astro";
 ---
 
@@ -250,14 +251,15 @@ import KumoChat from "../components/KumoChat.astro";
             </div>
 
             <!-- =========================
-                 04 PLACEHOLDER
+                 04 MERCHANT RECOMMENDATION
                  ========================= -->
 
             <div class="carousel-item">
-              <div
-                class="project-card project-card-video placeholder-project"
-                role="group"
-                aria-label="Project Four — in progress"
+              <button
+                class="project-card project-card-video project-card-recommendation"
+                type="button"
+                data-project-open="merchant-recommendation-project"
+                aria-label="Open Merchant Recommendation System project"
               >
                 <div class="project-video-background">
                   <video
@@ -279,16 +281,16 @@ import KumoChat from "../components/KumoChat.astro";
                   <div class="video-card-content">
 
                     <span class="video-card-type">
-                      DATA / CLOUD / SYSTEMS
+                      RECOMMENDATIONS / FORECASTING / CLIENT WORK
                     </span>
 
                     <div class="video-card-main">
                       <strong>
-                        Project Four
+                        Merchant
                       </strong>
 
                       <small>
-                        Data going somewhere useful
+                        Personalised product discovery
                       </small>
                     </div>
 
@@ -296,17 +298,11 @@ import KumoChat from "../components/KumoChat.astro";
                 </div>
 
                 <div class="project-card-footer video-card-footer">
-                  <span>Project Four</span>
+                  <span>Merchant</span>
                   <span>04</span>
                 </div>
 
-                <div class="placeholder-overlay" aria-hidden="true">
-                  <span class="placeholder-status">
-                    <span class="placeholder-status-dot"></span>
-                    <span class="placeholder-badge">IN PROGRESS</span>
-                  </span>
-                </div>
-              </div>
+              </button>
             </div>
 
             <!-- =========================
@@ -488,7 +484,6 @@ import KumoChat from "../components/KumoChat.astro";
                 </div>
               </div>
             </div>
-
           </div>
         </div>
 
@@ -603,6 +598,7 @@ import KumoChat from "../components/KumoChat.astro";
   <ReceiptProject />
   <AccountProject />
   <KumoProject />
+  <RecommendationProject />
   <KumoChat />
 
 </BaseLayout>

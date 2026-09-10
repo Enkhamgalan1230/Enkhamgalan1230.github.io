@@ -1,0 +1,991 @@
+---
+import ProjectModal from "../components/ProjectModal.astro";
+---
+
+<ProjectModal
+  id="merchant-recommendation-project"
+  ariaLabel="Merchant Recommendation System project"
+>
+  <article class="merchant-project">
+
+    <section class="project-hero">
+      <div class="project-hero-top">
+        <span>04 / SELECTED WORK</span>
+        <span>CLIENT-FACING PROJECT</span>
+      </div>
+
+      <h1>Merchant<br />Recommendation System</h1>
+
+      <p class="project-tagline">
+        The right product,<br />
+        for the right customer.
+      </p>
+
+      <p class="project-supporting">
+        A client-facing recommendation and demand intelligence system built
+        for a plumbing merchant. The project uses historical customer and
+        sales behaviour to personalise product discovery, suggest useful
+        basket additions and help the business understand future product demand.
+      </p>
+
+      <div class="project-meta">
+        <span>CLIENT-FACING</span>
+        <span>RECOMMENDATION SYSTEMS</span>
+        <span>GRU</span>
+        <span>TENSORFLOW</span>
+        <span>PROPHET</span>
+        <span>STREAMLIT</span>
+        <span>PANDAS</span>
+        <span>PYTHON</span>
+      </div>
+    </section>
+
+    <section class="intro-grid">
+      <div class="intro-block">
+        <span class="section-number">01</span>
+
+        <h2>What the client needed.</h2>
+
+        <p>
+          The merchant has a large catalogue of plumbing, heating,
+          ventilation, fittings, tools and related products. The challenge was
+          helping customers find products that are actually relevant to them,
+          while also identifying complementary items that naturally belong
+          together.
+        </p>
+
+        <p>
+          The client also wanted to make better use of historical sales data
+          behind the scenes, particularly for understanding product demand
+          and supporting stock planning.
+        </p>
+      </div>
+
+      <div class="intro-block">
+        <span class="section-number">02</span>
+
+        <h2>What I worked on.</h2>
+
+        <p>
+          I designed a recommendation framework that changes behaviour
+          depending on what the system knows about the customer.
+        </p>
+
+        <p>
+          New visitors receive sensible popularity-based recommendations,
+          returning customers receive personalised predictions from their
+          purchase history, and basket activity triggers related-product
+          recommendations based on historical buying behaviour.
+        </p>
+
+        <p>
+          I also developed a product-level demand forecasting pipeline and
+          built the recommendation scenarios into an interactive Streamlit
+          application for the client.
+        </p>
+      </div>
+    </section>
+
+    <section class="architecture-section">
+      <div class="section-heading">
+        <span>UNDER THE HOOD</span>
+
+        <h2>
+          One dataset.<br />
+          Several ways to help.
+        </h2>
+      </div>
+
+      <div class="architecture-flow">
+        <div class="architecture-node">
+          <span>01</span>
+          <strong>Sales history</strong>
+          <small>
+            Customer, product, quantity, price, discount and transaction history
+          </small>
+        </div>
+
+        <div class="architecture-arrow">→</div>
+
+        <div class="architecture-node">
+          <span>02</span>
+          <strong>Preparation</strong>
+          <small>
+            Invalid records removed and customer purchase histories prepared
+          </small>
+        </div>
+
+        <div class="architecture-arrow">→</div>
+
+        <div class="architecture-node">
+          <span>03</span>
+          <strong>Customer context</strong>
+          <small>
+            New visitor, returning customer, basket activity or combined context
+          </small>
+        </div>
+
+        <div class="architecture-arrow">→</div>
+
+        <div class="architecture-node">
+          <span>04</span>
+          <strong>Recommendation</strong>
+          <small>
+            Popularity, GRU sequence modelling and item co-occurrence
+          </small>
+        </div>
+
+        <div class="architecture-arrow">→</div>
+
+        <div class="architecture-node">
+          <span>05</span>
+          <strong>Demand intelligence</strong>
+          <small>
+            Monthly product-level forecasting using sales and behavioural features
+          </small>
+        </div>
+
+        <div class="architecture-arrow">→</div>
+
+        <div class="architecture-node">
+          <span>06</span>
+          <strong>Client demo</strong>
+          <small>
+            Interactive Streamlit interface for testing realistic customer scenarios
+          </small>
+        </div>
+      </div>
+
+      <div class="architecture-detail">
+        <div>
+          <span>DESIGN PRINCIPLE</span>
+
+          <h3>
+            Context decides<br />
+            the model.
+          </h3>
+
+          <p>
+            I did not try to force every customer through the same model.
+            A completely new visitor does not have enough information for
+            meaningful personalisation, while a returning customer or an
+            active basket provides much stronger behavioural signals.
+          </p>
+
+          <p>
+            The system chooses a recommendation strategy according to what
+            information is actually available.
+          </p>
+        </div>
+
+        <div class="principle-card">
+          <span>EXAMPLE FLOW</span>
+
+          <strong>
+            No history?<br />
+            Start with what works.
+          </strong>
+
+          <small>
+            New customer → popular products<br />
+            Purchase history → GRU recommendations<br />
+            Basket activity → frequently bought together
+          </small>
+        </div>
+      </div>
+    </section>
+
+    <section class="scenario-section">
+      <div class="section-heading">
+        <span>RECOMMENDATION STRATEGY</span>
+
+        <h2>
+          Different customer.<br />
+          Different signal.
+        </h2>
+      </div>
+
+      <div class="scenario-grid">
+        <article class="scenario-card">
+          <span>01 / NEW VISITOR</span>
+
+          <h3>Start with popularity.</h3>
+
+          <p>
+            With no customer history or basket information, recommendations
+            fall back to products that consistently appear in historical
+            purchases.
+          </p>
+
+          <div class="scenario-model">
+            GLOBAL POPULARITY
+          </div>
+        </article>
+
+        <article class="scenario-card featured">
+          <span>02 / RETURNING CUSTOMER</span>
+
+          <h3>Learn what comes next.</h3>
+
+          <p>
+            Customer purchases are converted into ordered product sequences.
+            A GRU model learns repetition, transitions and purchasing patterns
+            to predict likely future products.
+          </p>
+
+          <div class="scenario-model">
+            GRU SEQUENTIAL MODEL
+          </div>
+        </article>
+
+        <article class="scenario-card">
+          <span>03 / ACTIVE BASKET</span>
+
+          <h3>Look at what belongs together.</h3>
+
+          <p>
+            Historical orders are analysed to find products that commonly
+            appear together, allowing the system to suggest useful additions
+            while the customer is actively shopping.
+          </p>
+
+          <div class="scenario-model">
+            ITEM CO-OCCURRENCE
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="features-section">
+      <div class="section-heading">
+        <span>MORE THAN ONE MODEL</span>
+
+        <h2>
+          What the system actually does.
+        </h2>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card">
+          <span>01</span>
+          <h3>Cold-start recommendations</h3>
+          <p>
+            Uses historical product popularity when there is no customer
+            history available, ensuring new visitors still receive useful
+            recommendations.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <span>02</span>
+          <h3>Sequential personalisation</h3>
+          <p>
+            A GRU-based recommender learns ordered customer purchase behaviour,
+            repeat buying patterns and product transitions to generate
+            personalised Top-N predictions.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <span>03</span>
+          <h3>Frequently bought together</h3>
+          <p>
+            Item co-occurrence analysis identifies products that historically
+            belong together, supporting basket expansion and practical
+            cross-selling.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <span>04</span>
+          <h3>Commercial recommendations</h3>
+          <p>
+            Recommendation logic can also consider discounted products and
+            business-priority items rather than relying entirely on machine
+            learning output.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <span>05</span>
+          <h3>Demand forecasting</h3>
+          <p>
+            Historical sales are converted into monthly product-level time
+            series and forecast using Prophet with price, discount, time and
+            regional holiday features.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <span>06</span>
+          <h3>Parallel forecasting</h3>
+          <p>
+            A custom Python pipeline processes and forecasts many products
+            concurrently using ThreadPoolExecutor, with tqdm providing live
+            progress throughout longer model runs.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="forecast-section">
+      <span class="forecast-number">03</span>
+
+      <div>
+        <span class="forecast-label">FROM RECOMMENDATIONS TO STOCK PLANNING</span>
+
+        <h2>
+          What might sell next,<br />
+          and how much?
+        </h2>
+
+        <p>
+          The same sales history used to understand customer behaviour is
+          also transformed into monthly product-level time series for demand
+          forecasting.
+        </p>
+
+        <p>
+          The pipeline incorporates quantities, pricing, discounts,
+          seasonality and regional holiday effects before fitting product-level
+          Prophet models.
+        </p>
+
+        <div class="forecast-metrics">
+          <div>
+            <span>MAPE</span>
+            <small>Percentage error</small>
+          </div>
+          <div>
+            <span>SMAPE</span>
+            <small>Symmetric percentage error</small>
+          </div>
+          <div>
+            <span>WAPE</span>
+            <small>Volume-weighted error</small>
+          </div>
+        </div>
+
+        <p class="testing-note">
+          Forecasting experiments were designed to compare product-level model
+          behaviour rather than claim a single universal accuracy figure across
+          the entire catalogue.
+        </p>
+      </div>
+    </section>
+
+    <section class="iteration-section">
+      <div class="section-heading">
+        <span>ITERATION</span>
+
+        <h2>
+          It grew past<br />
+          one recommender.
+        </h2>
+      </div>
+
+      <div class="iteration-grid">
+        <div class="iteration-column">
+          <span>RECOMMENDATION</span>
+          <p>
+            The first idea developed into a scenario-based recommendation
+            architecture with separate strategies for anonymous visitors,
+            returning customers and active baskets.
+          </p>
+          <p>
+            I later added discounted-product recommendations, business-priority
+            ranking and a Streamlit interface so the client could interact with
+            the different behaviours directly.
+          </p>
+        </div>
+
+        <div class="iteration-column">
+          <span>FORECASTING</span>
+          <p>
+            The demand pipeline evolved from basic product forecasting into a
+            configurable monthly processing system with external regressors,
+            holiday features, lag experiments and per-product validation.
+          </p>
+          <p>
+            Performance became its own engineering problem, leading to
+            experiments with Dask, process-based parallelism, thread-based
+            execution, regressor pruning and live progress monitoring.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="project-ending">
+      <p class="ending-label">
+        Client-facing recommendation system developed for a plumbing merchant.
+      </p>
+
+      <h2>
+        Help customers choose.<br />
+        Help the merchant prepare.
+      </h2>
+
+      <p class="ending-supporting">
+        Recommendation systems, customer behaviour modelling and demand
+        forecasting built around the same real-world sales problem.
+      </p>
+    </section>
+
+  </article>
+</ProjectModal>
+
+<style>
+  .merchant-project {
+    width: 100%;
+    color: #25301f;
+    background:
+      radial-gradient(circle at 8% 8%, #E8E2CD 0%, transparent 34%),
+      radial-gradient(circle at 93% 17%, #81916E 0%, transparent 32%),
+      radial-gradient(circle at 74% 73%, #A1AC8D 0%, transparent 37%),
+      radial-gradient(circle at 15% 90%, #657856 0%, transparent 31%),
+      linear-gradient(135deg, #C7CBB4 0%, #D1D3BD 48%, #C7CBB4 100%);
+  }
+
+  .merchant-project strong { color: inherit; }
+
+  .project-hero {
+    position: relative;
+    min-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 70px;
+  }
+
+  .project-hero-top {
+    position: absolute;
+    top: 28px;
+    left: 70px;
+    right: 90px;
+    display: flex;
+    justify-content: space-between;
+    font: .74rem "Courier Prime", monospace;
+    letter-spacing: .06em;
+    color: #3F5238;
+  }
+
+  .project-hero h1 {
+    max-width: 1250px;
+    margin: 0;
+    font: 400 clamp(4rem, 10vw, 9.5rem)/.86 "Instrument Serif", serif;
+    letter-spacing: -.055em;
+  }
+
+  .project-tagline {
+    max-width: 850px;
+    margin: 42px 0 20px;
+    font: 400 clamp(2rem, 3.4vw, 3.6rem)/.98 "Instrument Serif", serif;
+  }
+
+  .project-supporting,
+  .intro-block p,
+  .architecture-detail p,
+  .scenario-card p,
+  .feature-card p,
+  .forecast-section p,
+  .iteration-column p,
+  .ending-supporting {
+    max-width: 720px;
+    font: 1rem/1.6 "Courier Prime", monospace;
+    color: #3F5238;
+  }
+
+  .project-supporting { margin: 0; }
+
+  .project-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 28px;
+  }
+
+  .project-meta span {
+    padding: 10px 14px;
+    border: 1px solid #25301f33;
+    border-radius: 999px;
+    font: .72rem "Courier Prime", monospace;
+    letter-spacing: .025em;
+  }
+
+  .demo-section { padding: 0 70px 110px; }
+
+  .demo-video-frame {
+    overflow: hidden;
+    border-radius: 22px;
+    background: #3F5238;
+  }
+
+  .demo-video {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .section-heading > span,
+  .architecture-detail span,
+  .forecast-label,
+  .ending-label,
+  .iteration-column > span {
+    font: .74rem "Courier Prime", monospace;
+    letter-spacing: .08em;
+  }
+
+  .section-heading { margin-bottom: 54px; }
+
+  .section-heading h2 {
+    max-width: 950px;
+    margin: 14px 0 0;
+    font-family: "Instrument Serif", serif;
+    font-weight: 400;
+    font-size: clamp(3.4rem, 6vw, 7rem);
+    line-height: .9;
+    letter-spacing: -.025em;
+  }
+
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 70px;
+    padding: 20px 70px 130px;
+  }
+
+  .intro-block {
+    padding-top: 20px;
+    border-top: 1px solid #25301f33;
+  }
+
+  .section-number {
+    font: .74rem "Courier Prime", monospace;
+    color: #657856;
+  }
+
+  .intro-block h2 {
+    margin: 20px 0;
+    font-family: "Instrument Serif", serif;
+    font-weight: 400;
+    font-size: clamp(2.7rem, 4vw, 4.6rem);
+    line-height: .95;
+    letter-spacing: -.025em;
+  }
+
+  .intro-block p { margin: 0 0 18px; }
+
+  .architecture-section {
+    padding: 110px 70px;
+    color: #E8E2CD;
+    background:
+      radial-gradient(circle at 82% 20%, #657856 0%, transparent 35%),
+      linear-gradient(135deg, #31422C, #3F5238 52%, #657856);
+  }
+
+  .architecture-section .section-heading > span,
+  .architecture-detail span { color: #C7CBB4; }
+
+  .architecture-flow {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr) auto) minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
+  }
+
+  .architecture-node {
+    min-width: 0;
+    min-height: 205px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 23px;
+    overflow-wrap: anywhere;
+    border: 1px solid #ffffff35;
+    border-radius: 14px;
+  }
+
+  .architecture-node span,
+  .architecture-node small { font-family: "Courier Prime", monospace; }
+
+  .architecture-node span {
+    font-size: .7rem;
+    color: #A1AC8D;
+  }
+
+  .architecture-node strong {
+    font: 400 1.82rem/1 "Instrument Serif", serif;
+    color: #E8E2CD;
+  }
+
+  .architecture-node small {
+    max-width: 170px;
+    font-size: .78rem;
+    line-height: 1.45;
+    color: #C7CBB4;
+  }
+
+  .architecture-arrow { color: #A1AC8D; }
+
+  .architecture-detail {
+    display: grid;
+    grid-template-columns: .9fr 1.1fr;
+    gap: 60px;
+    align-items: center;
+    margin-top: 100px;
+    padding-top: 80px;
+    border-top: 1px solid #ffffff30;
+  }
+
+  .architecture-detail h3 {
+    margin: 16px 0 24px;
+    font-family: "Instrument Serif", serif;
+    font-weight: 400;
+    font-size: clamp(2.5rem, 4vw, 4.5rem);
+    line-height: .93;
+    letter-spacing: -.025em;
+  }
+
+  .architecture-detail p {
+    margin: 0 0 18px;
+    color: #E8E2CD;
+  }
+
+  .principle-card {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 32px;
+    border: 1px solid #ffffff35;
+    border-radius: 18px;
+    background: #ffffff0d;
+  }
+
+  .principle-card strong {
+    font: 400 clamp(2rem, 3.5vw, 4rem)/.98 "Instrument Serif", serif;
+  }
+
+  .principle-card small {
+    color: #C7CBB4;
+    font: .78rem/1.7 "Courier Prime", monospace;
+  }
+
+  .scenario-section {
+    padding: 130px 70px;
+    background: #E8E2CDCC;
+  }
+
+  .scenario-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+
+  .scenario-card {
+    min-height: 390px;
+    display: flex;
+    flex-direction: column;
+    padding: 28px;
+    border: 1px solid #25301f25;
+    border-radius: 18px;
+    background: #C7CBB4BB;
+  }
+
+  .scenario-card.featured {
+    color: #E8E2CD;
+    background: #3F5238;
+  }
+
+  .scenario-card > span {
+    font: .72rem "Courier Prime", monospace;
+    letter-spacing: .06em;
+    color: #657856;
+  }
+
+  .scenario-card.featured > span { color: #A1AC8D; }
+
+  .scenario-card h3 {
+    margin: auto 0 20px;
+    font: 400 clamp(2.3rem, 3.6vw, 4rem)/.92 "Instrument Serif", serif;
+  }
+
+  .scenario-card p { margin: 0 0 26px; }
+
+  .scenario-card.featured p { color: #E8E2CD; }
+
+  .scenario-model {
+    width: fit-content;
+    padding: 9px 12px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    font: .68rem "Courier Prime", monospace;
+    letter-spacing: .05em;
+  }
+
+  .features-section {
+    padding: 130px 70px;
+    background: #C7CBB4DD;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  .feature-card {
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    padding: 27px;
+    border: 1px solid #25301f20;
+    border-radius: 18px;
+    background: #E8E2CDBB;
+  }
+
+  .feature-card:nth-child(even) { background: #A1AC8DAA; }
+
+  .feature-card > span {
+    font: .72rem "Courier Prime", monospace;
+    color: #657856;
+  }
+
+  .feature-card h3 {
+    margin: auto 0 20px;
+    font: 400 clamp(2rem, 3vw, 3.7rem)/.95 "Instrument Serif", serif;
+  }
+
+  .feature-card p {
+    margin: 0;
+    font-size: .95rem;
+  }
+
+  .forecast-section {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 40px;
+    padding: 130px 70px;
+    background: #81916E;
+  }
+
+  .forecast-number {
+    font: .74rem "Courier Prime", monospace;
+    color: #3F5238;
+  }
+
+  .forecast-section h2 {
+    max-width: 1050px;
+    margin: 18px 0 28px;
+    font-family: "Instrument Serif", serif;
+    font-weight: 400;
+    font-size: clamp(3.5rem, 7vw, 7.5rem);
+    line-height: .88;
+    letter-spacing: -.025em;
+  }
+
+  .forecast-section p {
+    margin: 0 0 18px;
+    color: #2F4029;
+  }
+
+  .forecast-metrics {
+    max-width: 760px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 40px;
+  }
+
+  .forecast-metrics div {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 20px;
+    border: 1px solid #25301f25;
+    border-radius: 12px;
+  }
+
+  .forecast-metrics span {
+    font: 1.5rem "Instrument Serif", serif;
+  }
+
+  .forecast-metrics small {
+    font: .72rem "Courier Prime", monospace;
+    color: #3F5238;
+  }
+
+  .testing-note {
+    max-width: 720px;
+    margin-top: 28px !important;
+    padding-top: 20px;
+    border-top: 1px solid #25301f25;
+    font-size: .82rem !important;
+  }
+
+  .iteration-section {
+    padding: 130px 70px;
+    background: #E8E2CDE8;
+  }
+
+  .iteration-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 70px;
+  }
+
+  .iteration-column {
+    padding-top: 20px;
+    border-top: 1px solid #25301f25;
+  }
+
+  .iteration-column > span { color: #657856; }
+
+  .iteration-column p { margin: 24px 0 0; }
+
+  .project-ending {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 70px;
+    background:
+      radial-gradient(circle at 90% 20%, #A1AC8D 0%, transparent 32%),
+      linear-gradient(135deg, #C7CBB4, #E8E2CD);
+  }
+
+  .project-ending h2 {
+    max-width: 1100px;
+    margin: 24px 0 28px;
+    font-family: "Instrument Serif", serif;
+    font-weight: 400;
+    font-size: clamp(4rem, 8vw, 8rem);
+    line-height: .84;
+    letter-spacing: -.025em;
+  }
+
+  .ending-supporting { margin: 0 0 44px; }
+
+  @media (min-width: 641px) and (max-width: 1350px) {
+    .architecture-flow {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .architecture-arrow { display: none; }
+    .architecture-node { min-height: 170px; }
+    .architecture-node small { max-width: none; }
+    .scenario-grid { grid-template-columns: 1fr; }
+    .scenario-card { min-height: 300px; }
+  }
+
+  @media (max-width: 640px) {
+    .project-hero {
+      min-height: 88dvh;
+      padding: 90px 20px 40px;
+    }
+
+    .project-hero-top {
+      top: 20px;
+      left: 20px;
+      right: 72px;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: .6rem;
+    }
+
+    .project-hero h1 {
+      font-size: clamp(2.7rem, 14vw, 5.5rem);
+    }
+
+    .project-tagline {
+      margin: 30px 0 18px;
+      font-size: clamp(2rem, 10vw, 2.8rem);
+    }
+
+    .project-supporting,
+    .intro-block p,
+    .scenario-card p,
+    .feature-card p,
+    .forecast-section p,
+    .iteration-column p {
+      font-size: .9rem;
+    }
+
+    .project-meta {
+      gap: 7px;
+      margin-top: 22px;
+    }
+
+    .project-meta span {
+      padding: 8px 10px;
+      font-size: .62rem;
+    }
+
+    .demo-section { padding: 0 16px 80px; }
+    .demo-video-frame { border-radius: 16px; }
+
+    .intro-grid {
+      grid-template-columns: 1fr;
+      gap: 60px;
+      padding: 20px 20px 90px;
+    }
+
+    .architecture-section,
+    .scenario-section,
+    .features-section,
+    .forecast-section,
+    .iteration-section,
+    .project-ending {
+      padding: 90px 20px;
+    }
+
+    .section-heading h2 {
+      font-size: clamp(3rem, 14vw, 5rem);
+    }
+
+    .architecture-flow {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .architecture-arrow {
+      text-align: center;
+      transform: rotate(90deg);
+    }
+
+    .architecture-node { min-height: 145px; }
+    .architecture-node small { max-width: none; }
+
+    .architecture-detail {
+      grid-template-columns: 1fr;
+      gap: 34px;
+      margin-top: 70px;
+      padding-top: 60px;
+    }
+
+    .scenario-grid,
+    .feature-grid,
+    .iteration-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .scenario-card,
+    .feature-card {
+      min-height: 285px;
+      padding: 23px;
+    }
+
+    .forecast-section {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .forecast-metrics { grid-template-columns: 1fr; }
+    .project-ending { min-height: 70dvh; }
+
+    .project-ending h2 {
+      font-size: clamp(3.5rem, 17vw, 5.5rem);
+    }
+  }
+</style>
