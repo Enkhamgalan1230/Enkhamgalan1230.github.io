@@ -847,7 +847,9 @@ import KumoChat from "../components/KumoChat.astro";
     "(prefers-reduced-motion: reduce)",
   );
 
-  if (!smoothScrollReducedMotion.matches) {
+  // Keep scrolling native. The previous Lenis/GSAP block added smooth scrolling,
+  // pinning and scrubbed transforms that made the page feel animated while scrolling.
+  if (false) {
     const { default: Lenis } = await import("lenis");
     const { gsap } = await import("gsap");
     const { ScrollTrigger } = await import("gsap/ScrollTrigger");
@@ -1171,11 +1173,29 @@ import KumoChat from "../components/KumoChat.astro";
     );
   }
 
+  const fadeTargets = Array.from(
+    document.querySelectorAll<HTMLElement>(
+      "[data-scroll-reveal-section], .projects-inner"
+    )
+  );
+
+  const fadeObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        entry.target.classList.toggle("is-visible", entry.isIntersecting);
+      });
+    },
+    { threshold: 0.12 }
+  );
+
+  fadeTargets.forEach((target) => fadeObserver.observe(target));
+
 
   /* =========================
      SCROLL TRANSITION
      ========================= */
 
+  if (false) {
   const hero =
     document.querySelector<HTMLElement>(
       ".hero"
@@ -1289,6 +1309,7 @@ import KumoChat from "../components/KumoChat.astro";
   );
 
   requestScrollTransition();
+  }
 
 
   /* =========================
@@ -1700,6 +1721,15 @@ import KumoChat from "../components/KumoChat.astro";
      HERO
      ========================= */
 
+  [data-scroll-reveal-section] {
+    opacity: 0;
+    transition: opacity 0.45s ease;
+  }
+
+  [data-scroll-reveal-section].is-visible {
+    opacity: 1;
+  }
+
   .hero {
     position: relative;
 
@@ -1744,7 +1774,7 @@ import KumoChat from "../components/KumoChat.astro";
       );
     background-size: 30px 30px;
 
-    opacity: calc(1 - var(--hero-fade, 0));
+    opacity: 1;
   }
 
   .hero-content {
@@ -1752,9 +1782,7 @@ import KumoChat from "../components/KumoChat.astro";
 
     z-index: 1;
 
-    opacity: calc(1 - var(--hero-fade, 0));
-
-    will-change: opacity;
+    opacity: 1;
 
     width:
       min(
@@ -1821,8 +1849,6 @@ import KumoChat from "../components/KumoChat.astro";
     color: #111111;
 
     box-shadow: 8px 9px 0 rgba(77, 118, 87, 0.24);
-
-    animation: cv-float 8s ease-in-out infinite;
 
     transition:
       background 0.2s ease,
@@ -1947,12 +1973,6 @@ import KumoChat from "../components/KumoChat.astro";
 
     z-index: 2;
 
-    animation:
-      float-scroll-cue
-      2.8s
-      ease-in-out
-      infinite;
-
     transition:
       opacity 0.3s ease,
       transform 0.3s ease;
@@ -2024,7 +2044,7 @@ import KumoChat from "../components/KumoChat.astro";
 
     background: #edecea;
 
-    opacity: var(--prompt-fade, 0);
+    opacity: 1;
 
     transition: opacity 0.18s linear;
 
@@ -2049,11 +2069,6 @@ import KumoChat from "../components/KumoChat.astro";
     line-height: 0.95;
     letter-spacing: -0.025em;
 
-    animation:
-      head-prompt-float
-      4.8s
-      ease-in-out
-      infinite;
   }
 
   .head-prompt-yet {
@@ -2267,7 +2282,7 @@ import KumoChat from "../components/KumoChat.astro";
 
     background: #edecea;
 
-    opacity: var(--projects-fade, 1);
+    opacity: 1;
 
     transition: opacity 0.18s linear;
 
@@ -2286,24 +2301,11 @@ import KumoChat from "../components/KumoChat.astro";
     margin: 0 auto;
 
     opacity: 0;
-
-    transform:
-      translateY(44px)
-      scale(0.985);
-
-    filter: blur(5px);
+    transform: none;
+    filter: none;
 
     transition:
-      opacity 0.8s ease,
-      transform
-        0.8s
-        cubic-bezier(
-          0.22,
-          1,
-          0.36,
-          1
-        ),
-      filter 0.8s ease;
+      opacity 0.45s ease;
 
     will-change: opacity, transform, filter;
   }
@@ -2311,11 +2313,8 @@ import KumoChat from "../components/KumoChat.astro";
   .projects-inner.is-visible {
     opacity: 1;
 
-    transform:
-      translateY(0)
-      scale(1);
-
-    filter: blur(0);
+    transform: none;
+    filter: none;
   }
 
   .projects-heading {

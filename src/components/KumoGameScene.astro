@@ -210,8 +210,14 @@
   }
 
   function scheduleKumoFrame() {
-    if (!kumoGameActive || kumoReducedMotion.matches || !kumoSprite) return;
+    if (
+      !kumoGameActive ||
+      kumoReducedMotion.matches ||
+      !kumoSprite ||
+      kumoFrameTimer !== undefined
+    ) return;
     kumoFrameTimer = window.setTimeout(() => {
+      kumoFrameTimer = undefined;
       kumoFrameIndex = (kumoFrameIndex + 1) % kumoIdleFrames.length;
       kumoSprite.src = kumoIdleFrames[kumoFrameIndex];
       scheduleKumoFrame();
@@ -219,6 +225,7 @@
   }
 
   function setKumoGameState(nextState: KumoGameState) {
+    if (kumoGameState === nextState) return;
     kumoGameState = nextState;
     kumoGame?.classList.toggle("kumo-game--dialogue", nextState === "dialogue");
     kumoGame?.classList.toggle("kumo-game--choice", nextState === "choice");
@@ -262,6 +269,7 @@
 
   function startKumoDialogue() {
     if (!kumoGameActive || kumoGameState !== "idle") return;
+    stopKumoFrames();
     playKumoUndertale(0);
     setKumoGameState("dialogue");
   }
@@ -269,6 +277,8 @@
   function returnToKumoIdle() {
     clearUndertaleTimer();
     kumoUndertaleIndex = 0;
+    kumoFrameIndex = 0;
+    if (kumoSprite) kumoSprite.src = kumoIdleFrames[0];
     setKumoGameState("idle");
     stopKumoFrames();
     scheduleKumoFrame();
@@ -634,6 +644,10 @@
       --kumo-width: clamp(42px, 13vw, 64px);
       gap: 16px;
       padding: 24px 14px 32px;
+      background-image: linear-gradient(rgba(223, 233, 223, 0.48), rgba(223, 233, 223, 0.48)), url("/game/kumo/mobile/mobile_bg.png");
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
     }
     .kumo-game__eyebrow { margin-bottom: 8px; }
     .kumo-game__description { max-width: 320px; margin-top: 8px; line-height: 1.45; }
