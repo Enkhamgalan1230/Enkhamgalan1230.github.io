@@ -1,0 +1,822 @@
+<section
+  class="guestbook"
+  id="guestbook"
+  data-scroll-fade-section
+  aria-labelledby="guestbook-title"
+>
+  <div class="guestbook-inner">
+    <div class="guestbook-heading">
+      <p class="guestbook-label">SIGN THE GUESTBOOK</p>
+      <h2 id="guestbook-title">Leave a little <span>note.</span></h2>
+      <p class="guestbook-intro">
+        You made it this far. Say hello, leave a thought, or just drop a tiny
+        piece of internet history here.
+      </p>
+    </div>
+
+    <div class="guestbook-layout">
+      <form class="guestbook-form" data-guestbook-form>
+        <label>
+          <span>I wanna know who wrote it thooo</span>
+          <input
+            type="text"
+            name="name"
+            maxlength="40"
+            placeholder="e.g. Orgil"
+            autocomplete="name"
+            required
+          />
+        </label>
+
+        <label>
+          <span>Your note</span>
+          <textarea
+            name="message"
+            maxlength="280"
+            rows="5"
+            placeholder="Hello from..."
+            required
+          ></textarea>
+        </label>
+
+        <div class="guestbook-form-footer">
+          <small>Notes are filtered before they appear.</small>
+          <button type="submit">Leave note <span aria-hidden="true">→</span></button>
+        </div>
+        <p class="guestbook-status" data-guestbook-status role="status" aria-live="polite"></p>
+      </form>
+
+      <div class="guestbook-entries" data-guestbook-entries aria-live="polite">
+        <p class="guestbook-empty" data-guestbook-empty>No notes yet. Be the first.</p>
+      </div>
+      <p class="guestbook-latest-label" data-guestbook-latest-label hidden>Currently showing latest 3 notes</p>
+      <button class="guestbook-see-all" type="button" data-guestbook-see-all hidden>SEE ALL NOTES <span aria-hidden="true">&#x2197;</span></button>
+    </div>
+
+    <div class="guestbook-admin" data-guestbook-admin hidden>
+      <span>Welcome back, boss.</span>
+      <button type="button" data-guestbook-admin-exit>Exit</button>
+      <p class="guestbook-admin-status" data-guestbook-admin-status role="status" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="guestbook-all-overlay" data-guestbook-all-overlay hidden>
+    <section
+      class="guestbook-all-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="guestbook-all-title"
+    >
+      <button class="guestbook-note-dialog-close" type="button" data-guestbook-all-close aria-label="Close all notes">&#x00D7;</button>
+      <p class="guestbook-label">THE WALL</p>
+      <h3 id="guestbook-all-title">All the notes.</h3>
+      <div class="guestbook-all-entries" data-guestbook-all-entries></div>
+    </section>
+  </div>
+</section>
+
+<script>
+  const guestbookForm = document.querySelector<HTMLFormElement>("[data-guestbook-form]");
+  const guestbookEntries = document.querySelector<HTMLElement>("[data-guestbook-entries]");
+  const guestbookEmpty = document.querySelector<HTMLElement>("[data-guestbook-empty]");
+  const guestbookLatestLabel = document.querySelector<HTMLElement>("[data-guestbook-latest-label]");
+  const guestbookSeeAll = document.querySelector<HTMLButtonElement>("[data-guestbook-see-all]");
+  const guestbookAllOverlay = document.querySelector<HTMLElement>("[data-guestbook-all-overlay]");
+  const guestbookAllClose = document.querySelector<HTMLButtonElement>("[data-guestbook-all-close]");
+  const guestbookAllEntries = document.querySelector<HTMLElement>("[data-guestbook-all-entries]");
+  const guestbookStatus = document.querySelector<HTMLElement>("[data-guestbook-status]");
+  const guestbookAdmin = document.querySelector<HTMLElement>("[data-guestbook-admin]");
+  const guestbookAdminExit = document.querySelector<HTMLButtonElement>("[data-guestbook-admin-exit]");
+  const guestbookAdminStatus = document.querySelector<HTMLElement>("[data-guestbook-admin-status]");
+  const guestbookApiUrl = "https://enkhamgalan-spotify-api.zaecisama.workers.dev/api/guestbook";
+  let guestbookAdminToken = "";
+  let guestbookEntriesData: GuestbookEntry[] = [];
+
+  function getGuestbookVisitorId() {
+    const storageKey = "entwan-guestbook-visitor-id";
+    try {
+      const saved = window.localStorage.getItem(storageKey);
+      if (saved) return saved;
+      const created = crypto.randomUUID();
+      window.localStorage.setItem(storageKey, created);
+      return created;
+    } catch {
+      return `visitor-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    }
+  }
+
+  const guestbookVisitorId = getGuestbookVisitorId();
+
+  const guestbookFontFamilies: Record<string, string> = {
+    serif: '"Instrument Serif", serif',
+    mono: '"Courier Prime", monospace',
+    grotesk: "Arial, sans-serif",
+    soft: '"Trebuchet MS", sans-serif',
+    display: '"Palatino Linotype", "Book Antiqua", serif',
+  };
+
+  type GuestbookEntry = {
+    id: number;
+    name: string;
+    message: string;
+    color: string;
+    font: string;
+    fontWeight: string;
+    fontStyle: string;
+    date: string;
+  };
+
+  function createGuestbookEntryCard(entry: GuestbookEntry) {
+    const article = document.createElement("article");
+    article.className = [
+      "guestbook-entry",
+      `guestbook-entry--${entry.color || "sage"}`,
+      `guestbook-entry--font-${entry.font || "serif"}`,
+      `guestbook-entry--weight-${entry.fontWeight || "normal"}`,
+      `guestbook-entry--style-${entry.fontStyle || "normal"}`,
+    ].join(" ");
+
+    const name = document.createElement("strong");
+    name.textContent = `from: ${entry.name}`;
+
+    const date = document.createElement("time");
+    date.textContent = formatGuestbookDate(entry.date);
+
+    const message = document.createElement("p");
+    message.className = "guestbook-entry-message";
+    message.textContent = entry.message;
+    message.style.fontFamily = guestbookFontFamilies[entry.font] ?? guestbookFontFamilies.serif;
+    message.style.fontWeight = entry.fontWeight === "bold" ? "700" : "400";
+    message.style.fontStyle = entry.fontStyle === "italic" ? "italic" : "normal";
+    if (entry.font === "serif") {
+      message.style.fontSize = "1.8rem";
+      message.style.lineHeight = "1.18";
+    } else if (entry.font === "display") {
+      message.style.fontSize = "1.7rem";
+      message.style.lineHeight = "1.28";
+    }
+
+    const meta = document.createElement("div");
+    meta.className = "guestbook-entry-meta";
+    meta.append(date, name);
+    article.append(message, meta);
+
+    if (guestbookAdminToken) {
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.className = "guestbook-entry-delete";
+      deleteButton.dataset.guestbookDelete = String(entry.id);
+      deleteButton.textContent = "Delete";
+      article.append(deleteButton);
+    }
+
+    return article;
+  }
+
+  function renderGuestbookEntries(entries: GuestbookEntry[]) {
+    if (!guestbookEntries || !guestbookEmpty) return;
+    guestbookEntries.querySelectorAll(".guestbook-entry").forEach((entry) => entry.remove());
+    guestbookEmpty.hidden = entries.length > 0;
+    if (guestbookLatestLabel) guestbookLatestLabel.hidden = entries.length === 0;
+    guestbookSeeAll?.toggleAttribute("hidden", entries.length <= 3);
+
+    entries.slice(0, 3).forEach((entry) => {
+      guestbookEntries.append(createGuestbookEntryCard(entry));
+    });
+
+    if (guestbookAllEntries) {
+      guestbookAllEntries.replaceChildren(
+        ...entries.map((entry) => createGuestbookEntryCard(entry)),
+      );
+    }
+  }
+
+  async function loadGuestbookEntries() {
+    try {
+      const response = await fetch(guestbookApiUrl, { cache: "no-store" });
+      if (!response.ok) throw new Error("Guestbook unavailable");
+      const data = await response.json() as { entries?: GuestbookEntry[] };
+      guestbookEntriesData = data.entries ?? [];
+      renderGuestbookEntries(guestbookEntriesData);
+    } catch {
+      if (guestbookStatus) guestbookStatus.textContent = "The guestbook is taking a little nap. Try again soon.";
+    }
+  }
+
+  loadGuestbookEntries();
+
+  function formatGuestbookDate(dateValue: string) {
+    return new Intl.DateTimeFormat(undefined, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }).format(new Date(dateValue.replace(" ", "T") + "Z"));
+  }
+
+  function closeAllGuestbookNotes() {
+    if (guestbookAllOverlay) guestbookAllOverlay.hidden = true;
+    document.body.style.overflow = "";
+  }
+
+  function openAllGuestbookNotes() {
+    if (!guestbookAllOverlay) return;
+    guestbookAllOverlay.hidden = false;
+    document.body.style.overflow = "hidden";
+    guestbookAllClose?.focus();
+  }
+
+  guestbookSeeAll?.addEventListener("click", openAllGuestbookNotes);
+  guestbookAllClose?.addEventListener("click", closeAllGuestbookNotes);
+  guestbookAllOverlay?.addEventListener("click", (event) => {
+    if (event.target === guestbookAllOverlay) closeAllGuestbookNotes();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && guestbookAllOverlay && !guestbookAllOverlay.hidden) {
+      closeAllGuestbookNotes();
+    }
+  });
+
+  guestbookAdminExit?.addEventListener("click", () => {
+    guestbookAdminToken = "";
+    if (guestbookAdmin) guestbookAdmin.hidden = true;
+    renderGuestbookEntries(guestbookEntriesData);
+  });
+
+  async function handleGuestbookEntryClick(event: Event) {
+    const target = event.target as HTMLElement;
+    const deleteButton = target.closest<HTMLButtonElement>("[data-guestbook-delete]");
+    const entryId = deleteButton?.dataset.guestbookDelete;
+    if (!entryId || !guestbookAdminToken) return;
+
+    deleteButton.disabled = true;
+    try {
+      const response = await fetch(`${guestbookApiUrl}/${entryId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${guestbookAdminToken}` },
+      });
+      if (!response.ok) throw new Error("Admin token rejected.");
+      await loadGuestbookEntries();
+      if (guestbookAdminStatus) guestbookAdminStatus.textContent = "Note deleted.";
+    } catch (error) {
+      deleteButton.disabled = false;
+      if (guestbookAdminStatus) guestbookAdminStatus.textContent = error instanceof Error
+        ? error.message
+        : "Could not delete note.";
+    }
+  }
+
+  guestbookEntries?.addEventListener("click", handleGuestbookEntryClick);
+  guestbookAllEntries?.addEventListener("click", handleGuestbookEntryClick);
+
+  guestbookForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const formData = new FormData(guestbookForm);
+    const name = String(formData.get("name") ?? "").trim();
+    const message = String(formData.get("message") ?? "").trim();
+    if (!name || !message) return;
+
+    const submitButton = guestbookForm.querySelector<HTMLButtonElement>("button[type='submit']");
+    if (submitButton) submitButton.disabled = true;
+    if (guestbookStatus) guestbookStatus.textContent = "Checking your note...";
+
+    try {
+      const response = await fetch(guestbookApiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, message, visitorId: guestbookVisitorId }),
+      });
+      const data = await response.json() as { error?: string; adminSession?: string };
+      if (!response.ok) throw new Error(data.error ?? "Could not save note");
+      if (data.adminSession) {
+        guestbookAdminToken = data.adminSession;
+        if (guestbookAdmin) guestbookAdmin.hidden = false;
+        if (guestbookAdminStatus) guestbookAdminStatus.textContent = "Delete mode enabled.";
+        renderGuestbookEntries(guestbookEntriesData);
+      }
+      guestbookForm.reset();
+      if (guestbookStatus) guestbookStatus.textContent = "Your note is on the wall.";
+      await loadGuestbookEntries();
+    } catch (error) {
+      if (guestbookStatus) guestbookStatus.textContent = error instanceof Error
+        ? error.message
+        : "Could not save note. Try again soon.";
+    } finally {
+      if (submitButton) submitButton.disabled = false;
+    }
+  });
+</script>
+
+<style>
+  .guestbook {
+    min-height: min(820px, 100vh);
+    padding: clamp(86px, 12vw, 160px) 5vw clamp(110px, 14vw, 190px);
+    background: #f7f6f4;
+    opacity: var(--scroll-fade, 1);
+    transition: opacity 0.3s ease;
+  }
+
+  .guestbook-inner {
+    width: min(100%, 1080px);
+    margin: 0 auto;
+  }
+
+  .guestbook-heading { max-width: 650px; }
+
+  .guestbook-label {
+    margin: 0 0 14px;
+    color: #777;
+    font: 0.68rem "Courier Prime", monospace;
+    letter-spacing: 0.1em;
+  }
+
+  .guestbook h2 {
+    margin: 0;
+    font: 400 clamp(3.2rem, 7vw, 6.8rem)/0.95 "Instrument Serif", serif;
+    letter-spacing: -0.035em;
+  }
+
+  .guestbook h2 span { color: #4d7657; }
+
+  .guestbook-intro {
+    max-width: 460px;
+    margin: 22px 0 0;
+    color: #666;
+    font: 0.82rem/1.65 "Courier Prime", monospace;
+  }
+
+  .guestbook-layout {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.8fr) minmax(300px, 1.2fr);
+    gap: clamp(34px, 7vw, 100px);
+    margin-top: clamp(52px, 8vw, 92px);
+    align-items: start;
+  }
+
+  .guestbook-form {
+    padding: 22px;
+    border: 1px solid rgba(17, 17, 17, 0.14);
+    border-radius: 18px;
+    background: #efefeb;
+  }
+
+  .guestbook-form > label {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 18px;
+    color: #555;
+    font: 0.65rem "Courier Prime", monospace;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .guestbook-form > label input,
+  .guestbook-form > label textarea {
+    width: 100%;
+    border: 1px solid rgba(17, 17, 17, 0.2);
+    border-radius: 10px;
+    padding: 12px 13px;
+    background: #f7f6f4;
+    color: #111;
+    font: 0.8rem/1.4 "Courier Prime", monospace;
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .guestbook-form > label input:focus,
+  .guestbook-form > label textarea:focus {
+    border-color: #4d7657;
+    box-shadow: 0 0 0 3px rgba(77, 118, 87, 0.12);
+  }
+
+  .guestbook-preferences {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .guestbook-choice-group {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .guestbook-choice-group legend {
+    margin-bottom: 9px;
+    color: #555;
+    font: 0.65rem "Courier Prime", monospace;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .guestbook-colour-options {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 2px 2px 8px;
+    scrollbar-color: rgba(17, 17, 17, 0.3) transparent;
+  }
+
+  .guestbook-colour-options label {
+    display: flex;
+    align-items: center;
+    flex: 0 0 112px;
+    gap: 6px;
+    margin: 0;
+    padding: 5px 4px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    color: #666;
+    font: 0.58rem "Courier Prime", monospace;
+    letter-spacing: 0;
+    text-transform: none;
+    cursor: pointer;
+  }
+
+  .guestbook-colour-options label:has(input:checked) {
+    border-color: rgba(77, 118, 87, 0.55);
+    background: rgba(77, 118, 87, 0.08);
+    color: #111;
+  }
+
+  .guestbook-colour-options input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .guestbook-colour-swatch {
+    flex: 0 0 15px;
+    width: 15px;
+    height: 15px;
+    border: 1px solid rgba(17, 17, 17, 0.14);
+    border-radius: 50%;
+  }
+
+  .guestbook-swatch--rose { background: #f1d8d2; }
+  .guestbook-swatch--peach { background: #f2dfcc; }
+  .guestbook-swatch--apricot { background: #eed8c3; }
+  .guestbook-swatch--butter { background: #f2e7bf; }
+  .guestbook-swatch--sage { background: #dbe7cf; }
+  .guestbook-swatch--mint { background: #d6e8dc; }
+  .guestbook-swatch--seafoam { background: #d2e5df; }
+  .guestbook-swatch--powder { background: #d8e4f1; }
+  .guestbook-swatch--periwinkle { background: #dddff0; }
+  .guestbook-swatch--lavender { background: #e6d9e9; }
+  .guestbook-swatch--lilac { background: #eadce9; }
+  .guestbook-swatch--blush { background: #efd9e1; }
+  .guestbook-swatch--terracotta { background: #ebd4cc; }
+  .guestbook-swatch--sand { background: #eadfcf; }
+  .guestbook-swatch--sky { background: #dce9ed; }
+
+  .guestbook-font-select {
+    display: grid;
+    gap: 9px;
+    color: #555;
+    font: 0.65rem "Courier Prime", monospace;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .guestbook-font-select select {
+    width: 100%;
+    border: 1px solid rgba(17, 17, 17, 0.2);
+    border-radius: 10px;
+    padding: 10px 12px;
+    background: #f7f6f4;
+    color: #111;
+    font: 0.75rem "Courier Prime", monospace;
+    cursor: pointer;
+  }
+
+  .guestbook-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .guestbook-form-footer small {
+    color: #888;
+    font: 0.65rem "Courier Prime", monospace;
+  }
+
+  .guestbook-form button {
+    border: 0;
+    border-radius: 999px;
+    padding: 11px 15px;
+    background: #111;
+    color: #fff;
+    font: 0.68rem "Courier Prime", monospace;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .guestbook-form button:hover { background: #4d7657; transform: translateY(-2px); }
+  .guestbook-form button span { margin-left: 7px; font-size: 1rem; }
+
+  .guestbook-status {
+    min-height: 1.2em;
+    margin: 14px 0 0;
+    color: #4d7657;
+    font: 0.68rem "Courier Prime", monospace;
+  }
+
+  .guestbook-entries {
+    display: grid;
+    gap: 13px;
+    max-height: 440px;
+    overflow-y: auto;
+    padding: 6px 10px 6px 0;
+    scrollbar-color: rgba(17, 17, 17, 0.3) transparent;
+  }
+
+  .guestbook-latest-label {
+    margin: 17px 0 9px;
+    color: #888;
+    font: 0.62rem "Courier Prime", monospace;
+    letter-spacing: 0.1em;
+  }
+
+  .guestbook-latest-label[hidden] { display: none; }
+
+  .guestbook-see-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 0;
+    border: 1px solid #4d7657;
+    border-radius: 999px;
+    padding: 10px 14px;
+    background: #4d7657;
+    color: #fff;
+    font: 0.68rem "Courier Prime", monospace;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .guestbook-see-all:hover {
+    border-color: #111;
+    background: #111;
+    transform: translateY(-2px);
+  }
+
+  .guestbook-see-all span { font-size: 1rem; }
+
+  .guestbook-empty {
+    margin: 0;
+    padding: 34px 0;
+    border-top: 1px solid rgba(17, 17, 17, 0.16);
+    border-bottom: 1px solid rgba(17, 17, 17, 0.16);
+    color: #888;
+    font: 0.75rem "Courier Prime", monospace;
+  }
+
+  :global(.guestbook-entry) {
+    display: grid;
+    min-height: 120px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 18px;
+    padding: 18px;
+    border-radius: 14px;
+    background: #f2d7c9;
+    box-shadow: 0 8px 18px rgba(17, 17, 17, 0.07);
+  }
+
+  :global(.guestbook-entry--rose) { background: #f1d8d2; }
+  :global(.guestbook-entry--peach) { background: #f2dfcc; }
+  :global(.guestbook-entry--apricot) { background: #eed8c3; }
+  :global(.guestbook-entry--butter) { background: #f2e7bf; }
+  :global(.guestbook-entry--sage) { background: #dbe7cf; }
+  :global(.guestbook-entry--mint) { background: #d6e8dc; }
+  :global(.guestbook-entry--seafoam) { background: #d2e5df; }
+  :global(.guestbook-entry--powder) { background: #d8e4f1; }
+  :global(.guestbook-entry--periwinkle) { background: #dddff0; }
+  :global(.guestbook-entry--lavender) { background: #e6d9e9; }
+  :global(.guestbook-entry--lilac) { background: #eadce9; }
+  :global(.guestbook-entry--blush) { background: #efd9e1; }
+  :global(.guestbook-entry--terracotta) { background: #ebd4cc; }
+  :global(.guestbook-entry--sand) { background: #eadfcf; }
+  :global(.guestbook-entry--sky) { background: #dce9ed; }
+
+  :global(.guestbook-entry-meta) {
+    display: flex;
+    min-width: 82px;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+    text-align: right;
+  }
+
+  :global(.guestbook-entry strong) {
+    color: #999;
+    font: 0.72rem "Courier Prime", monospace;
+  }
+
+  :global(.guestbook-entry time) {
+    color: #999;
+    font: 0.72rem "Courier Prime", monospace;
+  }
+
+  :global(.guestbook-entry p) {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+    color: #555;
+    font: 400 1.8rem/1.18 "Instrument Serif", serif;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  :global(.guestbook-entry--font-serif p) { font-family: "Instrument Serif", serif; font-size: 1.8rem; line-height: 1.18; }
+  :global(.guestbook-entry--font-mono p) { font-family: "Courier Prime", monospace; font-size: 1.25rem; line-height: 1.48; }
+  :global(.guestbook-entry--font-grotesk p) { font-family: Arial, sans-serif; font-size: 1.3rem; line-height: 1.38; }
+  :global(.guestbook-entry--font-soft p) { font-family: "Trebuchet MS", sans-serif; font-size: 1.45rem; line-height: 1.32; letter-spacing: 0.01em; }
+  :global(.guestbook-entry--font-display p) { font-family: "Palatino Linotype", "Book Antiqua", serif; font-size: 1.7rem; line-height: 1.28; }
+  :global(.guestbook-entry--weight-bold p) { font-weight: 700; }
+  :global(.guestbook-entry--style-italic p) { font-style: italic; }
+
+  :global(.guestbook-entry-delete) {
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin-top: 14px;
+    border: 1px solid rgba(17, 17, 17, 0.22);
+    border-radius: 999px;
+    padding: 6px 10px;
+    background: transparent;
+    color: #555;
+    font: 0.6rem "Courier Prime", monospace;
+    cursor: pointer;
+  }
+
+  :global(.guestbook-entry-delete:hover) {
+    border-color: #a65353;
+    color: #a65353;
+  }
+
+  .guestbook-note-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgba(17, 17, 17, 0.32);
+    backdrop-filter: blur(7px);
+  }
+
+  .guestbook-note-overlay[hidden] { display: none; }
+
+  .guestbook-note-dialog {
+    position: relative;
+    width: min(100%, 680px);
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(30px, 6vw, 68px);
+    border: 1px solid rgba(17, 17, 17, 0.14);
+    border-radius: 24px;
+    background: #dbe7cf;
+    box-shadow: 0 24px 70px rgba(17, 17, 17, 0.2);
+  }
+
+  .guestbook-note-dialog-close {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(17, 17, 17, 0.2);
+    border-radius: 50%;
+    background: transparent;
+    color: #555;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .guestbook-note-dialog-close:hover { background: rgba(255, 255, 255, 0.28); }
+
+  .guestbook-note-dialog time,
+  .guestbook-note-dialog h3 {
+    color: #777;
+    font: 0.72rem "Courier Prime", monospace;
+    text-align: right;
+  }
+
+  .guestbook-note-dialog h3 {
+    margin: 5px 0 0;
+  }
+
+  .guestbook-note-dialog p {
+    max-width: 560px;
+    margin: 34px 0 0;
+    color: #333;
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 1.08;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .guestbook-all-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1999;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgba(17, 17, 17, 0.32);
+    backdrop-filter: blur(7px);
+  }
+
+  .guestbook-all-overlay[hidden] { display: none; }
+
+  .guestbook-all-dialog {
+    position: relative;
+    width: min(100%, 700px);
+    max-height: min(720px, 90vh);
+    overflow: hidden;
+    padding: clamp(28px, 5vw, 52px);
+    border-radius: 24px;
+    background: #f7f6f4;
+    box-shadow: 0 24px 70px rgba(17, 17, 17, 0.2);
+  }
+
+  .guestbook-all-dialog h3 {
+    margin: 0 0 24px;
+    color: #111;
+    font: 400 clamp(2.5rem, 6vw, 4.5rem)/0.95 "Instrument Serif", serif;
+  }
+
+  .guestbook-all-entries {
+    display: grid;
+    max-height: 52vh;
+    gap: 12px;
+    overflow-y: auto;
+    padding: 4px 10px 4px 0;
+    scrollbar-color: rgba(17, 17, 17, 0.3) transparent;
+  }
+
+  .guestbook-admin {
+    display: flex;
+    align-items: end;
+    gap: 10px;
+    max-width: 520px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px dashed rgba(17, 17, 17, 0.18);
+  }
+
+  .guestbook-admin[hidden] { display: none; }
+
+  .guestbook-admin label {
+    display: grid;
+    flex: 1;
+    gap: 7px;
+    color: #777;
+    font: 0.62rem "Courier Prime", monospace;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .guestbook-admin input {
+    width: 100%;
+    border: 1px solid rgba(17, 17, 17, 0.2);
+    border-radius: 8px;
+    padding: 9px 10px;
+    background: #fff;
+    font: 0.7rem "Courier Prime", monospace;
+  }
+
+  .guestbook-admin button {
+    border: 0;
+    border-radius: 999px;
+    padding: 10px 12px;
+    background: #111;
+    color: #fff;
+    font: 0.62rem "Courier Prime", monospace;
+    cursor: pointer;
+  }
+
+  .guestbook-admin-status {
+    margin: 0;
+    color: #4d7657;
+    font: 0.62rem "Courier Prime", monospace;
+  }
+
+  @media (max-width: 700px) {
+    .guestbook { padding-right: 20px; padding-left: 20px; }
+    .guestbook-layout { grid-template-columns: 1fr; }
+    .guestbook-admin { align-items: stretch; flex-direction: column; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .guestbook, .guestbook-form input, .guestbook-form textarea, .guestbook-form select, .guestbook-form button { transition: none; }
+  }
+</style>

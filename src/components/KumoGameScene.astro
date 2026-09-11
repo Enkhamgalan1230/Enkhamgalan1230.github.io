@@ -6,8 +6,8 @@
 >
   <div class="kumo-game__header">
     <p class="kumo-game__eyebrow">REST AREA</p>
-    <h2 class="kumo-game__title">Personal AI <span>assistant.</span></h2>
-    <p class="kumo-game__description">Want to listen to music? Click the icon. Then ask Kumo anything.</p>
+    <h2 class="kumo-game__title">Meet My Portfolio<span> AI assistant.</span></h2>
+    <p class="kumo-game__description">You can ask about me from her, Checkout the ♪ icon too!</p>
   </div>
 
   <div class="kumo-game__window">
@@ -150,9 +150,11 @@
   let kumoFrameIndex = 0;
   let kumoFrameTimer: number | undefined;
   let kumoUndertaleTimer: number | undefined;
+  let kumoAudioFadeFrame: number | undefined;
   let kumoUndertaleIndex = 0;
   let kumoSoundEnabled = false;
-  if (kumoAudio) kumoAudio.volume = 0.3;
+  let kumoVolumeLevel = Number(kumoVolume?.value ?? 0.3);
+  if (kumoAudio) kumoAudio.volume = kumoVolumeLevel;
   const kumoReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   function loadKumoScene() {
@@ -196,6 +198,38 @@
     kumoAudio.play().catch(() => undefined);
   }
 
+  function fadeKumoAudio(targetVolume: number, pauseWhenDone = false) {
+    if (!kumoAudio) return;
+    if (kumoAudioFadeFrame !== undefined) {
+      window.cancelAnimationFrame(kumoAudioFadeFrame);
+      kumoAudioFadeFrame = undefined;
+    }
+
+    const startVolume = kumoAudio.volume;
+    const endVolume = Math.max(0, Math.min(1, targetVolume));
+    if (kumoReducedMotion.matches || Math.abs(startVolume - endVolume) < 0.01) {
+      kumoAudio.volume = endVolume;
+      if (pauseWhenDone) kumoAudio.pause();
+      return;
+    }
+
+    const startTime = performance.now();
+    const fadeDuration = 420;
+    const step = (now: number) => {
+      const progress = Math.min((now - startTime) / fadeDuration, 1);
+      const easedProgress = 1 - Math.pow(1 - progress, 3);
+      kumoAudio.volume = startVolume + (endVolume - startVolume) * easedProgress;
+      if (progress < 1) {
+        kumoAudioFadeFrame = window.requestAnimationFrame(step);
+      } else {
+        kumoAudioFadeFrame = undefined;
+        if (pauseWhenDone) kumoAudio.pause();
+      }
+    };
+
+    kumoAudioFadeFrame = window.requestAnimationFrame(step);
+  }
+
   function setKumoSoundEnabled(enabled: boolean) {
     kumoSoundEnabled = enabled;
     if (!kumoAudio || !kumoSoundButton) return;
@@ -205,7 +239,13 @@
     kumoSoundButton.classList.toggle("kumo-game__sound-button--on", enabled);
     if (enabled) {
       playKumoAudio();
+      fadeKumoAudio(kumoVolumeLevel);
     } else {
+      if (kumoAudioFadeFrame !== undefined) {
+        window.cancelAnimationFrame(kumoAudioFadeFrame);
+        kumoAudioFadeFrame = undefined;
+      }
+      kumoAudio.volume = kumoVolumeLevel;
       kumoAudio.pause();
     }
   }
@@ -296,7 +336,9 @@
   kumoSpriteButton?.addEventListener("click", startKumoDialogue);
   kumoSoundButton?.addEventListener("click", () => setKumoSoundEnabled(!kumoSoundEnabled));
   kumoVolume?.addEventListener("input", () => {
-    if (kumoAudio && kumoVolume) kumoAudio.volume = Number(kumoVolume.value);
+    if (!kumoVolume) return;
+    kumoVolumeLevel = Number(kumoVolume.value);
+    if (kumoAudio && kumoGameActive) kumoAudio.volume = kumoVolumeLevel;
   });
   kumoUndertale?.addEventListener("click", () => {
     if (kumoGameState !== "dialogue") return;
@@ -345,10 +387,12 @@
     if (kumoGameActive) {
       playKumoVideo();
       playKumoAudio();
+      fadeKumoAudio(kumoSoundEnabled ? kumoVolumeLevel : 0);
       scheduleKumoFrame();
     } else {
       kumoGameVideo?.pause();
-      kumoAudio?.pause();
+      if (kumoSoundEnabled) fadeKumoAudio(0, true);
+      else kumoAudio?.pause();
       stopKumoFrames();
     }
   }, { threshold: [0, 0.35] });

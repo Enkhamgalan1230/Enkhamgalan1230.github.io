@@ -7,6 +7,9 @@ interface Env extends Cloudflare.Env {
   SPOTIFY_CLIENT_SECRET: string;
   SPOTIFY_REFRESH_TOKEN: string;
   KUMO_INDEX_SECRET: string;
+  GUESTBOOK_ADMIN_TOKEN: string;
+  GUESTBOOK_ADMIN_TRIGGER: string;
+  GUESTBOOK_DB: D1Database;
 }
 
 const SPOTIFY_TOKEN_URL =
@@ -31,11 +34,107 @@ function corsHeaders(
   return {
     "Access-Control-Allow-Origin": requestOrigin,
     "Access-Control-Allow-Methods":
-      "GET, POST, OPTIONS",
+    "DELETE, GET, POST, OPTIONS",
     "Access-Control-Allow-Headers":
       "Content-Type, Authorization",
     "Cache-Control": "no-store",
   };
+}
+
+type GuestbookRow = {
+  id: number;
+  name: string;
+  message: string;
+  color: string;
+  font: string;
+  font_weight: string;
+  font_style: string;
+  visitor_id: string | null;
+  created_at: string;
+};
+
+const guestbookColours = [
+  "rose", "peach", "apricot", "butter", "sage",
+  "mint", "seafoam", "powder", "periwinkle", "lavender",
+  "lilac", "blush", "terracotta", "sand", "sky",
+];
+const guestbookFonts = ["serif", "mono", "grotesk", "soft", "display"];
+const guestbookFontWeights = ["normal", "normal", "normal", "bold"];
+const guestbookFontStyles = ["normal", "normal", "normal", "italic"];
+
+function randomGuestbookChoice<T>(choices: T[]) {
+  const random = new Uint32Array(1);
+  crypto.getRandomValues(random);
+  return choices[random[0] % choices.length];
+}
+
+const guestbookBlockedTerms = [
+  "fuck", "shit", "bitch", "cunt", "asshole", "dick", "piss",
+  "bastard", "motherfucker", "nigger", "faggot", "whore", "slut",
+  "retard", "pisda", "pizda", "gichii", "zail", "zailaa", "gich",
+  "sda", "zda", "zl", "zla",
+];
+
+function isGuestbookMessageBlocked(name: string, message: string) {
+  const normalisedWithSpaces = `${name} ${message}`
+    .normalize("NFKC")
+    .toLocaleLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+  const normalised = normalisedWithSpaces.replace(/ /g, "");
+  const tokens = new Set(normalisedWithSpaces.split(/\s+/));
+
+  if (guestbookBlockedTerms.some((term) => term.length <= 3
+    ? tokens.has(term)
+    : normalised.includes(term))) return true;
+
+  const words = message.toLocaleLowerCase().match(/[a-z0-9']+/g) ?? [];
+  const repeatedCharacters = /(.)\1{7,}/i.test(normalised);
+  const repeatedWords = words.length >= 3 && new Set(words).size <= 2;
+  const excessiveLinks = (message.match(/https?:\/\//gi) ?? []).length > 2;
+
+  return repeatedCharacters || repeatedWords || excessiveLinks;
+}
+
+function guestbookEntry(row: GuestbookRow) {
+  return {
+    id: row.id,
+    name: row.name,
+    message: row.message,
+    color: row.color,
+    font: row.font,
+    fontWeight: row.font_weight,
+    fontStyle: row.font_style,
+    date: row.created_at,
+  };
+}
+
+async function hashGuestbookToken(token: string) {
+  const bytes = new TextEncoder().encode(token);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+async function hasGuestbookAdminAccess(request: Request, env: Env) {
+  const authorization = request.headers.get("Authorization");
+  if (authorization === `Bearer ${env.GUESTBOOK_ADMIN_TOKEN}`) return true;
+
+  const sessionToken = authorization?.startsWith("Bearer ")
+    ? authorization.slice(7)
+    : "";
+  if (!sessionToken || !env.GUESTBOOK_DB) return false;
+
+  const tokenHash = await hashGuestbookToken(sessionToken);
+  const session = await env.GUESTBOOK_DB.prepare(
+    `SELECT token_hash
+     FROM guestbook_admin_sessions
+     WHERE token_hash = ? AND expires_at > datetime('now')
+     LIMIT 1`,
+  ).bind(tokenHash).first();
+
+  return Boolean(session);
 }
 
 function json(
@@ -273,6 +372,162 @@ export default {
         origin,
         env,
       );
+    }
+
+    if (
+      url.pathname === "/api/guestbook" &&
+      request.method === "GET"
+    ) {
+      if (!env.GUESTBOOK_DB) {
+        return json({ error: "Guestbook database is not configured" }, 503, origin, env);
+      }
+
+      try {
+        const result = await env.GUESTBOOK_DB.prepare(
+          `SELECT id, name, message, color, font, font_weight, font_style, created_at
+           FROM guestbook_entries
+           WHERE status = 'approved'
+           ORDER BY created_at DESC, id DESC
+           LIMIT 100`,
+        ).all<GuestbookRow>();
+
+        return json(
+          { entries: (result.results ?? []).map(guestbookEntry) },
+          200,
+          origin,
+          env,
+        );
+      } catch (error) {
+        console.error("Guestbook read failed:", error);
+        return json({ error: "Could not load guestbook entries" }, 500, origin, env);
+      }
+    }
+
+    if (
+      url.pathname === "/api/guestbook" &&
+      request.method === "POST"
+    ) {
+      if (!env.GUESTBOOK_DB) {
+        return json({ error: "Guestbook database is not configured" }, 503, origin, env);
+      }
+
+      try {
+        const contentLength = Number(request.headers.get("Content-Length") ?? 0);
+        if (contentLength > 12000) {
+          return json({ error: "Request is too large" }, 413, origin, env);
+        }
+
+        const visitorIp = request.headers.get("CF-Connecting-IP") ?? "unknown";
+        const rateLimit = await env.KUMO_RATE_LIMITER.limit({
+          key: `guestbook:${visitorIp}`,
+        });
+        if (!rateLimit.success) {
+          return json({ error: "Too many attempts. Please try again later." }, 429, origin, env);
+        }
+
+        const body = await request.json<{
+          name?: string;
+          message?: string;
+          visitorId?: string;
+        }>();
+        const name = body.name?.trim() ?? "";
+        const message = body.message?.trim() ?? "";
+        const visitorId = body.visitorId?.trim() ?? "";
+
+        if (!name || !message) {
+          return json({ error: "Name and message are required" }, 400, origin, env);
+        }
+
+        if (name.length > 40 || message.length > 280) {
+          return json({ error: "Name or message is too long" }, 400, origin, env);
+        }
+
+        if (!/^[a-z0-9-]{16,80}$/i.test(visitorId)) {
+          return json({ error: "Could not verify this browser" }, 400, origin, env);
+        }
+
+        if (
+          name.toLowerCase() === "entwan" &&
+          Boolean(env.GUESTBOOK_ADMIN_TRIGGER) &&
+          message === env.GUESTBOOK_ADMIN_TRIGGER
+        ) {
+          const sessionToken = `${crypto.randomUUID()}-${crypto.randomUUID()}`;
+          const tokenHash = await hashGuestbookToken(sessionToken);
+          await env.GUESTBOOK_DB.prepare(
+            `INSERT INTO guestbook_admin_sessions (token_hash, expires_at)
+             VALUES (?, datetime('now', '+30 minutes'))`,
+          ).bind(tokenHash).run();
+
+          return json(
+            { adminSession: sessionToken },
+            200,
+            origin,
+            env,
+          );
+        }
+
+        const color = randomGuestbookChoice(guestbookColours);
+        const font = randomGuestbookChoice(guestbookFonts);
+        const fontWeight = randomGuestbookChoice(guestbookFontWeights);
+        const fontStyle = randomGuestbookChoice(guestbookFontStyles);
+
+        if (isGuestbookMessageBlocked(name, message)) {
+          return json(
+            { error: "That note cannot be posted. Please keep it kind." },
+            422,
+            origin,
+            env,
+          );
+        }
+
+        const previousEntry = await env.GUESTBOOK_DB.prepare(
+          "SELECT id FROM guestbook_entries WHERE visitor_id = ? LIMIT 1",
+        ).bind(visitorId).first();
+        if (previousEntry) {
+          return json({ error: "You have already left a note." }, 409, origin, env);
+        }
+
+        const result = await env.GUESTBOOK_DB.prepare(
+          `INSERT INTO guestbook_entries (name, message, color, font, font_weight, font_style, visitor_id)
+           VALUES (?, ?, ?, ?, ?, ?, ?)
+           RETURNING id, name, message, color, font, font_weight, font_style, created_at`,
+        ).bind(name, message, color, font, fontWeight, fontStyle, visitorId).first<GuestbookRow>();
+
+        if (!result) {
+          return json({ error: "Could not save note" }, 500, origin, env);
+        }
+
+        return json({ entry: guestbookEntry(result) }, 201, origin, env);
+      } catch (error) {
+        console.error("Guestbook write failed:", error);
+        return json({ error: "Could not save note" }, 500, origin, env);
+      }
+    }
+
+    const guestbookDeleteMatch = url.pathname.match(/^\/api\/guestbook\/(\d+)$/);
+    if (guestbookDeleteMatch && request.method === "DELETE") {
+      if (
+        !env.GUESTBOOK_DB ||
+        !(await hasGuestbookAdminAccess(request, env))
+      ) {
+        return json({ error: "Unauthorized" }, 401, origin, env);
+      }
+
+      try {
+        const result = await env.GUESTBOOK_DB.prepare(
+          "DELETE FROM guestbook_entries WHERE id = ?",
+        ).bind(Number(guestbookDeleteMatch[1])).run();
+
+        return json(
+          { ok: true, deleted: result.meta.changes > 0 },
+          200,
+          origin,
+          env,
+        );
+      } catch (error) {
+        console.error("Guestbook delete failed:", error);
+        return json({ error: "Could not delete note" }, 500, origin, env);
+      }
     }
 
     if (

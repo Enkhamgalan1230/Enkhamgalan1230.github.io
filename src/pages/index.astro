@@ -7,6 +7,8 @@ import KumoProject from "../projects/KumoProject.astro";
 import RecommendationProject from "../projects/RecommendationProject.astro";
 import KumoGameScene from "../components/KumoGameScene.astro";
 import KumoChat from "../components/KumoChat.astro";
+import Guestbook from "../components/Guestbook.astro";
+import ConnectSection from "../components/ConnectSection.astro";
 ---
 
 <BaseLayout title="Entwan's Portfolio">
@@ -514,8 +516,6 @@ import KumoChat from "../components/KumoChat.astro";
     </div>
   </section>
 
-  <KumoGameScene />
-
   <section
     class="head-prompt"
     id="head-prompt"
@@ -523,7 +523,7 @@ import KumoChat from "../components/KumoChat.astro";
     data-scroll-fade-section
     aria-labelledby="head-prompt-title"
   >
-    <p class="head-prompt-label">BY THE WAY &#x1F447;</p>
+    <p class="head-prompt-label">BY THE WAY</p>
 
     <h2 id="head-prompt-title">
       Did you click on that
@@ -565,6 +565,8 @@ import KumoChat from "../components/KumoChat.astro";
       NICE TO MEET YOU IN THAT CASE &#x1F91D;
     </div>
   </section>
+
+  <KumoGameScene />
 
   <div class="kumo-info-overlay" data-kumo-info-overlay aria-hidden="true">
     <div
@@ -610,6 +612,8 @@ import KumoChat from "../components/KumoChat.astro";
   <KumoProject />
   <RecommendationProject />
   <KumoChat />
+  <Guestbook />
+  <ConnectSection />
 
 </BaseLayout>
 
@@ -2106,6 +2110,7 @@ import KumoChat from "../components/KumoChat.astro";
   }
 
   .head-prompt-yet {
+    color: #4d7657;
     white-space: nowrap;
   }
 

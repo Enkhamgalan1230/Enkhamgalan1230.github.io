@@ -1,0 +1,109 @@
+<section class="connect-section" data-scroll-fade-section aria-labelledby="connect-title">
+  <div class="connect-inner">
+    <p class="connect-label">ONE MORE THING</p>
+    <h2 id="connect-title">Wanna connect <span>with me?</span></h2>
+    <p class="connect-copy">
+      If something here made you curious, say hello. I’d love to hear from you. Баярлалаа!
+    </p>
+
+    <div class="connect-actions">
+      <a
+        class="connect-button connect-button-primary"
+        href="https://www.linkedin.com/in/entwan"
+        target="_blank"
+        rel="noreferrer"
+      >
+        LinkedIn <span aria-hidden="true">&#x2197;</span>
+      </a>
+      <a
+        class="connect-button connect-button-secondary"
+        href="mailto:enkhamgalan.entwan@outlook.com"
+      >
+        Email me <span aria-hidden="true">&#x2197;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .connect-section {
+    min-height: min(680px, 80vh);
+    display: grid;
+    place-items: center;
+    padding: clamp(90px, 13vw, 170px) 20px;
+    background: #dfe9df;
+    color: #111;
+    opacity: var(--scroll-fade, 1);
+    transition: opacity 0.3s ease;
+  }
+
+  .connect-inner {
+    width: min(100%, 820px);
+    text-align: center;
+  }
+
+  .connect-label {
+    margin: 0 0 17px;
+    color: #4d7657;
+    font: 0.68rem "Courier Prime", monospace;
+    letter-spacing: 0.12em;
+  }
+
+  .connect-section h2 {
+    margin: 0;
+    font: 400 clamp(3.4rem, 8vw, 7.5rem)/0.92 "Instrument Serif", serif;
+    letter-spacing: -0.04em;
+  }
+
+  .connect-section h2 span { color: #4d7657; }
+
+  .connect-copy {
+    max-width: 520px;
+    margin: 25px auto 0;
+    color: #4d7657;
+    font: 400 clamp(1.35rem, 2.4vw, 2rem)/1.2 "Instrument Serif", serif;
+  }
+
+  .connect-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 11px;
+    margin-top: 34px;
+  }
+
+  .connect-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid #4d7657;
+    border-radius: 999px;
+    padding: 12px 17px;
+    font: 0.7rem "Courier Prime", monospace;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  }
+
+  .connect-button span { font-size: 1rem; }
+
+  .connect-button-primary {
+    background: #4d7657;
+    color: #fff;
+  }
+
+  .connect-button-secondary {
+    background: transparent;
+    color: #4d7657;
+  }
+
+  .connect-button:hover {
+    background: #111;
+    border-color: #111;
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .connect-section, .connect-button { transition: none; }
+  }
+</style>

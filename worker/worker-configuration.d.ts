@@ -3,6 +3,7 @@
 // Runtime types generated with workerd@1.20260908.1 2026-09-02 
 interface __BaseEnv_Env {
 	VECTORIZE: VectorizeIndex;
+	GUESTBOOK_DB: D1Database;
 	KUMO_RATE_LIMITER: RateLimit;
 	AI: Ai;
 	ALLOWED_ORIGIN: "https://enkhamgalan1230.github.io,https://entwan.dev,https://www.entwan.dev,http://localhost:4321,http://127.0.0.1:4321";

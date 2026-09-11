@@ -20,3 +20,8 @@ namespace_id = "1001"
 [ratelimits.simple]
 limit = 5
 period = 60
+
+[[d1_databases]]
+binding = "GUESTBOOK_DB"
+database_name = "entwan-guestbook"
+database_id = "31b96e4d-4bbe-4afc-9a82-d25178a0a335"
