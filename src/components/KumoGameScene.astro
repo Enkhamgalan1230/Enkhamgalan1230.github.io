@@ -386,6 +386,27 @@
     background-size: auto, auto, 28px 28px, auto;
   }
 
+  .kumo-game::before,
+  .kumo-game::after {
+    position: absolute;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    height: clamp(44px, 7vw, 92px);
+    content: "";
+    pointer-events: none;
+  }
+
+  .kumo-game::before {
+    top: 0;
+    background: linear-gradient(to bottom, #edecea, transparent);
+  }
+
+  .kumo-game::after {
+    bottom: 0;
+    background: linear-gradient(to top, #edecea, transparent);
+  }
+
   .kumo-game__header {
     position: relative;
     z-index: 1;
