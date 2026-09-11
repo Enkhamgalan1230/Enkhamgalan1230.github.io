@@ -5,20 +5,7 @@
     type="button"
     aria-label="Open Kumo"
   >
-    <img
-      class="kumo__launcher-avatar"
-      src="/images/kumo_avatars/neutral.png"
-      alt=""
-      aria-hidden="true"
-    />
-    <span class="kumo__launcher-copy">
-      <strong>KUMO.exe</strong>
-      <small>
-        <span class="kumo__launcher-dot" data-kumo-status-dot></span>
-        <span data-kumo-status>ONLINE</span>
-      </small>
-    </span>
-    <span class="kumo__launcher-hint">TALK TO ME</span>
+    <span class="kumo__launcher-icon" aria-hidden="true"></span>
   </button>
 
   <section
@@ -607,6 +594,8 @@
     openKumo,
   );
 
+  window.addEventListener("kumo:open", openKumo);
+
   closeButton?.addEventListener(
     "click",
     closeKumo,
@@ -694,94 +683,73 @@
   }
 
   .kumo__launcher {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-
-    min-height: 58px;
-    border: 2px solid #111;
-    background: #111;
-    color: #edecea;
-
-    padding: 6px 12px 6px 7px;
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    border: 2px solid #294b35;
+    border-radius: 50%;
+    background: #4d7657;
+    color: #f7f1df;
+    padding: 0;
 
     font: inherit;
-    font-size: 13px;
-
     cursor: pointer;
-
-    transition:
-      transform 160ms ease,
-      opacity 160ms ease;
+    box-shadow: 0 5px 0 #294b35, 0 9px 18px rgba(17, 17, 17, 0.16);
+    animation: kumo-launcher-bounce 3.8s ease-in-out infinite;
+    transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
   }
 
   .kumo__launcher:hover {
-    transform:
-      scale(1.04);
+    animation-play-state: paused;
+    transform: translateY(-2px) scale(1.06);
+    background: #628b6b;
+    box-shadow: 0 7px 0 #294b35, 0 12px 22px rgba(17, 17, 17, 0.18);
+  }
+
+  .kumo__launcher:hover .kumo__launcher-icon::after {
+    background: #628b6b;
   }
 
   .kumo__launcher:active {
-    transform:
-      scale(0.98);
+    transform: translate(2px, 2px) scale(0.98);
+    box-shadow: 0 2px 0 #294b35, 0 5px 10px rgba(17, 17, 17, 0.14);
   }
 
-  .kumo__launcher-avatar {
-    width: 44px;
-    height: 44px;
-    object-fit: contain;
-    image-rendering: pixelated;
-    border: 0;
-    outline: 0;
-    box-shadow: none;
+  .kumo__launcher-icon {
+    position: relative;
+    display: block;
+    width: 28px;
+    height: 22px;
+    border: 2px solid currentColor;
+    border-radius: 8px;
+    background:
+      radial-gradient(circle, currentColor 0 2px, transparent 2.5px) 5px 8px / 6px 6px no-repeat,
+      radial-gradient(circle, currentColor 0 2px, transparent 2.5px) 11px 8px / 6px 6px no-repeat,
+      radial-gradient(circle, currentColor 0 2px, transparent 2.5px) 17px 8px / 6px 6px no-repeat;
   }
 
-  .kumo__launcher-copy {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 3px;
+  .kumo__launcher-icon::after {
+    position: absolute;
+    left: 3px;
+    bottom: -6px;
+    width: 8px;
+    height: 8px;
+    content: "";
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    background: #4d7657;
+    transform: skewY(-32deg) rotate(28deg);
   }
 
-  .kumo__launcher-copy strong {
-    font-size: 13px;
-    line-height: 1;
-  }
-
-  .kumo__launcher-copy small {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    color: #b9c8b4;
-    font-size: 8px;
-    letter-spacing: 0.08em;
-  }
-
-  .kumo__launcher-dot {
-    width: 6px;
-    height: 6px;
-    background: #8fb286;
-  }
-
-  .kumo__launcher-dot.is-offline,
   .kumo__status-dot.is-offline {
     background: #929292;
     box-shadow: 0 0 0 2px rgba(146, 146, 146, 0.18);
   }
 
-  .kumo__launcher-hint {
-    max-width: 0;
-    overflow: hidden;
-    opacity: 0;
-    font-size: 8px;
-    letter-spacing: 0.08em;
-    white-space: nowrap;
-    transition: max-width 160ms ease, opacity 160ms ease;
-  }
-
-  .kumo__launcher:hover .kumo__launcher-hint,
-  .kumo__launcher:focus-visible .kumo__launcher-hint {
-    max-width: 70px;
-    opacity: 1;
+  @keyframes kumo-launcher-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
   }
 
   .kumo__window {
@@ -946,7 +914,7 @@
       50%;
 
     background:
-      #66745c;
+      #4d7657;
   }
 
   .kumo__close {
@@ -1335,13 +1303,17 @@
 
   @media (
     prefers-reduced-motion:
-      reduce
+    reduce
   ) {
     .kumo__launcher,
     .kumo__close,
     .kumo__send,
     .kumo__suggestion {
       transition: none;
+    }
+
+    .kumo__launcher {
+      animation: none;
     }
 
     :global(.kumo-message--thinking p) {
@@ -1375,23 +1347,8 @@
     }
 
     .kumo__launcher {
-      min-height: 50px;
-      gap: 6px;
-      padding: 4px 9px 4px 5px;
-    }
-
-    .kumo__launcher-avatar {
-      width: 38px;
-      height: 38px;
-    }
-
-    .kumo__launcher-copy strong {
-      font-size: 10px;
-    }
-
-    .kumo__launcher-copy small,
-    .kumo__launcher-hint {
-      display: none;
+      width: 56px;
+      height: 56px;
     }
 
     .kumo__input {

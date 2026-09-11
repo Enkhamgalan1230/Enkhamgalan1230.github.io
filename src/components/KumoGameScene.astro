@@ -1,0 +1,659 @@
+<section
+  class="kumo-game"
+  data-scroll-snap-section="kumo-game"
+  aria-label="A quiet rest area with Kumo"
+>
+  <div class="kumo-game__header">
+    <p class="kumo-game__eyebrow">REST AREA</p>
+    <h2 class="kumo-game__title">Personal AI <span>assistant.</span></h2>
+    <p class="kumo-game__description">Want to listen to music? Click the icon. Then ask Kumo anything.</p>
+  </div>
+
+  <div class="kumo-game__window">
+    <div class="kumo-game__window-bar">
+      <span class="kumo-game__window-title" aria-hidden="true">KUMO REST AREA.exe</span>
+      <span class="kumo-game__window-controls" aria-hidden="true">— □ ×</span>
+      <div class="kumo-game__sound-controls">
+        <button
+          class="kumo-game__sound-button"
+          type="button"
+          aria-label="Turn Kumo music on"
+          aria-pressed="false"
+        >
+          <span aria-hidden="true">♪</span>
+        </button>
+        <input
+          class="kumo-game__volume"
+          type="range"
+          min="0"
+          max="1"
+          step="0.05"
+          value="0.3"
+          aria-label="Kumo music volume"
+        />
+      </div>
+    </div>
+
+    <audio class="kumo-game__audio" loop preload="none" muted>
+      <source src="/game/kumo/audio/lofi.mp3" type="audio/mpeg" />
+    </audio>
+
+    <div class="kumo-game__scene">
+      <video
+        class="kumo-game__video"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        aria-hidden="true"
+      >
+        <source
+          media="(max-width: 640px)"
+          src="/game/kumo/mobile/scene.mp4"
+          type="video/mp4"
+        />
+        <source
+          src="/game/kumo/desktop/scene.mp4"
+          type="video/mp4"
+        />
+      </video>
+
+      <div class="kumo-game__shade" aria-hidden="true"></div>
+
+      <button
+        class="kumo-game__kumo-button"
+        type="button"
+        aria-label="Talk to Kumo"
+      >
+        <img
+          class="kumo-game__kumo"
+          src="/game/kumo/ui/folder/siamese_cat_clean_1.png"
+          alt=""
+          aria-hidden="true"
+        />
+      </button>
+
+      <button
+        class="kumo-game__prompt kumo-game__prompt--desktop"
+        type="button"
+        aria-label="Talk to Kumo"
+      >
+        <img src="/game/kumo/ui/f-talk.png" alt="Press F to talk" />
+      </button>
+
+      <button
+        class="kumo-game__prompt kumo-game__prompt--mobile"
+        type="button"
+        aria-label="Talk to Kumo"
+      >
+        <img src="/game/kumo/ui/tap-to-talk.png" alt="Tap to talk" />
+      </button>
+
+      <div class="kumo-game__undertale" aria-hidden="true" aria-live="polite">
+        <img
+          class="kumo-game__undertale-image"
+          src="/game/kumo/undertale/1.gif"
+          alt="Kumo dialogue"
+        />
+      </div>
+
+      <div class="kumo-game__choices" aria-label="Dialogue choices" aria-hidden="true">
+        <button class="kumo-game__choice" type="button" data-kumo-choice="ask">
+          ASK KUMO
+        </button>
+        <button class="kumo-game__choice" type="button" data-kumo-choice="explore">
+          KEEP EXPLORING
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const kumoGame = document.querySelector<HTMLElement>(".kumo-game");
+  const kumoGameScene = kumoGame?.querySelector<HTMLElement>(".kumo-game__scene");
+  const kumoGameVideo = kumoGame?.querySelector<HTMLVideoElement>(".kumo-game__video");
+  const kumoAudio = kumoGame?.querySelector<HTMLAudioElement>(".kumo-game__audio");
+  const kumoSoundButton = kumoGame?.querySelector<HTMLButtonElement>(".kumo-game__sound-button");
+  const kumoVolume = kumoGame?.querySelector<HTMLInputElement>(".kumo-game__volume");
+  const kumoSprite = kumoGame?.querySelector<HTMLImageElement>(".kumo-game__kumo");
+  const kumoSpriteButton = kumoGame?.querySelector<HTMLButtonElement>(".kumo-game__kumo-button");
+  const kumoPrompts = kumoGame?.querySelectorAll<HTMLButtonElement>(".kumo-game__prompt");
+  const kumoUndertale = kumoGame?.querySelector<HTMLElement>(".kumo-game__undertale");
+  const kumoUndertaleImage = kumoGame?.querySelector<HTMLImageElement>(".kumo-game__undertale-image");
+  const kumoChoices = kumoGame?.querySelector<HTMLElement>(".kumo-game__choices");
+  const kumoChoiceButtons = kumoGame?.querySelectorAll<HTMLButtonElement>(".kumo-game__choice");
+
+  const kumoIdleFrames = [
+    "/game/kumo/ui/folder/siamese_cat_clean_1.png",
+    "/game/kumo/ui/folder/siamese_cat_clean_2.png",
+    "/game/kumo/ui/folder/siamese_cat_clean_3.png",
+    "/game/kumo/ui/folder/siamese_cat_clean_4.png",
+    "/game/kumo/ui/folder/siamese_cat_clean_5.png",
+    "/game/kumo/ui/folder/siamese_cat_clean_6.png",
+  ];
+  const kumoIdleDurations = [700, 350, 180, 350, 220, 700];
+  const kumoUndertaleGifs = [
+    "/game/kumo/undertale/1.gif",
+    "/game/kumo/undertale/2.gif",
+    "/game/kumo/undertale/3.gif",
+    "/game/kumo/undertale/4.gif",
+  ];
+  const kumoUndertaleDurations = [
+    // Match the actual frame counts in the current GIFs so the browser
+    // does not have time to loop a GIF before the next one is loaded.
+    39 * 80 - 40,
+    44 * 80 - 40,
+    39 * 80 - 40,
+    42 * 80 - 40,
+  ];
+
+  type KumoGameState = "idle" | "dialogue" | "choice";
+  let kumoGameState: KumoGameState = "idle";
+  let kumoGameActive = false;
+  let kumoFrameIndex = 0;
+  let kumoFrameTimer: number | undefined;
+  let kumoUndertaleTimer: number | undefined;
+  let kumoUndertaleIndex = 0;
+  let kumoSoundEnabled = false;
+  if (kumoAudio) kumoAudio.volume = 0.3;
+  const kumoReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  function sizeKumoGameWindow() {
+    if (!kumoGameScene || !kumoGameVideo?.videoWidth || !kumoGameVideo.videoHeight) return;
+    kumoGameScene.style.setProperty(
+      "--kumo-video-ratio",
+      `${kumoGameVideo.videoWidth} / ${kumoGameVideo.videoHeight}`,
+    );
+  }
+
+  kumoGameVideo?.addEventListener("loadedmetadata", sizeKumoGameWindow);
+  sizeKumoGameWindow();
+
+  function isTypingTarget(target: EventTarget | null) {
+    return target instanceof HTMLElement &&
+      (target.matches("input, textarea, select, [contenteditable='true']") ||
+        Boolean(target.closest("input, textarea, select, [contenteditable='true']")));
+  }
+
+  function playKumoVideo() {
+    if (kumoReducedMotion.matches) return;
+    if (!kumoGameVideo) return;
+    kumoGameVideo.play().catch(() => undefined);
+  }
+
+  function playKumoAudio() {
+    if (!kumoSoundEnabled || !kumoGameActive || !kumoAudio) return;
+    kumoAudio.play().catch(() => undefined);
+  }
+
+  function setKumoSoundEnabled(enabled: boolean) {
+    kumoSoundEnabled = enabled;
+    if (!kumoAudio || !kumoSoundButton) return;
+    kumoAudio.muted = !enabled;
+    kumoSoundButton.setAttribute("aria-pressed", String(enabled));
+    kumoSoundButton.setAttribute("aria-label", enabled ? "Mute Kumo music" : "Turn Kumo music on");
+    kumoSoundButton.classList.toggle("kumo-game__sound-button--on", enabled);
+    if (enabled) {
+      playKumoAudio();
+    } else {
+      kumoAudio.pause();
+    }
+  }
+
+  function stopKumoFrames() {
+    if (kumoFrameTimer !== undefined) {
+      window.clearTimeout(kumoFrameTimer);
+      kumoFrameTimer = undefined;
+    }
+  }
+
+  function scheduleKumoFrame() {
+    if (!kumoGameActive || kumoReducedMotion.matches || !kumoSprite) return;
+    kumoFrameTimer = window.setTimeout(() => {
+      kumoFrameIndex = (kumoFrameIndex + 1) % kumoIdleFrames.length;
+      kumoSprite.src = kumoIdleFrames[kumoFrameIndex];
+      scheduleKumoFrame();
+    }, kumoIdleDurations[kumoFrameIndex]);
+  }
+
+  function setKumoGameState(nextState: KumoGameState) {
+    kumoGameState = nextState;
+    kumoGame?.classList.toggle("kumo-game--dialogue", nextState === "dialogue");
+    kumoGame?.classList.toggle("kumo-game--choice", nextState === "choice");
+    kumoUndertale?.setAttribute("aria-hidden", String(nextState !== "dialogue"));
+    kumoChoices?.classList.toggle("kumo-game__choices--visible", nextState === "choice");
+    kumoChoices?.setAttribute("aria-hidden", String(nextState !== "choice"));
+    kumoSpriteButton?.setAttribute("aria-hidden", "false");
+    if (kumoSpriteButton) kumoSpriteButton.disabled = nextState !== "idle";
+    kumoPrompts?.forEach((prompt) => {
+      prompt.setAttribute("aria-hidden", String(nextState !== "idle"));
+      prompt.disabled = nextState !== "idle";
+    });
+    kumoChoiceButtons?.forEach((button) => {
+      button.disabled = nextState !== "choice";
+    });
+  }
+
+  function clearUndertaleTimer() {
+    if (kumoUndertaleTimer !== undefined) {
+      window.clearTimeout(kumoUndertaleTimer);
+      kumoUndertaleTimer = undefined;
+    }
+  }
+
+  function playKumoUndertale(index: number) {
+    clearUndertaleTimer();
+    kumoUndertaleIndex = index;
+    if (!kumoUndertaleImage) return;
+    kumoUndertaleImage.src = kumoUndertaleGifs[index];
+    kumoUndertaleTimer = window.setTimeout(finishKumoUndertale, kumoUndertaleDurations[index]);
+  }
+
+  function finishKumoUndertale() {
+    clearUndertaleTimer();
+    if (kumoUndertaleIndex < kumoUndertaleGifs.length - 1) {
+      playKumoUndertale(kumoUndertaleIndex + 1);
+      return;
+    }
+    setKumoGameState("choice");
+  }
+
+  function startKumoDialogue() {
+    if (!kumoGameActive || kumoGameState !== "idle") return;
+    playKumoUndertale(0);
+    setKumoGameState("dialogue");
+  }
+
+  function returnToKumoIdle() {
+    clearUndertaleTimer();
+    kumoUndertaleIndex = 0;
+    setKumoGameState("idle");
+    stopKumoFrames();
+    scheduleKumoFrame();
+  }
+
+  kumoPrompts?.forEach((prompt) => prompt.addEventListener("click", startKumoDialogue));
+  kumoSpriteButton?.addEventListener("click", startKumoDialogue);
+  kumoSoundButton?.addEventListener("click", () => setKumoSoundEnabled(!kumoSoundEnabled));
+  kumoVolume?.addEventListener("input", () => {
+    if (kumoAudio && kumoVolume) kumoAudio.volume = Number(kumoVolume.value);
+  });
+  kumoUndertale?.addEventListener("click", () => {
+    if (kumoGameState !== "dialogue") return;
+    if (kumoUndertaleIndex < kumoUndertaleGifs.length - 1) {
+      playKumoUndertale(kumoUndertaleIndex + 1);
+    }
+  });
+
+  kumoChoiceButtons?.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (button.dataset.kumoChoice === "ask") {
+        returnToKumoIdle();
+        window.dispatchEvent(new CustomEvent("kumo:open"));
+      } else {
+        returnToKumoIdle();
+      }
+    });
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (!kumoGameActive || isTypingTarget(event.target)) return;
+    if (event.key === "Escape" && kumoGameState !== "idle") {
+      returnToKumoIdle();
+      return;
+    }
+    if (event.key.toLowerCase() === "f" && kumoGameState === "idle") {
+      event.preventDefault();
+      startKumoDialogue();
+    }
+  });
+
+  kumoReducedMotion.addEventListener("change", () => {
+    if (kumoReducedMotion.matches) {
+      stopKumoFrames();
+      kumoGameVideo?.pause();
+      if (kumoSprite) kumoSprite.src = kumoIdleFrames[0];
+    } else if (kumoGameActive) {
+      playKumoVideo();
+      scheduleKumoFrame();
+    }
+  });
+
+  const kumoGameObserver = kumoGame && new IntersectionObserver(([entry]) => {
+    kumoGameActive = Boolean(entry?.isIntersecting && entry.intersectionRatio >= 0.35);
+    if (kumoGameActive) {
+      playKumoVideo();
+      playKumoAudio();
+      scheduleKumoFrame();
+    } else {
+      kumoGameVideo?.pause();
+      kumoAudio?.pause();
+      stopKumoFrames();
+    }
+  }, { threshold: [0, 0.35] });
+
+  if (kumoGame) kumoGameObserver?.observe(kumoGame);
+</script>
+
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+  .kumo-game {
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+    overflow: hidden;
+    --kumo-left: 26%;
+    --kumo-bottom: 8%;
+    --kumo-width: clamp(70px, 8vw, 120px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: clamp(36px, 6vw, 88px) 5vw;
+    gap: clamp(22px, 3vw, 42px);
+    background:
+      radial-gradient(circle at 18% 20%, rgba(116, 147, 119, 0.22), transparent 25%),
+      radial-gradient(circle at 82% 75%, rgba(170, 190, 158, 0.24), transparent 30%),
+      radial-gradient(circle, rgba(77, 104, 80, 0.12) 1px, transparent 1.5px),
+      #dfe9df;
+    background-size: auto, auto, 28px 28px, auto;
+  }
+
+  .kumo-game__header {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+
+  .kumo-game__eyebrow {
+    margin: 0 0 12px;
+    color: #77716a;
+    font: 700 clamp(0.58rem, 1vw, 0.76rem) "Courier Prime", monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .kumo-game__title {
+    margin: 0;
+    color: #111111;
+    font-family: "Instrument Serif", serif;
+    font-size: clamp(2.1rem, 4vw, 4.2rem);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    line-height: 0.98;
+  }
+
+  .kumo-game__title span {
+    color: #4d7657;
+    font-style: italic;
+  }
+
+  .kumo-game__description {
+    max-width: 560px;
+    margin: 12px auto 0;
+    color: #625e58;
+    font: 400 clamp(0.78rem, 1.2vw, 1rem) "Courier Prime", monospace;
+    line-height: 1.6;
+  }
+
+  .kumo-game__window {
+    position: relative;
+    z-index: 2;
+    width: min(100%, 1320px);
+    margin: 0 auto;
+    overflow: hidden;
+    border: 2px solid #2a2825;
+    background: #211f1d;
+    box-shadow: 0 24px 0 rgba(42, 40, 37, 0.08), 0 18px 45px rgba(42, 40, 37, 0.2);
+  }
+
+  .kumo-game__window-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    min-height: 34px;
+    padding: 0 12px;
+    color: #edecea;
+    font: 0.68rem "Courier Prime", monospace;
+    letter-spacing: 0.05em;
+  }
+
+  .kumo-game__window-controls {
+    position: absolute;
+    right: 12px;
+    color: #a9a39b;
+    letter-spacing: 0.2em;
+  }
+
+  .kumo-game__sound-controls {
+    position: absolute;
+    top: 50%;
+    right: 52px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transform: translateY(-50%);
+  }
+
+  .kumo-game__sound-button {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #8b847b;
+    border-radius: 3px;
+    padding: 0;
+    background: #3a3531;
+    color: #a9a39b;
+    font: 700 0.92rem/1 "Courier Prime", monospace;
+    cursor: pointer;
+    transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+  }
+
+  .kumo-game__volume {
+    width: 58px;
+    height: 4px;
+    accent-color: #e8c995;
+    cursor: pointer;
+  }
+
+  .kumo-game__sound-button:hover,
+  .kumo-game__sound-button:focus-visible,
+  .kumo-game__sound-button--on {
+    border-color: #e8c995;
+    background: #4d7657;
+    color: #fff4d2;
+  }
+
+  .kumo-game__sound-button:focus-visible {
+    outline: 2px solid #f5d8a8;
+    outline-offset: 3px;
+  }
+
+  .kumo-game__audio { display: none; }
+
+  .kumo-game__scene {
+    position: relative;
+    aspect-ratio: var(--kumo-video-ratio, 16 / 9);
+    overflow: hidden;
+    isolation: isolate;
+    background: #413c38;
+  }
+
+  .kumo-game__video,
+  .kumo-game__shade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .kumo-game__video {
+    z-index: 0;
+    object-fit: cover;
+  }
+
+  .kumo-game__shade {
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.42);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+  }
+
+  .kumo-game--dialogue .kumo-game__shade { opacity: 1; }
+  .kumo-game--choice .kumo-game__shade { opacity: 1; background: rgba(0, 0, 0, 0.68); }
+
+  .kumo-game--dialogue .kumo-game__prompt,
+  .kumo-game--choice .kumo-game__prompt {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .kumo-game__kumo-button,
+  .kumo-game__prompt {
+    position: absolute;
+    z-index: 2;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .kumo-game__kumo-button {
+    left: var(--kumo-left);
+    bottom: var(--kumo-bottom);
+    width: var(--kumo-width);
+    transform: translateX(-50%);
+  }
+
+  .kumo-game__kumo {
+    display: block;
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+  }
+
+  .kumo-game__kumo-button:focus-visible,
+  .kumo-game__prompt:focus-visible,
+  .kumo-game__choice:focus-visible {
+    outline: 3px solid #f5d8a8;
+    outline-offset: 5px;
+  }
+
+  .kumo-game__prompt {
+    left: 50%;
+    bottom: 8%;
+    width: clamp(150px, 15vw, 220px);
+    transform: translateX(-50%);
+    will-change: transform;
+    animation: kumo-game__prompt-float 3.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+
+  @keyframes kumo-game__prompt-float {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, -5px); }
+  }
+
+  .kumo-game__prompt img {
+    display: block;
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+  }
+
+  .kumo-game__prompt--mobile { display: none; }
+
+  .kumo-game__undertale {
+    position: absolute;
+    bottom: 2%;
+    left: 50%;
+    width: min(30%, 620px);
+    z-index: 3;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 10px);
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  .kumo-game--dialogue .kumo-game__undertale {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+  }
+
+  .kumo-game__undertale-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+    image-rendering: pixelated;
+  }
+
+  .kumo-game__choices {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 3;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    width: min(70%, 360px);
+    transform: translate(-50%, -50%);
+  }
+
+  .kumo-game__choices--visible { display: flex; }
+  .kumo-game__choice {
+    border: 2px solid #e8c995;
+    padding: 7px 10px;
+    background: rgba(31, 21, 35, 0.88);
+    color: #f8ecd4;
+    font: 700 0.55rem "Press Start 2P", "Courier Prime", monospace;
+    line-height: 1.4;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 rgba(12, 9, 14, 0.7);
+  }
+  .kumo-game__choice:hover,
+  .kumo-game__choice:focus-visible { background: #e8c995; color: #171616; }
+
+  @media (max-width: 640px) {
+    .kumo-game {
+      --kumo-left: 58%;
+      --kumo-bottom: 15%;
+      --kumo-width: clamp(42px, 13vw, 64px);
+      gap: 16px;
+      padding: 24px 14px 32px;
+    }
+    .kumo-game__eyebrow { margin-bottom: 8px; }
+    .kumo-game__description { max-width: 320px; margin-top: 8px; line-height: 1.45; }
+    .kumo-game__window-bar { min-height: 30px; font-size: 0.58rem; }
+    .kumo-game__window-controls { letter-spacing: 0.12em; }
+    .kumo-game__sound-controls { right: 42px; gap: 4px; }
+    .kumo-game__sound-button { width: 22px; height: 22px; font-size: 0.8rem; }
+    .kumo-game__volume { width: 42px; }
+    .kumo-game__prompt--desktop { display: none; }
+    .kumo-game__prompt--mobile { display: block; bottom: calc(var(--kumo-bottom) + var(--kumo-width) * 1.05); width: 34vw; }
+    .kumo-game__undertale { bottom: 1.5%; width: 88%; }
+    .kumo-game__choices { width: min(78%, 300px); gap: 10px; }
+    .kumo-game__choice { padding: 6px 8px; text-align: left; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kumo-game__video { visibility: hidden; }
+    .kumo-game__prompt { animation: none; }
+    .kumo-game__shade,
+    .kumo-game__undertale { transition: none; }
+  }
+
+</style>

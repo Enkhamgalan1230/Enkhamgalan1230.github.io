@@ -20,10 +20,11 @@ Run from the repository root:
 
 ```sh
 npm install
-npm run dev
+npm run dev                 # or: astro dev --background
 npm run build
 npm run preview
 npm run astro -- --help
+npm run validate:knowledge
 ```
 
 Per repository instructions, start the development server in background mode:
@@ -52,12 +53,15 @@ src/
     Footer.astro      Footer branding, location, coordinates, and Ulzii mark.
     FaceButton.astro  Animated face trigger and about-me dialog.
     MusicButton.astro Spotify now-playing/search UI and client-side data loading.
+    KumoChat.astro    Floating Kumo AI launcher, chat window, status, messages, and API calls.
     ProjectModal.astro Shared dialog behavior for project case studies.
     ProjectCard.astro Empty placeholder; currently unused.
     SectionTitle.astro Empty placeholder; currently unused.
   projects/
     ReceiptProject.astro    Receipt case-study modal content.
     AccountProject.astro    Accountancy case-study modal content.
+    KumoProject.astro       Kumo AI case-study modal content and launch button.
+    RecommendationProject.astro Recommendation-system case-study modal content.
   styles/
     global.css              Global reset, layout, fonts, and base colors.
     project-dialogs.css     Shared typography overrides for project sheets.
@@ -86,8 +90,9 @@ CLAUDE.md                      Duplicate of the current development instructions
 
 - Hero section with typewriter-style rotating text and a CV link.
 - Horizontal project carousel with seven visual cards.
-- Receipt and Accountancy cards open project dialogs.
-- Projects Three through Seven are visual placeholders marked `IN PROGRESS`.
+- Receipt, Accountancy, Kumo AI, and Recommendation cards open project dialogs.
+- Remaining project cards are visual placeholders marked `IN PROGRESS`.
+- Kumo is available both as a project case study and as a floating AI chat assistant.
 - A face prompt encourages opening the about dialog.
 - Scroll/reveal effects, carousel movement, prompt interactions, and reduced-motion handling are implemented in an inline client-side script.
 - Styling is largely inline in the page and is intentionally highly art-directed.
@@ -101,11 +106,23 @@ CLAUDE.md                      Duplicate of the current development instructions
 
 ### Project dialogs
 
-- `ReceiptProject.astro` and `AccountProject.astro` are rendered on the homepage and wrapped by `ProjectModal.astro`.
+- Project components are rendered on the homepage and wrapped by `ProjectModal.astro`.
 - They are not independent routes.
 - Receipt links to the live Streamlit app and its GitHub repository.
+- Kumo's project dialog includes an `OPEN KUMO` action that opens the shared chat window.
 - Project dialog typography is customized by `src/styles/project-dialogs.css`.
 - Preserve the existing modal IDs and `data-project-open` values when editing dialog behavior.
+
+### Kumo AI
+
+- `src/components/KumoChat.astro` owns the floating launcher, chat window, message rendering, avatar moods, status indicators, suggestions, loading state, and client-side request handling.
+- The client calls the deployed Cloudflare Worker endpoint `https://enkhamgalan-spotify-api.zaecisama.workers.dev/api/kumo/chat` through the `WORKER_URL` constant in the component; the same Worker also serves the Spotify routes.
+- Kumo's answer is retrieval-grounded. The Worker normalizes the query, retrieves and reranks knowledge chunks, then generates an answer from the selected evidence.
+- Kumo knowledge is stored as TypeScript data under `worker/src/entwan/knowledge/` (`about.ts`, `education.ts`, `faq.ts`, `interests.ts`, `projects.ts`, `skills.ts`, and `work.ts`).
+- RAG helpers live under `worker/src/entwan/rag/`; prompts live in `worker/src/entwan/prompts.ts`.
+- `npm run validate:knowledge` validates the structured knowledge files.
+- Kumo status dots are green (`#4d7657`) for `ONLINE` and intentionally grey when the UI enters its `OFFLINE`/rate-limit state.
+- Preserve Kumo DOM IDs, `data-kumo-*` attributes, mood names, and the shared `data-open-kumo` hooks when editing it.
 
 ### Spotify integration
 
@@ -127,6 +144,7 @@ CLAUDE.md                      Duplicate of the current development instructions
 - The site uses large editorial typography, soft rounded cards, video backgrounds, subtle motion, and responsive layouts.
 - Mobile breakpoint is generally `640px`; tablet-specific behavior appears around `1100px`.
 - Respect `prefers-reduced-motion` when adding animations.
+- The site uses inline component/page styles extensively; inspect the relevant Astro file before adding a new global rule.
 
 ## Editing rules for future LLMs
 
@@ -148,6 +166,7 @@ CLAUDE.md                      Duplicate of the current development instructions
 - Some checked-in text appears to have character-encoding corruption (for example arrows, em dashes, copyright symbols, and Mongolian text displayed as mojibake). Preserve or repair it intentionally rather than changing unrelated content.
 - `src/styles/global.css` currently contains a duplicated Google Fonts import.
 - The root package has no Worker deployment script; Worker deployment/configuration is managed separately with Cloudflare tooling.
+- `dist/`, `.astro/`, and `node_modules/` are generated/local directories and should not be edited manually.
 
 ## Recommended task prompt
 

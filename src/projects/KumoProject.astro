@@ -220,26 +220,7 @@ import ProjectModal from "../components/ProjectModal.astro";
 
   openKumoButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      const kumoWindow =
-        document.querySelector<HTMLElement>(
-          "#kumo-window",
-        );
-
-      if (!kumoWindow) return;
-
-      kumoWindow.setAttribute(
-        "aria-hidden",
-        "false",
-      );
-
-      const input =
-        document.querySelector<HTMLTextAreaElement>(
-          "#kumo-input",
-        );
-
-      requestAnimationFrame(() => {
-        input?.focus();
-      });
+      window.dispatchEvent(new CustomEvent("kumo:open"));
     });
   });
 </script>
@@ -327,11 +308,11 @@ import ProjectModal from "../components/ProjectModal.astro";
 
     border-radius: 50%;
 
-    background: #ea8966;
+    background: #4d7657;
 
     box-shadow:
       0 0 0 4px
-      rgba(102, 116, 92, 0.1);
+      rgba(77, 118, 87, 0.1);
   }
 
   .project-hero h1 {
