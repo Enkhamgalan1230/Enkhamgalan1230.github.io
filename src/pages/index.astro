@@ -15,7 +15,7 @@ import KumoChat from "../components/KumoChat.astro";
        HERO
        ========================= -->
 
-  <section class="hero" data-scroll-reveal-section="hero">
+  <section class="hero" data-scroll-reveal-section="hero" data-scroll-fade-section>
     <div class="hero-content">
       <p class="hero-intro">
         Data and problem <span class="hero-green">given.</span>
@@ -54,6 +54,7 @@ import KumoChat from "../components/KumoChat.astro";
     class="projects-section"
     id="projects"
     data-scroll-snap-section="projects"
+    data-scroll-fade-section
   >
     <div class="projects-inner reveal-section">
 
@@ -519,6 +520,7 @@ import KumoChat from "../components/KumoChat.astro";
     class="head-prompt"
     id="head-prompt"
     data-scroll-reveal-section="head-prompt"
+    data-scroll-fade-section
     aria-labelledby="head-prompt-title"
   >
     <p class="head-prompt-label">BY THE WAY &#x1F447;</p>
@@ -1190,6 +1192,33 @@ import KumoChat from "../components/KumoChat.astro";
 
   fadeTargets.forEach((target) => fadeObserver.observe(target));
 
+  const scrollFadeTargets = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-scroll-fade-section]")
+  );
+  let scrollFadeFrame: number | undefined;
+
+  function updateSectionFade() {
+    scrollFadeFrame = undefined;
+    const fadeDistance = window.innerHeight * 0.7;
+
+    scrollFadeTargets.forEach((section) => {
+      const sectionBottom = section.getBoundingClientRect().bottom;
+      const fade = sectionBottom >= fadeDistance
+        ? 1
+        : Math.max(0.42, sectionBottom / fadeDistance);
+      section.style.setProperty("--scroll-fade", fade.toFixed(3));
+    });
+  }
+
+  function requestSectionFade() {
+    if (scrollFadeFrame !== undefined) return;
+    scrollFadeFrame = window.requestAnimationFrame(updateSectionFade);
+  }
+
+  window.addEventListener("scroll", requestSectionFade, { passive: true });
+  window.addEventListener("resize", requestSectionFade, { passive: true });
+  requestSectionFade();
+
 
   /* =========================
      SCROLL TRANSITION
@@ -1722,12 +1751,17 @@ import KumoChat from "../components/KumoChat.astro";
      ========================= */
 
   [data-scroll-reveal-section] {
-    opacity: 0;
+    --reveal-opacity: 0;
     transition: opacity 0.45s ease;
   }
 
   [data-scroll-reveal-section].is-visible {
-    opacity: 1;
+    --reveal-opacity: 1;
+  }
+
+  [data-scroll-fade-section] {
+    opacity: calc(var(--reveal-opacity, 1) * var(--scroll-fade, 1));
+    transition: opacity 0.3s ease;
   }
 
   .hero {

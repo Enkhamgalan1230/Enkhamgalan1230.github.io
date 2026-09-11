@@ -1,6 +1,7 @@
 <section
   class="kumo-game"
   data-scroll-snap-section="kumo-game"
+  data-scroll-fade-section
   aria-label="A quiet rest area with Kumo"
 >
   <div class="kumo-game__header">
@@ -41,6 +42,8 @@
     <div class="kumo-game__scene">
       <video
         class="kumo-game__video"
+        data-desktop-src="/game/kumo/desktop/scene.mp4"
+        data-mobile-src="/game/kumo/mobile/scene.mp4"
         autoplay
         muted
         loop
@@ -48,15 +51,6 @@
         preload="metadata"
         aria-hidden="true"
       >
-        <source
-          media="(max-width: 640px)"
-          src="/game/kumo/mobile/scene.mp4"
-          type="video/mp4"
-        />
-        <source
-          src="/game/kumo/desktop/scene.mp4"
-          type="video/mp4"
-        />
       </video>
 
       <div class="kumo-game__shade" aria-hidden="true"></div>
@@ -114,6 +108,7 @@
   const kumoGame = document.querySelector<HTMLElement>(".kumo-game");
   const kumoGameScene = kumoGame?.querySelector<HTMLElement>(".kumo-game__scene");
   const kumoGameVideo = kumoGame?.querySelector<HTMLVideoElement>(".kumo-game__video");
+  const kumoMobileViewport = window.matchMedia("(max-width: 640px)");
   const kumoAudio = kumoGame?.querySelector<HTMLAudioElement>(".kumo-game__audio");
   const kumoSoundButton = kumoGame?.querySelector<HTMLButtonElement>(".kumo-game__sound-button");
   const kumoVolume = kumoGame?.querySelector<HTMLInputElement>(".kumo-game__volume");
@@ -159,6 +154,19 @@
   let kumoSoundEnabled = false;
   if (kumoAudio) kumoAudio.volume = 0.3;
   const kumoReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  function loadKumoScene() {
+    if (!kumoGameVideo) return;
+    const sceneSrc = kumoMobileViewport.matches
+      ? kumoGameVideo.dataset.mobileSrc
+      : kumoGameVideo.dataset.desktopSrc;
+    if (!sceneSrc || kumoGameVideo.src.endsWith(sceneSrc)) return;
+    kumoGameVideo.src = sceneSrc;
+    kumoGameVideo.load();
+  }
+
+  loadKumoScene();
+  kumoMobileViewport.addEventListener("change", loadKumoScene);
 
   function sizeKumoGameWindow() {
     if (!kumoGameScene || !kumoGameVideo?.videoWidth || !kumoGameVideo.videoHeight) return;
@@ -368,6 +376,8 @@
     min-height: 100dvh;
     padding: clamp(36px, 6vw, 88px) 5vw;
     gap: clamp(22px, 3vw, 42px);
+    opacity: var(--scroll-fade, 1);
+    transition: opacity 0.3s ease;
     background:
       radial-gradient(circle at 18% 20%, rgba(116, 147, 119, 0.22), transparent 25%),
       radial-gradient(circle at 82% 75%, rgba(170, 190, 158, 0.24), transparent 30%),
