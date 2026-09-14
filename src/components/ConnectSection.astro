@@ -1,9 +1,15 @@
-<section class="connect-section" data-scroll-fade-section aria-labelledby="connect-title">
-  <div class="connect-inner">
+<section class="connect-section" data-scroll-fade-section data-scroll-reveal-section="connect" aria-labelledby="connect-title">
+  <div class="connect-inner" data-scroll-reveal-group>
     <p class="connect-label">ONE MORE THING</p>
     <h2 id="connect-title">Wanna connect <span>with me?</span></h2>
     <p class="connect-copy">
-      If something here made you curious, say hello. I’d love to hear from you. Баярлалаа!
+      If something here made you curious, say hello. I’d love to hear from you.
+      <br />
+      <span
+        class="connect-thanks"
+        data-connect-thanks
+        aria-live="polite"
+      >Thank you</span>
     </p>
 
     <div class="connect-actions">
@@ -27,18 +33,58 @@
 
 <style>
   .connect-section {
+    position: relative;
+
+    transform: translateY(24px);
+
+    isolation: isolate;
+    overflow: hidden;
+
     min-height: min(680px, 80vh);
     display: grid;
+    align-items: center;
+    justify-items: center;
     place-items: center;
     padding: clamp(90px, 13vw, 170px) 20px;
     background: #dfe9df;
     color: #111;
     opacity: var(--scroll-fade, 1);
-    transition: opacity 0.3s ease;
+    transition:
+      opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+      transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  .connect-section.is-visible {
+    transform: translateY(0);
+  }
+
+  .connect-section::before,
+  .connect-section::after {
+    position: absolute;
+    right: 0;
+    left: 0;
+    z-index: 0;
+    height: clamp(44px, 7vw, 92px);
+    content: "";
+    pointer-events: none;
+  }
+
+  .connect-section::before {
+    top: 0;
+    background: linear-gradient(to bottom, #f7f6f4, transparent);
+  }
+
+  .connect-section::after {
+    bottom: 0;
+    background: linear-gradient(to top, #f7f6f4, transparent);
   }
 
   .connect-inner {
+    position: relative;
+    z-index: 1;
+
     width: min(100%, 820px);
+    margin: 0 auto;
     text-align: center;
   }
 
@@ -62,6 +108,12 @@
     margin: 25px auto 0;
     color: #4d7657;
     font: 400 clamp(1.35rem, 2.4vw, 2rem)/1.2 "Instrument Serif", serif;
+  }
+
+  .connect-thanks {
+    display: inline-block;
+    min-width: 7ch;
+    color: #4d7657;
   }
 
   .connect-actions {
@@ -103,7 +155,62 @@
     transform: translateY(-2px);
   }
 
+  @media (max-width: 700px) {
+    .connect-section {
+      min-height: 100dvh;
+      padding: 128px 20px 64px;
+      align-items: center;
+      justify-items: center;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .connect-section, .connect-button { transition: none; }
   }
 </style>
+
+<script>
+  const connectThanks = document.querySelector<HTMLElement>(
+    "[data-connect-thanks]",
+  );
+
+  const connectThankYouWords = ["Thank you", "Баярлалаа"];
+  const connectTypingSpeed = 85;
+  const connectDeletingSpeed = 25;
+  const connectFinishedPause = 1000;
+  const connectEmptyPause = 500;
+
+  const connectWait = (time: number) =>
+    new Promise<void>((resolve) => {
+      setTimeout(resolve, time);
+    });
+
+  async function startConnectThanksTypewriter() {
+    if (!connectThanks) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      connectThanks.textContent = connectThankYouWords[0];
+      return;
+    }
+
+    while (true) {
+      for (const word of connectThankYouWords) {
+        for (let i = 1; i <= word.length; i++) {
+          connectThanks.textContent = word.slice(0, i);
+          await connectWait(connectTypingSpeed);
+        }
+
+        await connectWait(connectFinishedPause);
+
+        for (let i = word.length; i >= 0; i--) {
+          connectThanks.textContent = word.slice(0, i);
+          await connectWait(connectDeletingSpeed);
+        }
+
+        await connectWait(connectEmptyPause);
+      }
+    }
+  }
+
+  startConnectThanksTypewriter();
+</script>

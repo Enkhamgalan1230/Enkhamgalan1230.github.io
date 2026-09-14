@@ -11,6 +11,39 @@ html {
   scroll-behavior: smooth;
 }
 
+.scroll-reveal-item {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+    transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.is-visible > .scroll-reveal-item,
+.is-visible .scroll-reveal-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-scroll-reveal-section] {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .scroll-reveal-item {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 body {
   margin: 0;
   min-height: 100vh;

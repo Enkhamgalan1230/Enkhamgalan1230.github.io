@@ -2,6 +2,8 @@
   class="kumo-game"
   data-scroll-snap-section="kumo-game"
   data-scroll-fade-section
+  data-scroll-reveal-section="kumo-game"
+  data-scroll-reveal-group
   aria-label="A quiet rest area with Kumo"
 >
   <div class="kumo-game__header">
@@ -405,6 +407,8 @@
 
   .kumo-game {
     position: relative;
+
+    transform: translateY(24px);
     z-index: 1;
     isolation: isolate;
     overflow: hidden;
@@ -421,13 +425,19 @@
     padding: clamp(36px, 6vw, 88px) 5vw;
     gap: clamp(22px, 3vw, 42px);
     opacity: var(--scroll-fade, 1);
-    transition: opacity 0.3s ease;
+    transition:
+      opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+      transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
     background:
       radial-gradient(circle at 18% 20%, rgba(116, 147, 119, 0.22), transparent 25%),
       radial-gradient(circle at 82% 75%, rgba(170, 190, 158, 0.24), transparent 30%),
       radial-gradient(circle, rgba(77, 104, 80, 0.12) 1px, transparent 1.5px),
       #dfe9df;
     background-size: auto, auto, 28px 28px, auto;
+  }
+
+  .kumo-game.is-visible {
+    transform: translateY(0);
   }
 
   .kumo-game::before,
