@@ -572,12 +572,13 @@ import ConnectSection from "../components/ConnectSection.astro";
 
   <KumoGameScene />
 
-  <div class="kumo-info-overlay" data-kumo-info-overlay aria-hidden="true">
+  <div class="kumo-info-overlay" data-kumo-info-overlay aria-hidden="true" data-lenis-prevent>
     <div
       class="kumo-info-card"
       role="dialog"
       aria-modal="true"
       aria-labelledby="kumo-info-title"
+      data-lenis-prevent
     >
       <button
         class="kumo-info-close"
@@ -2145,7 +2146,14 @@ import ConnectSection from "../components/ConnectSection.astro";
 
     text-align: center;
 
-    background: #edecea;
+    background-color: #edecea;
+    background-image:
+      radial-gradient(
+        circle,
+        rgba(17, 17, 17, 0.17) 1.25px,
+        transparent 1.5px
+      );
+    background-size: 30px 30px;
 
     opacity: 1;
 
@@ -2240,6 +2248,9 @@ import ConnectSection from "../components/ConnectSection.astro";
     place-items: center;
     padding: 24px;
 
+    overscroll-behavior: contain;
+    touch-action: none;
+
     background: rgba(17, 17, 17, 0.46);
     opacity: 0;
     pointer-events: none;
@@ -2261,6 +2272,11 @@ import ConnectSection from "../components/ConnectSection.astro";
     border-radius: 4px;
     background: #edecea;
     box-shadow: 12px 14px 0 rgba(77, 118, 87, 0.3);
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
     transform: translateY(14px);
     transition: transform 0.25s ease;
   }

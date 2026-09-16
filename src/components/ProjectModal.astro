@@ -30,7 +30,7 @@ const {
       ×
     </button>
 
-    <div class="project-sheet-scroll">
+    <div class="project-sheet-scroll" data-lenis-prevent>
       <slot />
     </div>
   </div>
@@ -155,6 +155,9 @@ const {
     transition:
       opacity 0.35s ease,
       visibility 0.35s ease;
+
+    overscroll-behavior: contain;
+    touch-action: none;
   }
 
   .project-overlay.is-open {
@@ -208,6 +211,8 @@ const {
 
     overflow-y: auto;
     overscroll-behavior: contain;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
 
     scrollbar-width: thin;
   }

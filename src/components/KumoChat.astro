@@ -57,6 +57,7 @@
       class="kumo__messages"
       id="kumo-messages"
       aria-live="polite"
+      data-lenis-prevent
     >
       <div class="kumo-message kumo-message--kumo">
         <img
@@ -965,6 +966,10 @@
     min-height: 0;
 
     overflow-y: auto;
+
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
 
     display: flex;
 

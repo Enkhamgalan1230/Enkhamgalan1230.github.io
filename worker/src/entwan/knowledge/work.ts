@@ -132,7 +132,7 @@ export const work: KnowledgeChunk[] = [
     category: "work",
     subject: "professional-challenges",
     topic: "inheriting-existing-systems",
-    text: "One of the areas Enkh finds most challenging is taking over an existing system built by somebody else. Different developers structure code, environments and assumptions differently, so understanding an unfamiliar codebase while trying not to break existing behaviour can initially feel more difficult than building something from the beginning.",
+    text: "When Enkh takes over an existing system built by somebody else, he deliberately spends time understanding the codebase, environments, tests, conventions and business assumptions before changing behaviour. That careful approach helps him make safe, useful improvements in unfamiliar systems while he builds context.",
     importance: "high",
   },
 

@@ -41,6 +41,12 @@ function buildSystemPrompt(
   return KUMO_SYSTEM_PROMPT;
 }
 
+function isHiringQuestion(question: string) {
+  return /\b(hire|hiring|employ|candidate|recruit|weakness|why\s+(should|would|shouldn't|should not|wouldn't|would not))\b/i.test(
+    question,
+  );
+}
+
 export async function generateAnswer(
   env: Env,
   question: string,
@@ -60,6 +66,23 @@ export async function generateAnswer(
         question,
       );
 
+  const hiringInstruction = isHiringQuestion(question)
+    ? `
+
+FINAL HIRING-ANSWER CHECK:
+This is a hiring or fit question. Do not answer from the candidate's deficits first.
+Use a warm best-friend voice, lead with Enkh's practical value, mention at most
+one brief growth area only if it genuinely helps, and finish with the positive
+reason he would be worth speaking to. Never finish on a weakness or use phrases
+such as "he might not be your person", "not someone you should hire", or "has
+not mastered". Avoid corporate phrasing and do not literally say "The better
+question is what kind of person the role needs".
+`
+    : "";
+
+  const finalSystemPrompt =
+    systemPrompt + hiringInstruction;
+
   const response =
     await env.AI.run(
       GENERATION_MODEL,
@@ -68,7 +91,7 @@ export async function generateAnswer(
           {
             role: "system",
             content:
-              systemPrompt,
+              finalSystemPrompt,
           },
           {
             role: "user",

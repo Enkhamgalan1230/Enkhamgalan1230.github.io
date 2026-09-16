@@ -186,7 +186,7 @@ export const faq: KnowledgeChunk[] = [
     category: "faq",
     subject: "career",
     topic: "challenge",
-    text: "If asked what Enkh finds difficult professionally, explain that taking over unfamiliar systems can be challenging because different developers structure code, environments and assumptions differently. New projects can also initially feel stressful because of uncertainty, which he tries to reduce through research, planning and iteration.",
+    text: "If asked what Enkh finds difficult professionally, explain that he treats unfamiliar systems as a context-building challenge: he studies the code, tests, conventions and business assumptions before making changes. He reduces uncertainty through research, planning, communication and iteration, and this helps him make careful improvements without treating an existing codebase as disposable.",
     importance: "medium",
   },
 
@@ -195,7 +195,7 @@ export const faq: KnowledgeChunk[] = [
     category: "faq",
     subject: "career",
     topic: "weakness",
-    text: "If asked about Enkh's weaknesses, give a grounded answer rather than a polished interview cliché. He is still developing deeper expertise in areas such as advanced SQL, JavaScript, TypeScript, cloud deployment, RAG and AI agents. He also finds inheriting unfamiliar codebases more difficult than starting a system from scratch.",
+    text: "If asked about Enkh's weaknesses, give a grounded answer rather than a polished interview cliché. He is still developing deeper expertise in areas such as advanced SQL, JavaScript, TypeScript, cloud deployment, RAG and AI agents. Frame these as active growth areas: he learns through practical systems, research and iteration, while already bringing strong experience in data pipelines, applied AI, end-to-end system design, client communication and problem framing. When discussing inherited codebases, describe his careful process of understanding context before changing behaviour rather than calling it a weakness.",
     importance: "high",
   },
 

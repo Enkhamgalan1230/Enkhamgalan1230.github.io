@@ -9,32 +9,12 @@
   <div class="kumo-game__header">
     <p class="kumo-game__eyebrow">REST AREA</p>
     <h2 class="kumo-game__title">Meet My Portfolio<span> AI assistant.</span></h2>
-    <p class="kumo-game__description">You can ask about me from her, Checkout the ♪ icon too!</p>
+    <p class="kumo-game__description">You can ask about me from KUMO, Play some tunes ♪ too!</p>
   </div>
 
   <div class="kumo-game__window">
     <div class="kumo-game__window-bar">
       <span class="kumo-game__window-title" aria-hidden="true">KUMO REST AREA.exe</span>
-      <span class="kumo-game__window-controls" aria-hidden="true">— □ ×</span>
-      <div class="kumo-game__sound-controls">
-        <button
-          class="kumo-game__sound-button"
-          type="button"
-          aria-label="Turn Kumo music on"
-          aria-pressed="false"
-        >
-          <span aria-hidden="true">♪</span>
-        </button>
-        <input
-          class="kumo-game__volume"
-          type="range"
-          min="0"
-          max="1"
-          step="0.05"
-          value="0.3"
-          aria-label="Kumo music volume"
-        />
-      </div>
     </div>
 
     <audio class="kumo-game__audio" loop preload="none" muted>
@@ -42,6 +22,22 @@
     </audio>
 
     <div class="kumo-game__scene">
+      <div class="kumo-game__sound-controls">
+        <button
+          class="kumo-game__sound-button"
+          type="button"
+          aria-label="Turn Kumo music on"
+          aria-pressed="false"
+        >
+          <img
+            class="kumo-game__sound-icon"
+            src="/game/kumo/ui/sound-off.png"
+            alt=""
+            aria-hidden="true"
+          />
+        </button>
+      </div>
+
       <video
         class="kumo-game__video"
         data-desktop-src="/game/kumo/desktop/scene.mp4"
@@ -87,11 +83,13 @@
       </button>
 
       <div class="kumo-game__undertale" aria-hidden="true" aria-live="polite">
-        <img
+        <video
           class="kumo-game__undertale-image"
-          src="/game/kumo/undertale/1.gif"
-          alt="Kumo dialogue"
-        />
+          muted
+          playsinline
+          preload="auto"
+          aria-label="Kumo dialogue"
+        ></video>
       </div>
 
       <div class="kumo-game__choices" aria-label="Dialogue choices" aria-hidden="true">
@@ -113,12 +111,12 @@
   const kumoMobileViewport = window.matchMedia("(max-width: 640px)");
   const kumoAudio = kumoGame?.querySelector<HTMLAudioElement>(".kumo-game__audio");
   const kumoSoundButton = kumoGame?.querySelector<HTMLButtonElement>(".kumo-game__sound-button");
-  const kumoVolume = kumoGame?.querySelector<HTMLInputElement>(".kumo-game__volume");
+  const kumoSoundIcon = kumoGame?.querySelector<HTMLImageElement>(".kumo-game__sound-icon");
   const kumoSprite = kumoGame?.querySelector<HTMLImageElement>(".kumo-game__kumo");
   const kumoSpriteButton = kumoGame?.querySelector<HTMLButtonElement>(".kumo-game__kumo-button");
   const kumoPrompts = kumoGame?.querySelectorAll<HTMLButtonElement>(".kumo-game__prompt");
   const kumoUndertale = kumoGame?.querySelector<HTMLElement>(".kumo-game__undertale");
-  const kumoUndertaleImage = kumoGame?.querySelector<HTMLImageElement>(".kumo-game__undertale-image");
+  const kumoUndertaleVideo = kumoGame?.querySelector<HTMLVideoElement>(".kumo-game__undertale-image");
   const kumoChoices = kumoGame?.querySelector<HTMLElement>(".kumo-game__choices");
   const kumoChoiceButtons = kumoGame?.querySelectorAll<HTMLButtonElement>(".kumo-game__choice");
 
@@ -131,19 +129,11 @@
     "/game/kumo/ui/folder/siamese_cat_clean_6.png",
   ];
   const kumoIdleDurations = [700, 350, 180, 350, 220, 700];
-  const kumoUndertaleGifs = [
-    "/game/kumo/undertale/1.gif",
-    "/game/kumo/undertale/2.gif",
-    "/game/kumo/undertale/3.gif",
-    "/game/kumo/undertale/4.gif",
-  ];
-  const kumoUndertaleDurations = [
-    // Match the actual frame counts in the current GIFs so the browser
-    // does not have time to loop a GIF before the next one is loaded.
-    39 * 80 - 40,
-    44 * 80 - 40,
-    39 * 80 - 40,
-    42 * 80 - 40,
+  const kumoUndertaleVideos = [
+    "/game/kumo/undertale/1.webm",
+    "/game/kumo/undertale/2.webm",
+    "/game/kumo/undertale/3.webm",
+    "/game/kumo/undertale/4.webm",
   ];
 
   type KumoGameState = "idle" | "dialogue" | "choice";
@@ -151,11 +141,11 @@
   let kumoGameActive = false;
   let kumoFrameIndex = 0;
   let kumoFrameTimer: number | undefined;
-  let kumoUndertaleTimer: number | undefined;
+  let kumoUndertaleAdvanceTimer: number | undefined;
   let kumoAudioFadeFrame: number | undefined;
   let kumoUndertaleIndex = 0;
   let kumoSoundEnabled = false;
-  let kumoVolumeLevel = Number(kumoVolume?.value ?? 0.3);
+  const kumoVolumeLevel = 0.3;
   if (kumoAudio) kumoAudio.volume = kumoVolumeLevel;
   const kumoReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -236,6 +226,11 @@
     kumoSoundEnabled = enabled;
     if (!kumoAudio || !kumoSoundButton) return;
     kumoAudio.muted = !enabled;
+    if (kumoSoundIcon) {
+      kumoSoundIcon.src = enabled
+        ? "/game/kumo/ui/sound-on.png"
+        : "/game/kumo/ui/sound-off.png";
+    }
     kumoSoundButton.setAttribute("aria-pressed", String(enabled));
     kumoSoundButton.setAttribute("aria-label", enabled ? "Mute Kumo music" : "Turn Kumo music on");
     kumoSoundButton.classList.toggle("kumo-game__sound-button--on", enabled);
@@ -294,27 +289,33 @@
   }
 
   function clearUndertaleTimer() {
-    if (kumoUndertaleTimer !== undefined) {
-      window.clearTimeout(kumoUndertaleTimer);
-      kumoUndertaleTimer = undefined;
+    if (kumoUndertaleAdvanceTimer !== undefined) {
+      window.clearTimeout(kumoUndertaleAdvanceTimer);
+      kumoUndertaleAdvanceTimer = undefined;
     }
   }
 
   function playKumoUndertale(index: number) {
     clearUndertaleTimer();
     kumoUndertaleIndex = index;
-    if (!kumoUndertaleImage) return;
-    kumoUndertaleImage.src = kumoUndertaleGifs[index];
-    kumoUndertaleTimer = window.setTimeout(finishKumoUndertale, kumoUndertaleDurations[index]);
+    if (!kumoUndertaleVideo) return;
+    kumoUndertaleVideo.pause();
+    kumoUndertaleVideo.src = kumoUndertaleVideos[index];
+    kumoUndertaleVideo.load();
+    void kumoUndertaleVideo.play().catch(() => undefined);
   }
 
-  function finishKumoUndertale() {
+  function advanceKumoUndertale() {
     clearUndertaleTimer();
-    if (kumoUndertaleIndex < kumoUndertaleGifs.length - 1) {
+    if (kumoUndertaleIndex < kumoUndertaleVideos.length - 1) {
       playKumoUndertale(kumoUndertaleIndex + 1);
       return;
     }
     setKumoGameState("choice");
+  }
+
+  function finishKumoUndertale() {
+    kumoUndertaleAdvanceTimer = window.setTimeout(advanceKumoUndertale, 2000);
   }
 
   function startKumoDialogue() {
@@ -337,17 +338,12 @@
   kumoPrompts?.forEach((prompt) => prompt.addEventListener("click", startKumoDialogue));
   kumoSpriteButton?.addEventListener("click", startKumoDialogue);
   kumoSoundButton?.addEventListener("click", () => setKumoSoundEnabled(!kumoSoundEnabled));
-  kumoVolume?.addEventListener("input", () => {
-    if (!kumoVolume) return;
-    kumoVolumeLevel = Number(kumoVolume.value);
-    if (kumoAudio && kumoGameActive) kumoAudio.volume = kumoVolumeLevel;
-  });
   kumoUndertale?.addEventListener("click", () => {
     if (kumoGameState !== "dialogue") return;
-    if (kumoUndertaleIndex < kumoUndertaleGifs.length - 1) {
-      playKumoUndertale(kumoUndertaleIndex + 1);
-    }
+    advanceKumoUndertale();
   });
+
+  kumoUndertaleVideo?.addEventListener("ended", finishKumoUndertale);
 
   kumoChoiceButtons?.forEach((button) => {
     button.addEventListener("click", (event) => {
@@ -504,7 +500,13 @@
     width: min(100%, 1320px);
     margin: 0 auto;
     overflow: hidden;
-    border: 2px solid #2a2825;
+    border-style: solid;
+    border-width: 20px;
+    border-image-source: url("/assets/kumo-window-frame.png");
+    border-image-slice: 60;
+    border-image-width: 20px;
+    border-image-outset: 0;
+    border-image-repeat: stretch;
     background: #211f1d;
     box-shadow: 0 24px 0 rgba(42, 40, 37, 0.08), 0 18px 45px rgba(42, 40, 37, 0.2);
   }
@@ -522,52 +524,38 @@
     letter-spacing: 0.05em;
   }
 
-  .kumo-game__window-controls {
-    position: absolute;
-    right: 12px;
-    color: #a9a39b;
-    letter-spacing: 0.2em;
-  }
-
   .kumo-game__sound-controls {
     position: absolute;
-    top: 50%;
-    right: 52px;
-    z-index: 3;
+    top: 16px;
+    right: 16px;
+    z-index: 6;
     display: flex;
     align-items: center;
-    gap: 6px;
-    transform: translateY(-50%);
   }
 
   .kumo-game__sound-button {
     display: grid;
     place-items: center;
-    width: 24px;
-    height: 24px;
-    border: 1px solid #8b847b;
-    border-radius: 3px;
+    width: 46px;
+    height: 46px;
+    border: 0;
+    border-radius: 0;
     padding: 0;
-    background: #3a3531;
-    color: #a9a39b;
-    font: 700 0.92rem/1 "Courier Prime", monospace;
+    background: transparent;
     cursor: pointer;
-    transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+    transition: transform 160ms ease, filter 160ms ease;
   }
 
-  .kumo-game__volume {
-    width: 58px;
-    height: 4px;
-    accent-color: #e8c995;
-    cursor: pointer;
+  .kumo-game__sound-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
-  .kumo-game__sound-button:hover,
-  .kumo-game__sound-button:focus-visible,
-  .kumo-game__sound-button--on {
-    border-color: #e8c995;
-    background: #4d7657;
-    color: #fff4d2;
+  .kumo-game__sound-button:hover {
+    transform: translateY(-1px) scale(1.04);
+    filter: brightness(1.12);
   }
 
   .kumo-game__sound-button:focus-visible {
@@ -674,6 +662,7 @@
     bottom: 2%;
     left: 50%;
     width: min(30%, 620px);
+    aspect-ratio: 873 / 234;
     z-index: 3;
     opacity: 0;
     pointer-events: none;
@@ -690,7 +679,8 @@
   .kumo-game__undertale-image {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: fill;
     cursor: pointer;
     image-rendering: pixelated;
   }
@@ -737,10 +727,12 @@
     .kumo-game__eyebrow { margin-bottom: 8px; }
     .kumo-game__description { max-width: 320px; margin-top: 8px; line-height: 1.45; }
     .kumo-game__window-bar { min-height: 30px; font-size: 0.58rem; }
-    .kumo-game__window-controls { letter-spacing: 0.12em; }
-    .kumo-game__sound-controls { right: 42px; gap: 4px; }
-    .kumo-game__sound-button { width: 22px; height: 22px; font-size: 0.8rem; }
-    .kumo-game__volume { width: 42px; }
+    .kumo-game__window {
+      border-width: 15px;
+      border-image-width: 15px;
+    }
+    .kumo-game__sound-controls { top: 12px; right: 12px; }
+    .kumo-game__sound-button { width: 38px; height: 38px; }
     .kumo-game__prompt--desktop { display: none; }
     .kumo-game__prompt--mobile { display: block; bottom: calc(var(--kumo-bottom) + var(--kumo-width) * 1.05); width: 34vw; }
     .kumo-game__undertale { bottom: 1.5%; width: 88%; }
