@@ -28,9 +28,17 @@ import ConnectSection from "../components/ConnectSection.astro";
         I turn them into:
       </p>
 
-      <div class="typewriter-wrapper">
-        <span id="typewriter"></span>
-        <span class="cursor" aria-hidden="true">|</span>
+      <div class="fill-game" aria-label="Examples of what I build">
+        <div class="fill-options" aria-hidden="true">
+          <span class="fill-word" data-fill-word="FORECASTS">FORECASTS</span>
+          <span class="fill-word" data-fill-word="AUTOMATION">AUTOMATION</span>
+          <span class="fill-word" data-fill-word="RECOMMENDATIONS">RECOMMENDATIONS</span>
+          <span class="fill-word" data-fill-word="COOL AI THINGS">COOL AI THINGS</span>
+        </div>
+
+        <div class="fill-answer" aria-live="polite">
+          <span id="typewriter">COOL AI THINGS</span>
+        </div>
       </div>
 
       <a
@@ -767,87 +775,57 @@ import ConnectSection from "../components/ConnectSection.astro";
      ========================= */
 
   const words = [
-    "Automation",
-    "Predictions",
-    "Efficiency",
+    "FORECASTS",
+    "AUTOMATION",
+    "RECOMMENDATIONS",
     "“Yeahh, that makes sense” moments",
-    "CooooOol AI things",
+    "COOL AI THINGS",
   ];
+  words.splice(3, 1);
 
   const element =
     document.querySelector<HTMLElement>(
       "#typewriter"
     );
 
-  const typingSpeed = 85;
-  const deletingSpeed = 25;
-  const finishedPause = 1000;
-  const emptyPause = 500;
+  const fillWords = document.querySelectorAll<HTMLElement>("[data-fill-word]");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let fillIndex = 0;
 
-  const wait = (time: number) =>
-    new Promise<void>((resolve) => {
-      setTimeout(resolve, time);
+  function showFillWord(word: string) {
+    if (!element) return;
+
+    fillWords.forEach((fillWord) => {
+      fillWord.classList.toggle(
+        "is-active",
+        fillWord.dataset.fillWord === word,
+      );
     });
 
-  async function typeWord(
-    word: string
-  ) {
-    if (!element) return;
-
-    for (
-      let i = 1;
-      i <= word.length;
-      i++
-    ) {
-      element.textContent =
-        word.slice(0, i);
-
-      await wait(
-        typingSpeed
-      );
-    }
+    element.classList.remove("is-filling");
+    void element.offsetWidth;
+    element.textContent = word;
+    element.classList.add("is-filling");
   }
 
-  async function deleteWord(
-    word: string
-  ) {
-    if (!element) return;
+  if (reducedMotion.matches) {
+    showFillWord(words[words.length - 1]);
+  } else {
+    showFillWord(words[0]);
 
-    for (
-      let i = word.length;
-      i >= 0;
-      i--
-    ) {
-      element.textContent =
-        word.slice(0, i);
+    const advanceFillWord = () => {
+      if (fillIndex >= words.length - 1) return;
 
-      await wait(
-        deletingSpeed
-      );
-    }
-  }
+      fillIndex += 1;
+      showFillWord(words[fillIndex]);
 
-  async function startTypewriter() {
-    if (!element) return;
-
-    while (true) {
-      for (const word of words) {
-        await typeWord(word);
-
-        await wait(
-          finishedPause
-        );
-
-        await deleteWord(word);
-
-        await wait(
-          emptyPause
-        );
+      if (fillIndex < words.length - 1) {
+        window.setTimeout(advanceFillWord, 1000);
       }
-    }
-  }
+    };
 
-  startTypewriter();
+    window.setTimeout(advanceFillWord, 1000);
+  }
 
 
   /* =========================
@@ -1420,6 +1398,33 @@ import ConnectSection from "../components/ConnectSection.astro";
       "[data-project-track]"
     );
 
+  if (projectTrack) {
+    const preferredProjectOrder = [
+      "merchant-recommendation-project",
+      "account-project",
+      "receipt-project",
+      "kumo-project",
+    ];
+    const projectItems = Array.from(
+      projectTrack.querySelectorAll<HTMLElement>(".carousel-item"),
+    );
+    const orderedProjectItems = preferredProjectOrder
+      .map((projectId) =>
+        projectItems.find((item) =>
+          item.querySelector(`[data-project-open="${projectId}"]`),
+        ),
+      )
+      .filter((item): item is HTMLElement => Boolean(item));
+    const remainingProjectItems = projectItems.filter(
+      (item) => !orderedProjectItems.includes(item),
+    );
+
+    projectTrack.replaceChildren(
+      ...orderedProjectItems,
+      ...remainingProjectItems,
+    );
+  }
+
   const nextButton =
     document.querySelector<HTMLButtonElement>(
       "[data-carousel-next]"
@@ -1912,9 +1917,9 @@ import ConnectSection from "../components/ConnectSection.astro";
 
     font-size:
       clamp(
-        2.1rem,
-        4vw,
-        4.2rem
+        2.6rem,
+        5vw,
+        5.4rem
       );
 
     font-weight: 400;
@@ -1954,6 +1959,9 @@ import ConnectSection from "../components/ConnectSection.astro";
 
     box-shadow: 8px 9px 0 rgba(77, 118, 87, 0.24);
 
+    animation: cv-float-rock 3.4s ease-in-out infinite;
+    transform-origin: center bottom;
+
     transition:
       background 0.2s ease,
       border-color 0.2s ease,
@@ -1967,6 +1975,11 @@ import ConnectSection from "../components/ConnectSection.astro";
     line-height: 0.7;
   }
 
+  @keyframes cv-float-rock {
+    0%, 100% { transform: translateY(0) rotate(-1deg); }
+    50% { transform: translateY(-5px) rotate(1deg); }
+  }
+
   @media (hover: hover) and (pointer: fine) {
     .cv-download:hover {
       border-color: #4d7657;
@@ -1978,43 +1991,69 @@ import ConnectSection from "../components/ConnectSection.astro";
     }
   }
 
-  .typewriter-wrapper {
-    min-height: 2em;
+  @media (prefers-reduced-motion: reduce) {
+    .cv-download { animation: none; }
+  }
 
-    margin-top: 8px;
-
-    font-family:
-      "Instrument Serif",
-      serif;
-
-    font-size:
-      clamp(
-        2.3rem,
-        4.2vw,
-        4.4rem
-      );
-
-    font-style: italic;
-
-    font-weight: 400;
-
-    line-height: 0.95;
-
+  .fill-game {
+    display: grid;
+    gap: 14px;
+    min-height: 5.8em;
+    margin-top: 20px;
     color: #4d7657;
   }
 
-  .cursor {
-    display: inline-block;
+  .fill-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
 
-    margin-left: 2px;
+  .fill-word {
+    border: 1px solid rgba(77, 118, 87, 0.45);
+    border-radius: 999px;
+    padding: 9px 13px 8px;
+    background: rgba(255, 255, 255, 0.3);
+    font: 400 clamp(0.95rem, 1.7vw, 1.45rem)/0.95 "Instrument Serif", serif;
+    letter-spacing: -0.015em;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  }
 
-    font-style: normal;
+  .fill-word.is-active {
+    border-color: #4d7657;
+    background: #4d7657;
+    color: #fff;
+    transform: translateY(-3px);
+  }
 
-    animation:
-      blink
-      0.8s
-      steps(1)
-      infinite;
+  .fill-answer {
+    display: inline-flex;
+    justify-self: start;
+    align-items: center;
+    min-width: min(100%, 500px);
+    min-height: 1.18em;
+    border: 2px dashed #4d7657;
+    border-radius: 4px;
+    padding: 12px 18px 11px;
+    background: rgba(255, 255, 255, 0.4);
+    font: italic 400 clamp(2.7rem, 5vw, 5.4rem)/0.95 "Instrument Serif", serif;
+    transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  }
+
+  .fill-answer:has(#typewriter.is-filling) {
+    border-style: solid;
+    background: #4d7657;
+    color: #fff;
+  }
+
+  #typewriter.is-filling {
+    animation: fill-answer-in 0.3s ease both;
+  }
+
+  @keyframes fill-answer-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   /* =========================
@@ -3280,25 +3319,43 @@ import ConnectSection from "../components/ConnectSection.astro";
     .hero-intro {
       font-size:
         clamp(
-          2rem,
-          10vw,
-          3.5rem
+          2.5rem,
+          12vw,
+          4.6rem
         );
 
       line-height: 1;
     }
 
-    .typewriter-wrapper {
-      min-height: 2.1em;
+    .fill-game {
+      min-height: 6.8em;
+      margin-top: 17px;
+    }
 
-      margin-top: 12px;
+    .fill-options {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 5px;
+      justify-content: flex-start;
+      width: 100%;
+    }
 
-      font-size:
-        clamp(
-          2.2rem,
-          11vw,
-          4rem
-        );
+    .fill-word {
+      flex: 0 1 auto;
+      width: auto;
+      max-width: none;
+      padding: 7px 10px;
+      font: 400 clamp(0.6rem, 2.7vw, 0.82rem)/0.95 "Instrument Serif", serif;
+      letter-spacing: -0.04em;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .fill-answer {
+      width: max-content;
+      min-width: 0;
+      max-width: 100%;
+      font-size: clamp(2.5rem, 11vw, 4.5rem);
     }
 
     .scroll-cue {

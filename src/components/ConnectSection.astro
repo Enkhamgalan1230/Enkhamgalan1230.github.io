@@ -250,3 +250,23 @@
     .connect-section, .connect-button, .connect-letter { transition: none; }
   }
 </style>
+
+<script>
+  const connectSection = document.querySelector<HTMLElement>(
+    ".connect-section",
+  );
+
+  if (connectSection) {
+    const connectObserver = new IntersectionObserver(
+      ([entry]) => {
+        connectSection.classList.toggle("is-visible", entry.isIntersecting);
+      },
+      {
+        threshold: 0.18,
+        rootMargin: "-8% 0px -8% 0px",
+      },
+    );
+
+    connectObserver.observe(connectSection);
+  }
+</script>
