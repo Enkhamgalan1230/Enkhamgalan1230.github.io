@@ -9,6 +9,7 @@ import KumoGameScene from "../components/KumoGameScene.astro";
 import KumoChat from "../components/KumoChat.astro";
 import Guestbook from "../components/Guestbook.astro";
 import ConnectSection from "../components/ConnectSection.astro";
+import ProjectShowcase from "../components/ProjectShowcase.astro";
 ---
 
 <BaseLayout
@@ -63,9 +64,11 @@ import ConnectSection from "../components/ConnectSection.astro";
        PROJECTS
        ========================= -->
 
+  <ProjectShowcase />
+
   <section
     class="projects-section"
-    id="projects"
+    id="legacy-projects"
     data-scroll-snap-section="projects"
     data-scroll-fade-section
   >
@@ -535,7 +538,7 @@ import ConnectSection from "../components/ConnectSection.astro";
     data-scroll-reveal-group
     aria-labelledby="head-prompt-title"
   >
-    <p class="head-prompt-label">BY THE WAY</p>
+    <p class="head-prompt-label">ABOUT ME</p>
 
     <h2 id="head-prompt-title">
       Did you click on that
@@ -710,10 +713,7 @@ import ConnectSection from "../components/ConnectSection.astro";
   }
 
   notYetButton?.addEventListener("click", () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    window.dispatchEvent(new CustomEvent("open-about-dialog"));
   });
 
   didItButton?.addEventListener("click", showHeadToast);
@@ -2425,6 +2425,7 @@ import ConnectSection from "../components/ConnectSection.astro";
      ========================= */
 
   .projects-section {
+    display: none !important;
     position: relative;
     z-index: 2;
     isolation: isolate;

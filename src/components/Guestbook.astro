@@ -1038,7 +1038,7 @@
 
 <style>
   .guestbook {
-    transform: translateY(24px);
+    position: relative;
 
     min-height: min(820px, 100vh);
 
@@ -1047,7 +1047,14 @@
       5vw
       clamp(110px, 14vw, 190px);
 
-    background: #f7f6f4;
+    background-color: #edecea;
+    background-image:
+      radial-gradient(
+        circle,
+        rgba(17, 17, 17, 0.17) 1.25px,
+        transparent 1.5px
+      );
+    background-size: 30px 30px;
 
     opacity: var(--scroll-fade, 1);
 
@@ -1057,10 +1064,13 @@
   }
 
   .guestbook.is-visible {
-    transform: translateY(0);
+    opacity: 1;
   }
 
   .guestbook-inner {
+    position: relative;
+    z-index: 2;
+
     width: min(100%, 1080px);
 
     margin: 0 auto;

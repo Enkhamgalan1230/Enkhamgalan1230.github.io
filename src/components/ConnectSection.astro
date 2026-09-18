@@ -1,10 +1,10 @@
 <section class="connect-section" data-scroll-reveal-section="connect" aria-labelledby="connect-title">
   <div class="connect-inner" data-scroll-reveal-group>
     <div class="connect-copy-column">
-      <h2 id="connect-title">Well, that’s me.</h2>
+      <h2 id="connect-title">Lets connect</h2>
       <p class="connect-copy">
-        If anything here caught your attention,<br />
-        come say hello. I’d be happy to talk.
+        Found something interesting?<br />
+        Say hello.
       </p>
       <div class="connect-actions">
         <a class="connect-button connect-button-primary" href="https://www.linkedin.com/in/entwan" target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">&#x2197;</span></a>
@@ -39,7 +39,17 @@
     display: grid;
     align-items: center;
     padding: clamp(120px, 16vw, 210px) 5vw clamp(70px, 8vw, 110px);
-    background: #dfe9df;
+    background:
+      radial-gradient(circle, rgba(77, 104, 80, 0.12) 1px, transparent 1.5px),
+      linear-gradient(
+        to bottom,
+        #edecea 0px,
+        #edecea 20px,
+        #e5ebe5 110px,
+        #dfe9df 220px,
+        #dfe9df 100%
+      );
+    background-size: 28px 28px, auto;
     color: #111;
     opacity: var(--scroll-fade, 1);
     transition: opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -47,7 +57,6 @@
 
   .connect-section.is-visible { transform: translateY(0); }
 
-  .connect-section::before,
   .connect-section::after {
     position: absolute;
     right: 0;
@@ -58,16 +67,6 @@
     pointer-events: none;
   }
 
-  .connect-section::before {
-    top: 0;
-    height: clamp(100px, 12vw, 180px);
-    background: linear-gradient(
-      to bottom,
-      #f7f6f4 0%,
-      #e9eee8 45%,
-      rgba(223, 233, 223, 0) 100%
-    );
-  }
   .connect-section::after { bottom: 0; background: linear-gradient(to top, #f7f6f4, transparent); }
 
   .connect-inner {

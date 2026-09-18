@@ -1,0 +1,190 @@
+---
+const projects = [
+  { number: "01", name: "Accountancy", meta: ["CLIENT PRESENTATION", "LLM API Gateway", "LLM CLASSIFICATION", "NUMPY", "OLLAMA", "PYTHON"], description: "A calmer way to review financial data, surface anomalies and reconcile accounts.", action: "READ MORE", target: "account-project" },
+  { number: "02", name: "Merchant", meta: ["CLIENT-FACING", "RECOMMENDATION SYSTEMS", "GRU", "TENSORFLOW", "PROPHET", "PYTHON"], description: "A recommendation system that turns purchase behaviour into more useful product discovery.", action: "READ MORE", target: "merchant-recommendation-project" },
+  { number: "03", name: "Receipt", meta: ["API", "WEB CRAWILING", "SQL DATABASE", "DATA PIPELINE", "PREDICTION", "ANALYSIS"], description: "A grocery intelligence tool for seeing price changes, planning purchases and spending with intent.", action: "READ MORE", target: "receipt-project" },
+  { number: "04", name: "KUMO AI.exe", meta: ["RAG", "CLOUDFLARE WORKERS AI", "KNOWLEDGEBASE", "ASTRO", "GEMMA", "EMBEDDINGS"], description: "A small, grounded portfolio assistant with a slightly suspicious amount of personality.", action: "READ MORE", target: "kumo-project" },
+];
+---
+
+<section class="project-showcase" id="projects" aria-labelledby="showcase-title">
+  <header class="showcase-heading">
+    <h2 id="showcase-title">SELECTED WORK</h2>
+    <p class="showcase-intro">Here are few projects I completed during my free time, at work, or while attending university.</p>
+  </header>
+
+  <div class="showcase-grid">
+    <article class="showcase-project showcase-account" data-motion-project>
+      <div class="project-media account-stage" aria-label="Accountancy product screens">
+        <div class="account-track" aria-hidden="true">
+          <div class="account-sequence">
+            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc1.png" alt="" /></div>
+            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc2.png" alt="" /></div>
+            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc3.png" alt="" /></div>
+            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc4.png" alt="" /></div>
+            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc5.png" alt="" /></div>
+            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc6.png" alt="" /></div>
+            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc1.png" alt="" /></div>
+            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc2.png" alt="" /></div>
+            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc3.png" alt="" /></div>
+            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc4.png" alt="" /></div>
+            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc5.png" alt="" /></div>
+            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc6.png" alt="" /></div>
+          </div>
+        </div>
+      </div>
+      <div class="showcase-copy">
+        <div class="showcase-kicker">{projects[0].meta.map((tag) => <span>{tag}</span>)}</div>
+        <h3>{projects[0].name}</h3><p>{projects[0].description}</p>
+        <button class="showcase-action" type="button" data-project-open={projects[0].target}>{projects[0].action}<span aria-hidden="true">↗</span></button>
+      </div>
+    </article>
+
+    <article class="showcase-project showcase-merchant" data-motion-project>
+      <div class="project-media merchant-stage" aria-label="Merchant recommendation system preview">
+        <div class="browser-window merchant-browser" data-motion-layer="browser">
+          <video autoplay muted loop playsinline preload="metadata" aria-label="Merchant recommendation system video"><source src="/images/projects/mockups/merchant.mp4" type="video/mp4" /></video>
+        </div>
+      </div>
+      <div class="showcase-copy">
+        <div class="showcase-kicker">{projects[1].meta.map((tag) => <span>{tag}</span>)}</div>
+        <h3>{projects[1].name}</h3><p>{projects[1].description}</p>
+        <button class="showcase-action" type="button" data-project-open={projects[1].target}>{projects[1].action}<span aria-hidden="true">↗</span></button>
+      </div>
+    </article>
+
+    <article class="showcase-project showcase-receipt" data-motion-project>
+      <div class="project-media receipt-stage" aria-label="Receipt data visualisation screens">
+        <div class="receipt-screen"><img src="/images/projects/mockups/reciept_mockup/reciept1.png" alt="Receipt home screen" loading="lazy" /></div>
+      </div>
+      <div class="showcase-copy">
+        <div class="showcase-kicker">{projects[2].meta.map((tag) => <span>{tag}</span>)}</div>
+        <h3>{projects[2].name}</h3><p>{projects[2].description}</p>
+        <button class="showcase-action" type="button" data-project-open={projects[2].target}>{projects[2].action}<span aria-hidden="true">↗</span></button>
+      </div>
+    </article>
+
+    <article class="showcase-project showcase-kumo" data-motion-project>
+      <div class="project-media kumo-stage" aria-label="Kumo mobile assistant screens">
+        <div class="kumo-track" aria-hidden="true">
+          <div class="kumo-sequence">
+            <div class="phone phone-c"><img src="/images/projects/mockups/kumo_mockup/kumo3.png" alt="" /></div>
+            <div class="phone phone-d"><img src="/images/projects/mockups/kumo_mockup/kumo4.png" alt="" /></div>
+            <div class="phone phone-a"><img src="/images/projects/mockups/kumo_mockup/kumo1.png" alt="" /></div>
+            <div class="phone phone-b"><img src="/images/projects/mockups/kumo_mockup/kumo2.png" alt="" /></div>
+            <div class="phone phone-c"><img src="/images/projects/mockups/kumo_mockup/kumo3.png" alt="" /></div>
+            <div class="phone phone-d"><img src="/images/projects/mockups/kumo_mockup/kumo4.png" alt="" /></div>
+            <div class="phone phone-a"><img src="/images/projects/mockups/kumo_mockup/kumo1.png" alt="" /></div>
+            <div class="phone phone-b"><img src="/images/projects/mockups/kumo_mockup/kumo2.png" alt="" /></div>
+            <div class="phone phone-c"><img src="/images/projects/mockups/kumo_mockup/kumo3.png" alt="" /></div>
+            <div class="phone phone-d"><img src="/images/projects/mockups/kumo_mockup/kumo4.png" alt="" /></div>
+            <div class="phone phone-a"><img src="/images/projects/mockups/kumo_mockup/kumo1.png" alt="" /></div>
+            <div class="phone phone-b"><img src="/images/projects/mockups/kumo_mockup/kumo2.png" alt="" /></div>
+          </div>
+        </div>
+      </div>
+      <div class="showcase-copy">
+        <div class="showcase-kicker">{projects[3].meta.map((tag) => <span>{tag}</span>)}</div>
+        <h3>{projects[3].name}</h3><p>{projects[3].description}</p>
+        <button class="showcase-action" type="button" data-project-open={projects[3].target}>{projects[3].action}<span aria-hidden="true">↗</span></button>
+      </div>
+    </article>
+  </div>
+</section>
+
+<script>
+  const motionProjects = Array.from(document.querySelectorAll<HTMLElement>("[data-motion-project]"));
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let motionFrame: number | undefined;
+
+  function clamp(value: number, min: number, max: number) {
+    return Math.min(Math.max(value, min), max);
+  }
+
+  function updateShowcaseMotion() {
+    motionFrame = undefined;
+    const viewportHeight = window.innerHeight;
+    motionProjects.forEach((project) => {
+      const rect = project.getBoundingClientRect();
+      const progress = clamp((viewportHeight - rect.top) / (viewportHeight + rect.height), 0, 1);
+      project.style.setProperty("--scroll-travel", ((progress - 0.5) * 2).toFixed(3));
+    });
+  }
+
+  function requestShowcaseMotion() {
+    if (reducedMotion.matches || motionFrame !== undefined) return;
+    motionFrame = window.requestAnimationFrame(updateShowcaseMotion);
+  }
+
+  const motionObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => entry.target.classList.toggle("is-entered", entry.isIntersecting));
+  }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+
+  motionProjects.forEach((project) => motionObserver.observe(project));
+  window.addEventListener("scroll", requestShowcaseMotion, { passive: true });
+  window.addEventListener("resize", requestShowcaseMotion);
+  requestShowcaseMotion();
+</script>
+
+<style>
+  .project-showcase { position: relative; z-index: 3; padding: clamp(84px, 10vw, 150px) clamp(12px, 1.6vw, 24px) clamp(110px, 12vw, 180px); overflow: hidden; background: #f4f2ee; color: #111; }
+  .showcase-heading, .showcase-grid { width: min(1800px, 100%); margin: 0 auto; }
+  .showcase-heading { display: flex; justify-content: space-between; gap: 28px; align-items: end; margin-bottom: clamp(62px, 8vw, 108px); }
+  .showcase-label, .showcase-kicker, .visual-note { margin: 0; font: .69rem/1.35 "Courier Prime", monospace; letter-spacing: .08em; color: #657856; }
+  .showcase-heading h2 { margin: 0; font: 400 clamp(3.3rem, 6.6vw, 7.8rem)/.84 "Instrument Serif", serif; letter-spacing: -.045em; }
+  .showcase-intro { max-width: 260px; margin: 0 0 4px auto; font: .8rem/1.5 "Courier Prime", monospace; color: #657856; }
+  .showcase-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(10px, 1.4vw, 22px); row-gap: clamp(42px, 4vw, 68px); }
+  .showcase-project { min-width: 0; display: flex; flex-direction: column; padding: clamp(14px, 1.6vw, 24px); border: 1px solid rgba(17,17,17,.14); border-radius: 18px; background: #fbfaf7; box-shadow: 0 10px 28px rgba(17,17,17,.035); }
+  .showcase-merchant { order: 1; }
+  .showcase-kumo { order: 2; }
+  .showcase-account { order: 3; }
+  .showcase-receipt { order: 4; }
+  .showcase-project.is-entered .project-media { opacity: 1; }
+  .project-media { position: relative; min-width: 0; height: clamp(340px, 31vw, 500px); overflow: hidden; isolation: isolate; opacity: .32; transition: opacity .22s ease; }
+  .showcase-copy { position: relative; z-index: 2; padding-top: 22px; }
+  .showcase-kicker { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; padding-top: 13px; border-top: 1px solid rgba(17,17,17,.2); }
+  .showcase-kicker span { display: inline-flex; align-items: center; min-height: 27px; padding: 5px 9px; border: 1px solid rgba(17,17,17,.18); border-radius: 999px; background: #f4f2ee; color: #263122; font-size: .66rem; line-height: 1.1; letter-spacing: .045em; }
+  .showcase-copy h3 { margin: 18px 0 10px; font: 400 clamp(2.7rem, 4.4vw, 5.1rem)/.84 "Instrument Serif", serif; letter-spacing: -.04em; }
+  .showcase-copy p { max-width: 330px; margin: 0; font: .78rem/1.5 "Courier Prime", monospace; color: #657856; }
+  .showcase-action { display: inline-flex; align-items: center; gap: 12px; margin-top: 20px; padding: 9px 0; border: 0; border-bottom: 1px solid #111; background: none; color: #111; font: .68rem "Courier Prime", monospace; letter-spacing: .06em; cursor: pointer; transition: gap .25s ease, color .25s ease; }
+  .showcase-action:hover { gap: 18px; color: #4d7657; }
+  .mockup-window, .browser-window { position: absolute; overflow: hidden; border: 1px solid rgba(17,17,17,.14); border-radius: 12px; background: #f4f2f0; box-shadow: 0 26px 60px rgba(17,17,17,.15); will-change: transform; }
+  .mockup-chrome, .browser-toolbar { position: relative; z-index: 2; display: flex; align-items: center; gap: 5px; height: 24px; padding: 0 9px; background: rgba(255,255,255,.86); border-bottom: 1px solid rgba(17,17,17,.1); }
+  .mockup-chrome i, .browser-dots i { width: 6px; height: 6px; border-radius: 50%; background: #cbd1c9; }
+  .mockup-window img { display: block; width: 100%; height: auto; }
+  .account-stage { --account-edge: clamp(2px, .5cqw, 6px); --account-gap: clamp(4px, .8cqw, 10px); --account-gap-double: calc(var(--account-gap) + var(--account-gap)); --account-slot: calc(100cqw - var(--account-edge) - var(--account-edge)); container-type: inline-size; background: #f7f6f3; }
+  .account-track { position: absolute; inset: 0; overflow: hidden; }
+  .account-sequence { display: flex; gap: var(--account-gap); width: max-content; height: 100%; padding: 0 var(--account-edge); animation: account-slide 28s infinite cubic-bezier(.77, 0, .18, 1); will-change: transform; }
+  .account-screen { position: relative; flex: 0 0 var(--account-slot); height: 100%; align-self: center; overflow: hidden; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+  .account-screen img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; }
+  @keyframes account-slide { 0%, 3% { transform: translate3d(0, 0, 0); } 8%, 11% { transform: translate3d(calc(0px - var(--account-slot) - var(--account-gap)), 0, 0); } 16%, 19% { transform: translate3d(calc(0px - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap)), 0, 0); } 24%, 27% { transform: translate3d(calc(0px - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap)), 0, 0); } 32%, 35% { transform: translate3d(calc(0px - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap)), 0, 0); } 40%, 43% { transform: translate3d(calc(0px - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap)), 0, 0); } 48%, 50% { transform: translate3d(calc(0px - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap)), 0, 0); } 50.01%, 53% { transform: translate3d(0, 0, 0); } 58%, 61% { transform: translate3d(calc(0px - var(--account-slot) - var(--account-gap)), 0, 0); } 66%, 69% { transform: translate3d(calc(0px - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap)), 0, 0); } 74%, 77% { transform: translate3d(calc(0px - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap)), 0, 0); } 82%, 85% { transform: translate3d(calc(0px - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap)), 0, 0); } 90%, 93% { transform: translate3d(calc(0px - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap)), 0, 0); } 98%, 100% { transform: translate3d(calc(0px - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap) - var(--account-slot) - var(--account-gap)), 0, 0); } }
+  .merchant-stage { background: #f7f6f3; }
+  .merchant-browser { inset: 1% 0 1%; border: 0; border-radius: 14px; box-shadow: none; background: transparent; transform: translate3d(calc(var(--scroll-travel) * -20px), calc(var(--scroll-travel) * 8px), 0); }
+  .browser-toolbar { justify-content: space-between; color: #657856; font: .6rem "Courier Prime", monospace; }
+  .browser-dots { display: flex; gap: 4px; }
+  .merchant-browser video { display: block; width: 100%; height: 100%; border-radius: 14px; object-fit: contain; object-position: center; }
+  .visual-note { position: absolute; right: 10px; bottom: 8px; color: #52634c; font-size: .58rem; }
+  .receipt-stage { background: #f7f6f3; }
+  .receipt-screen { position: absolute; top: 50%; left: 2%; width: 96%; transform: translateY(-50%); overflow: hidden; border: 1px solid rgba(17,17,17,.16); border-radius: 12px; background: #0d0f14; box-shadow: 0 20px 42px rgba(8,10,16,.16); }
+  .receipt-screen img { display: block; width: 100%; height: auto; }
+  .account-stage, .merchant-stage, .receipt-stage { height: clamp(360px, 34vw, 540px); }
+  .kumo-stage { --kumo-edge: clamp(12px, 2cqw, 24px); --kumo-gap: clamp(4px, 1cqw, 8px); --kumo-gap-double: calc(var(--kumo-gap) + var(--kumo-gap)); --kumo-edge-double: calc(var(--kumo-edge) + var(--kumo-edge)); --kumo-slot: calc((100cqw - var(--kumo-edge-double) - var(--kumo-gap-double)) / 3); height: clamp(360px, 34vw, 540px); container-type: inline-size; background: #f7f6f3; }
+  .kumo-track { --kumo-step: calc(var(--kumo-slot) + var(--kumo-gap)); position: absolute; left: calc(var(--kumo-edge) - var(--kumo-step) - var(--kumo-step) - var(--kumo-step) - var(--kumo-step) - var(--kumo-step) - var(--kumo-step)); top: 0; display: flex; width: max-content; height: 100%; animation: kumo-marquee 14s infinite cubic-bezier(.77, 0, .18, 1); will-change: transform; }
+  .kumo-sequence { display: flex; align-items: center; gap: var(--kumo-gap); height: 100%; flex: 0 0 auto; }
+  .phone { position: relative; flex: 0 0 var(--kumo-slot); filter: drop-shadow(0 18px 18px rgba(17,17,17,.18)); animation: kumo-phone-size 14s infinite; backface-visibility: hidden; -webkit-backface-visibility: hidden; transform-origin: center center; will-change: transform; }
+  .phone img { display: block; width: 100%; height: auto; image-rendering: auto; }
+  .phone-a, .phone-b, .phone-c, .phone-d { margin-top: 0; }
+  @keyframes kumo-marquee { 0%, 15% { transform: translate3d(0, 0, 0); } 20%, 35% { transform: translate3d(var(--kumo-step), 0, 0); } 40%, 55% { transform: translate3d(calc(var(--kumo-step) + var(--kumo-step)), 0, 0); } 60%, 75% { transform: translate3d(calc(var(--kumo-step) + var(--kumo-step) + var(--kumo-step)), 0, 0); } 80%, 100% { transform: translate3d(calc(var(--kumo-step) + var(--kumo-step) + var(--kumo-step) + var(--kumo-step)), 0, 0); } }
+  @keyframes kumo-phone-size { 0%, 15%, 90%, 100% { transform: scale(.92); } 20%, 35% { transform: scale(.92); } 40%, 55% { transform: scale(.92); } 60%, 75% { transform: scale(.92); } 80%, 85% { transform: scale(.82); } }
+  .phone-a { animation-name: kumo-phone-a; }
+  .phone-b { animation-name: kumo-phone-b; }
+  .phone-c { animation-name: kumo-phone-c; }
+  .phone-d { animation-name: kumo-phone-d; }
+  @keyframes kumo-phone-a { 0%, 15% { transform: scale(.98); } 20%, 35% { transform: scale(1.14); } 40%, 100% { transform: scale(.98); } }
+  @keyframes kumo-phone-b { 0%, 15% { transform: scale(1.14); } 20%, 35% { transform: scale(.98); } 40%, 55% { transform: scale(.88); } 60%, 75% { transform: scale(.98); } 80%, 100% { transform: scale(1.14); } }
+  @keyframes kumo-phone-c { 0%, 15% { transform: scale(.98); } 20%, 35% { transform: scale(.88); } 40%, 55% { transform: scale(.98); } 60%, 75% { transform: scale(1.14); } 80%, 100% { transform: scale(.98); } }
+  @keyframes kumo-phone-d { 0%, 15% { transform: scale(.88); } 20%, 35% { transform: scale(.98); } 40%, 55% { transform: scale(1.14); } 60%, 75% { transform: scale(.98); } 80%, 100% { transform: scale(.88); } }
+  @media (max-width: 800px) { .showcase-heading { display: block; } .showcase-intro { margin: 24px 0 0; } .showcase-grid { grid-template-columns: 1fr; row-gap: 48px; } .project-media { height: clamp(320px, 70vw, 450px); } .showcase-copy h3 { font-size: clamp(3rem, 13vw, 5rem); } }
+  @media (max-width: 520px) { .project-showcase { padding-inline: 20px; } .showcase-heading h2 { font-size: clamp(3.8rem, 18vw, 6rem); } .showcase-grid { row-gap: 38px; } .project-media { height: 300px; } .account-stage { height: clamp(240px, 65vw, 340px); } .merchant-stage, .receipt-stage { height: clamp(190px, 50vw, 250px); } .account-back, .account-mid, .account-front { width: 108%; } .account-back { right: -39%; } .account-mid { left: -32%; } .account-front { left: -4%; } .merchant-browser { inset: 3% 3% 3%; } }
+  @media (prefers-reduced-motion: reduce) { .project-media { opacity: 1; transition: none; } .kumo-track, .phone { animation-play-state: paused; } .account-sequence, .account-screen { animation: none; transform: none; } .showcase-action { transition: none; } }
+</style>
