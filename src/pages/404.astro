@@ -1,0 +1,257 @@
+---
+const title = "404 | Entwan";
+const description = "This page could not be found on Entwan's portfolio.";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#14161b" />
+    <title>{title}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <main class="error-page">
+      <div class="error-content">
+        <div class="error-number" aria-label="404">
+          <span>4</span>
+
+          <div class="photo-badge-wrap">
+            <div class="photo-badge">
+              <img src="/images/404/me.png" alt="Entwan giving a peace sign" />
+            </div>
+          </div>
+
+          <span>4</span>
+        </div>
+
+        <h1>Oh no <span>Bigman</span>, it's 404</h1>
+        <p class="subtext">Unbothered, giving a peace sign while you find your way back.</p>
+
+        <div class="actions">
+          <a class="button button-primary" href="/">Take me home</a>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
+
+<style>
+  :global(*) {
+    box-sizing: border-box;
+  }
+
+  :global(html),
+  :global(body) {
+    min-width: 0;
+    min-height: 100%;
+    margin: 0;
+  }
+
+  :global(body) {
+    overflow-x: hidden;
+    background: #14161b;
+    color: #f2f0e8;
+    font-family: "Inter", sans-serif;
+  }
+
+  :global(button),
+  :global(a) {
+    font: inherit;
+  }
+
+  .error-page {
+    display: grid;
+    min-height: 100svh;
+    place-items: center;
+    padding: clamp(32px, 8vw, 96px) 20px;
+  }
+
+  .error-content {
+    display: flex;
+    width: min(100%, 1100px);
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .error-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1c1f26;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(120px, 32vw, 340px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 0.74;
+    -webkit-text-stroke: 2px #2a2e37;
+    user-select: none;
+  }
+
+  .photo-badge-wrap {
+    position: relative;
+    z-index: 1;
+
+    display: grid;
+    flex: 0 0 auto;
+    width: clamp(140px, 26vw, 230px);
+    height: clamp(140px, 26vw, 230px);
+    margin: 0 clamp(-8px, -1.2vw, -2px);
+    place-items: center;
+    border: 5px solid #14161b;
+    border-radius: 50%;
+    background: #14161b;
+    filter: drop-shadow(0 18px 20px rgba(0, 0, 0, 0.3));
+  }
+
+  .photo-badge-wrap::before {
+    position: absolute;
+    z-index: -1;
+    inset: -11px;
+    border: 2px dashed #ffb400;
+    border-radius: 50%;
+    content: "";
+    animation: spin 26s linear infinite;
+  }
+
+  .photo-badge {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid #2a2e37;
+    border-radius: 50%;
+    background: #1c1f26;
+  }
+
+  .photo-badge img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  h1 {
+    margin: clamp(58px, 8vw, 92px) 0 0;
+    color: #f2f0e8;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+  }
+
+  h1 span {
+    color: #ffb400;
+  }
+
+  .subtext {
+    max-width: 100%;
+    margin: 16px 0 0;
+    color: #9a9da6;
+    font-size: clamp(13px, 1.4vw, 16px);
+    line-height: 1.5;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 30px;
+  }
+
+  .button {
+    display: inline-flex;
+    min-width: 132px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 13px 22px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  }
+
+  .button:hover {
+    transform: translateY(-2px);
+  }
+
+  .button-primary {
+    border: 1px solid #ffb400;
+    background: #ffb400;
+    color: #14161b;
+  }
+
+  .button-primary:hover {
+    background: #ffc333;
+    border-color: #ffc333;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .error-page {
+      padding-right: 16px;
+      padding-left: 16px;
+    }
+
+    .error-number {
+      font-size: clamp(110px, 36vw, 180px);
+    }
+
+    .photo-badge-wrap {
+      margin-right: -5px;
+      margin-left: -5px;
+    }
+
+    h1 {
+      max-width: 340px;
+      font-size: clamp(27px, 8vw, 38px);
+    }
+
+    .subtext {
+      max-width: 310px;
+    }
+
+    .actions {
+      width: 100%;
+    }
+
+    .button {
+      min-width: 138px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .photo-badge-wrap::before {
+      animation: none;
+    }
+
+    .button {
+      transition: none;
+    }
+
+    .button:hover {
+      transform: none;
+    }
+  }
+</style>
