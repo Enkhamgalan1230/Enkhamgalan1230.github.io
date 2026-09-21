@@ -1,4 +1,18 @@
 <footer class="site-footer">
+  <div class="footer-pet-lane">
+    <button
+      class="footer-pet"
+      id="footer-pet-placeholder"
+      data-pet-id="placeholder"
+      type="button"
+      aria-label="Meet Luśka, Weronika's pet"
+    >
+      <span class="footer-pet-message" aria-hidden="true"></span>
+      <span class="footer-pet-name">Luśka</span>
+      <span class="footer-pet-sprite"></span>
+    </button>
+  </div>
+
   <div class="footer-inner">
     <div class="footer-left">
       <span>Entwan © 2026</span>
@@ -21,13 +35,97 @@
 
 <style>
   .site-footer {
+    position: relative;
     width: 100%;
+    overflow: visible;
 
     padding: 28px 36px;
 
     border-top: 1px solid rgba(17, 17, 17, 0.14);
 
     background: #edecea;
+  }
+
+  .footer-pet-lane {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 2;
+    width: 100%;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .footer-pet {
+    appearance: none;
+    position: absolute;
+    top: -42px;
+    bottom: auto;
+    left: 0;
+    width: 52px;
+    height: 42px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    pointer-events: auto;
+    transform-origin: center;
+    will-change: left, transform;
+  }
+
+  .footer-pet:focus-visible {
+    outline: 2px solid #4d7657;
+    outline-offset: 3px;
+  }
+
+  .footer-pet-message {
+    position: absolute;
+    bottom: calc(100% + 31px);
+    left: 50%;
+    z-index: 2;
+    width: max-content;
+    max-width: min(230px, 70vw);
+    padding: 4px 6px;
+    background: rgba(128, 128, 128, 0.58);
+    color: #111;
+    font: 700 0.65rem/1.25 "Courier Prime", monospace;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 4px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  .footer-pet.is-speaking .footer-pet-message {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  .footer-pet-name {
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    z-index: 1;
+    padding: 4px 6px;
+    border: 1px solid rgba(17, 17, 17, 0.2);
+    background: rgba(128, 128, 128, 0.58);
+    color: #111;
+    font: 700 0.7rem/1 "Courier Prime", monospace;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    transform: translateX(-50%);
+  }
+
+  .footer-pet-sprite {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-image: var(--footer-pet-sprite, url("/images/pets/lhasa-apso.png"));
+    background-repeat: no-repeat;
+    background-size: 400% 400%;
+    image-rendering: pixelated;
+    transform-origin: center;
   }
 
   .footer-inner {
@@ -75,6 +173,12 @@
       padding: 22px 18px;
     }
 
+    .footer-pet {
+      width: 46px;
+      height: 38px;
+      top: -38px;
+    }
+
     .footer-inner {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
@@ -119,4 +223,163 @@
       text-align: right;
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .footer-pet { left: 50%; transform: translateX(-50%); }
+    .footer-pet-sprite { background-position: 100% 100%; }
+    .footer-pet-message { transition: none; }
+  }
 </style>
+
+<script>
+  const footerPetLane = document.querySelector<HTMLElement>(".footer-pet-lane");
+  const footerPet = document.querySelector<HTMLButtonElement>(".footer-pet");
+  const footerPetName = document.querySelector<HTMLElement>(".footer-pet-name");
+  const footerPetMessage = document.querySelector<HTMLElement>(".footer-pet-message");
+  const footerPetSprite = document.querySelector<HTMLElement>(".footer-pet-sprite");
+  const footerPetReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  type FooterPetConfig = {
+    name: string;
+    owner: string;
+    sprite: string;
+    walkFrames: number[];
+    settleFrames: number[];
+    restFrames: number[];
+  };
+
+  const footerPetConfigs: Record<string, FooterPetConfig> = {
+    placeholder: {
+      name: footerPetName?.textContent?.trim() || "PLACEHOLDER",
+      owner: "Weronika",
+      sprite: "/images/pets/lhasa-apso.png",
+      walkFrames: [0, 1, 2, 3, 4, 5, 6, 7],
+      settleFrames: [8, 9, 10, 11],
+      restFrames: [12, 13, 14, 15],
+    },
+  };
+
+  const footerPetConfig = footerPet
+    ? footerPetConfigs[footerPet.dataset.petId ?? ""]
+    : undefined;
+
+  if (footerPet && footerPetConfig) {
+    if (footerPetMessage) {
+      footerPetMessage.textContent =
+        `Look it's ${footerPetConfig.name}.${footerPetConfig.owner}'s pet.`;
+    }
+    footerPet.style.setProperty(
+      "--footer-pet-sprite",
+      `url("${footerPetConfig.sprite}")`,
+    );
+  }
+
+  let footerPetMessageTimer: number | undefined;
+
+  footerPet?.addEventListener("click", () => {
+    if (!footerPetMessage) return;
+    footerPet.classList.add("is-speaking");
+    if (footerPetMessageTimer) window.clearTimeout(footerPetMessageTimer);
+    footerPetMessageTimer = window.setTimeout(() => {
+      footerPet.classList.remove("is-speaking");
+    }, 3200);
+  });
+
+  if (footerPetLane && footerPet && footerPetSprite && footerPetConfig && !footerPetReducedMotion.matches) {
+    const { walkFrames, settleFrames, restFrames } = footerPetConfig;
+
+    const wait = (duration: number) =>
+      new Promise<void>((resolve) => window.setTimeout(resolve, duration));
+
+    function setFooterPetFrame(frame: number) {
+      const column = frame % 4;
+      const row = Math.floor(frame / 4);
+      footerPetSprite.style.backgroundPosition =
+        `${column * 33.333}% ${row * 33.333}%`;
+    }
+
+    async function playFrames(frames: number[], frameDuration: number) {
+      for (const frame of frames) {
+        setFooterPetFrame(frame);
+        await wait(frameDuration);
+      }
+    }
+
+    function randomBetween(min: number, max: number) {
+      return Math.round(min + Math.random() * (max - min));
+    }
+
+    async function walkTo(target: number, direction: 1 | -1) {
+      const start = footerPet.offsetLeft;
+      const distance = Math.abs(target - start);
+      const duration = Math.max(4200, Math.min(11000, distance * 65));
+
+      footerPetSprite.style.setProperty("--footer-pet-y", "0px");
+      footerPetSprite.style.transform =
+        `scaleX(${direction}) translateY(var(--footer-pet-y, 0px))`;
+      const movement = footerPet.animate(
+        [
+          { left: `${start}px` },
+          { left: `${target}px` },
+        ],
+        { duration, easing: "linear", fill: "forwards" },
+      );
+
+      const walking = (async () => {
+        const end = Date.now() + duration;
+        while (Date.now() < end) {
+          await playFrames(walkFrames, 155);
+        }
+      })();
+
+      await Promise.all([movement.finished.catch(() => undefined), walking]);
+      movement.cancel();
+      footerPet.style.left = `${target}px`;
+    }
+
+    async function restRandomly() {
+      const restingOffset = window.matchMedia("(max-width: 640px)").matches ? 4 : 7;
+      footerPetSprite.style.setProperty("--footer-pet-y", "0px");
+      await playFrames(settleFrames, 280);
+      await wait(randomBetween(700, 1800));
+
+      if (Math.random() < 0.62) {
+        footerPetSprite.style.setProperty("--footer-pet-y", `${restingOffset}px`);
+        await playFrames(restFrames, 280);
+        await wait(randomBetween(1800, 4200));
+        await playFrames([...restFrames].reverse(), 280);
+      }
+
+      await playFrames([...settleFrames].reverse(), 280);
+      footerPetSprite.style.setProperty("--footer-pet-y", "0px");
+    }
+
+    async function runFooterPet() {
+      let direction: 1 | -1 = Math.random() < 0.5 ? 1 : -1;
+
+      while (true) {
+        const maximum = Math.max(0, footerPetLane.clientWidth - footerPet.offsetWidth);
+        const current = footerPet.offsetLeft;
+        const distance = randomBetween(42, Math.min(190, Math.max(42, maximum)));
+        const target = direction === 1
+          ? Math.min(maximum, current + distance)
+          : Math.max(0, current - distance);
+
+        if (target === current) {
+          direction = direction === 1 ? -1 : 1;
+          continue;
+        }
+
+        await walkTo(target, direction);
+        await restRandomly();
+
+        if (Math.random() < 0.32 || target === 0 || target === maximum) {
+          direction = direction === 1 ? -1 : 1;
+        }
+      }
+    }
+
+    setFooterPetFrame(0);
+    void runFooterPet();
+  }
+</script>
