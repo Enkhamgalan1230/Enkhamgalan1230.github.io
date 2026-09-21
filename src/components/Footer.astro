@@ -51,7 +51,7 @@
     top: 0;
     right: 0;
     left: 0;
-    z-index: 2;
+    z-index: 0;
     width: 100%;
     height: 0;
     pointer-events: none;
@@ -86,11 +86,12 @@
     left: 50%;
     z-index: 2;
     width: max-content;
-    max-width: min(230px, 70vw);
+    max-width: min(230px, calc(100vw - 16px));
     padding: 4px 6px;
     background: rgba(128, 128, 128, 0.58);
     color: #111;
     font: 700 0.65rem/1.25 "Courier Prime", monospace;
+    overflow-wrap: anywhere;
     opacity: 0;
     pointer-events: none;
     transform: translate(-50%, 4px);
@@ -276,6 +277,34 @@
 
   let footerPetMessageTimer: number | undefined;
 
+  function getFooterPetRange() {
+    if (!footerPetLane || !footerPet) return { min: 0, max: 0 };
+
+    const laneBounds = footerPetLane.getBoundingClientRect();
+    const petWidth = footerPet.offsetWidth;
+    const messageWidth = footerPetMessage?.offsetWidth ?? 0;
+    const messageHalfWidth = messageWidth / 2;
+    const edgeGap = 8;
+    const minimum = Math.max(0, edgeGap + messageHalfWidth - petWidth / 2);
+    const laneMaximum = footerPetLane.clientWidth - petWidth;
+    const kumoLauncher = document.querySelector<HTMLElement>("#kumo-launcher");
+    let maximum = laneMaximum;
+
+    if (kumoLauncher) {
+      const kumoBounds = kumoLauncher.getBoundingClientRect();
+      const safeGap = 16;
+      maximum = Math.min(
+        maximum,
+        kumoBounds.left - laneBounds.left - safeGap - messageHalfWidth - petWidth / 2,
+      );
+    }
+
+    return {
+      min: minimum,
+      max: Math.max(minimum, maximum),
+    };
+  }
+
   footerPet?.addEventListener("click", () => {
     if (!footerPetMessage) return;
     footerPet.classList.add("is-speaking");
@@ -358,12 +387,14 @@
       let direction: 1 | -1 = Math.random() < 0.5 ? 1 : -1;
 
       while (true) {
-        const maximum = Math.max(0, footerPetLane.clientWidth - footerPet.offsetWidth);
-        const current = footerPet.offsetLeft;
-        const distance = randomBetween(42, Math.min(190, Math.max(42, maximum)));
+        const range = getFooterPetRange();
+        const current = Math.min(range.max, Math.max(range.min, footerPet.offsetLeft));
+        footerPet.style.left = `${current}px`;
+        const availableDistance = Math.max(42, range.max - range.min);
+        const distance = randomBetween(42, Math.min(190, availableDistance));
         const target = direction === 1
-          ? Math.min(maximum, current + distance)
-          : Math.max(0, current - distance);
+          ? Math.min(range.max, current + distance)
+          : Math.max(range.min, current - distance);
 
         if (target === current) {
           direction = direction === 1 ? -1 : 1;
@@ -373,7 +404,7 @@
         await walkTo(target, direction);
         await restRandomly();
 
-        if (Math.random() < 0.32 || target === 0 || target === maximum) {
+        if (Math.random() < 0.32 || target === range.min || target === range.max) {
           direction = direction === 1 ? -1 : 1;
         }
       }
