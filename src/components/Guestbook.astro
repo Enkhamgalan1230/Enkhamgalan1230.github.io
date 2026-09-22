@@ -1095,16 +1095,7 @@
   .guestbook h2 {
     margin: 0;
 
-    font:
-      400
-      clamp(
-        3.2rem,
-        7vw,
-        6.8rem
-      ) /
-      0.95
-      "Instrument Serif",
-      serif;
+    font: 400 clamp(3rem, 5vw, 5.5rem) / 0.95 "Instrument Serif", serif;
 
     letter-spacing: -0.035em;
   }
@@ -2277,6 +2268,12 @@
 
       flex-direction:
         column;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .guestbook h2 {
+      font-size: 3.2rem;
     }
   }
 

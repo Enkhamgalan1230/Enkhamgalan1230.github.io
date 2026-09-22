@@ -46,7 +46,7 @@
         muted
         loop
         playsinline
-        preload="metadata"
+        preload="none"
         aria-hidden="true"
       >
       </video>
@@ -159,8 +159,30 @@
     kumoGameVideo.load();
   }
 
-  loadKumoScene();
-  kumoMobileViewport.addEventListener("change", loadKumoScene);
+  let kumoSceneLoaded = false;
+  const kumoSceneObserver =
+    kumoGame && "IntersectionObserver" in window
+      ? new IntersectionObserver(
+          (entries) => {
+            if (!entries.some((entry) => entry.isIntersecting)) return;
+            loadKumoScene();
+            kumoSceneLoaded = true;
+            kumoSceneObserver?.disconnect();
+          },
+          { rootMargin: "400px 0px" },
+        )
+      : undefined;
+
+  if (kumoSceneObserver && kumoGame) {
+    kumoSceneObserver.observe(kumoGame);
+  } else {
+    loadKumoScene();
+    kumoSceneLoaded = true;
+  }
+
+  kumoMobileViewport.addEventListener("change", () => {
+    if (kumoSceneLoaded) loadKumoScene();
+  });
 
   function sizeKumoGameWindow() {
     if (!kumoGameScene || !kumoGameVideo?.videoWidth || !kumoGameVideo.videoHeight) return;
@@ -182,6 +204,10 @@
   function playKumoVideo() {
     if (kumoReducedMotion.matches) return;
     if (!kumoGameVideo) return;
+    if (!kumoSceneLoaded) {
+      loadKumoScene();
+      kumoSceneLoaded = true;
+    }
     kumoGameVideo.play().catch(() => undefined);
   }
 
@@ -475,7 +501,7 @@
     margin: 0;
     color: #111111;
     font-family: "Instrument Serif", serif;
-    font-size: clamp(2.1rem, 4vw, 4.2rem);
+    font-size: clamp(3rem, 5vw, 5.5rem);
     font-weight: 400;
     letter-spacing: -0.025em;
     line-height: 0.98;
@@ -725,6 +751,7 @@
       background-repeat: no-repeat;
     }
     .kumo-game__eyebrow { margin-bottom: 8px; }
+    .kumo-game__title { font-size: 3.2rem; }
     .kumo-game__description { max-width: 320px; margin-top: 8px; line-height: 1.45; }
     .kumo-game__window-bar { min-height: 30px; font-size: 0.58rem; }
     .kumo-game__window {

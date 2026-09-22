@@ -120,15 +120,15 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
               >
                 <div class="project-video-background">
                   <video
-                    autoplay
                     muted
                     loop
                     playsinline
-                    preload="metadata"
+                    preload="none"
+                    data-deferred-video
                     aria-hidden="true"
                   >
                     <source
-                      src="/videos/patterns/vids/pattern1.mp4"
+                      data-src="/videos/patterns/vids/pattern1.mp4"
                       type="video/mp4"
                     />
                   </video>
@@ -175,15 +175,15 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
               >
                 <div class="project-video-background">
                   <video
-                    autoplay
                     muted
                     loop
                     playsinline
-                    preload="metadata"
+                    preload="none"
+                    data-deferred-video
                     aria-hidden="true"
                   >
                     <source
-                      src="/videos/patterns/vids/pattern2.mp4"
+                      data-src="/videos/patterns/vids/pattern2.mp4"
                       type="video/mp4"
                     />
                   </video>
@@ -230,15 +230,15 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
               >
                 <div class="project-video-background">
                   <video
-                    autoplay
                     muted
                     loop
                     playsinline
-                    preload="metadata"
+                    preload="none"
+                    data-deferred-video
                     aria-hidden="true"
                   >
                     <source
-                      src="/videos/patterns/vids/pattern3.mp4"
+                      data-src="/videos/patterns/vids/pattern3.mp4"
                       type="video/mp4"
                     />
                   </video>
@@ -285,15 +285,15 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
               >
                 <div class="project-video-background">
                   <video
-                    autoplay
                     muted
                     loop
                     playsinline
-                    preload="metadata"
+                    preload="none"
+                    data-deferred-video
                     aria-hidden="true"
                   >
                     <source
-                      src="/videos/patterns/vids/pattern4.mp4"
+                      data-src="/videos/patterns/vids/pattern4.mp4"
                       type="video/mp4"
                     />
                   </video>
@@ -339,15 +339,15 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
               >
                 <div class="project-video-background">
                   <video
-                    autoplay
                     muted
                     loop
                     playsinline
-                    preload="metadata"
+                    preload="none"
+                    data-deferred-video
                     aria-hidden="true"
                   >
                     <source
-                      src="/videos/patterns/vids/pattern5.mp4"
+                      data-src="/videos/patterns/vids/pattern5.mp4"
                       type="video/mp4"
                     />
                   </video>
@@ -399,15 +399,15 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
               >
                 <div class="project-video-background">
                   <video
-                    autoplay
                     muted
                     loop
                     playsinline
-                    preload="metadata"
+                    preload="none"
+                    data-deferred-video
                     aria-hidden="true"
                   >
                     <source
-                      src="/videos/patterns/vids/pattern6.mp4"
+                      data-src="/videos/patterns/vids/pattern6.mp4"
                       type="video/mp4"
                     />
                   </video>
@@ -459,15 +459,15 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
               >
                 <div class="project-video-background">
                   <video
-                    autoplay
                     muted
                     loop
                     playsinline
-                    preload="metadata"
+                    preload="none"
+                    data-deferred-video
                     aria-hidden="true"
                   >
                     <source
-                      src="/videos/patterns/vids/pattern7.mp4"
+                      data-src="/videos/patterns/vids/pattern7.mp4"
                       type="video/mp4"
                     />
                   </video>
@@ -571,15 +571,16 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
       </button>
     </div>
 
-    <div
-      class="head-toast"
-      data-head-toast
-      role="status"
-      aria-live="polite"
-    >
-      NICE TO MEET YOU IN THAT CASE &#x1F91D;
-    </div>
   </section>
+
+  <div
+    class="head-toast"
+    data-head-toast
+    role="status"
+    aria-live="polite"
+  >
+    NICE TO MEET YOU IN THAT CASE &#x1F91D;
+  </div>
 
   <KumoGameScene />
 
@@ -618,7 +619,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
       </div>
 
       <div class="kumo-info-image">
-        <img src="/images/kumo_real.jpg" alt="Kumo" />
+        <img src="/images/kumo_real.webp" alt="Kumo" width="2043" height="2048" loading="lazy" decoding="async" />
       </div>
     </div>
   </div>
@@ -635,6 +636,44 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
 
 
 <script>
+  const deferredVideos = Array.from(
+    document.querySelectorAll<HTMLVideoElement>("[data-deferred-video]"),
+  );
+  const deferredVideoReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  function loadDeferredVideo(video: HTMLVideoElement) {
+    if (video.dataset.loaded === "true") return;
+    const source = video.querySelector<HTMLSourceElement>("source[data-src]");
+    const sourceURL = source?.dataset.src;
+    if (!source || !sourceURL) return;
+    source.src = sourceURL;
+    video.dataset.loaded = "true";
+    video.load();
+  }
+
+  if (deferredVideoReducedMotion.matches) {
+    deferredVideos.forEach(loadDeferredVideo);
+  } else if ("IntersectionObserver" in window) {
+    const deferredVideoObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target as HTMLVideoElement;
+          if (entry.isIntersecting) {
+            loadDeferredVideo(video);
+            void video.play().catch(() => undefined);
+          } else if (video.dataset.loaded === "true") {
+            video.pause();
+          }
+        });
+      },
+      { rootMargin: "300px 0px" },
+    );
+
+    deferredVideos.forEach((video) => deferredVideoObserver.observe(video));
+  } else {
+    deferredVideos.forEach(loadDeferredVideo);
+  }
+
   const kumoWhoButton =
     document.querySelector<HTMLButtonElement>(
       "[data-kumo-who]"
@@ -742,6 +781,12 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
     image.src = src;
   });
 
+  function wait(ms: number) {
+    return new Promise<void>((resolve) => {
+      window.setTimeout(resolve, ms);
+    });
+  }
+
   async function playPromptFace() {
     if (
       !promptFace ||
@@ -768,7 +813,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
     }
   }
 
-  window.setInterval(playPromptFace, 6000);
+  window.setInterval(playPromptFace, 8000);
 
   /* =========================
      TYPEWRITER
@@ -828,59 +873,8 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
   }
 
 
-  /* =========================
-     LENIS + PROJECT SCROLL
-     ========================= */
-
-  const smoothScrollReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  );
-
-  if (
-    !smoothScrollReducedMotion.matches &&
-    !window.matchMedia("(pointer: coarse)").matches
-  ) {
-    const { default: Lenis } = await import("lenis");
-
-    const lenis = new Lenis({
-      autoRaf: false,
-      duration: 1.2,
-      easing: (t: number) =>
-        Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      anchors: true,
-    });
-
-    const previousScrollBehavior =
-      document.documentElement.style.scrollBehavior;
-
-    document.documentElement.style.scrollBehavior = "auto";
-
-    let lenisFrame: number;
-
-    const raf = (time: number) => {
-      lenis.raf(time);
-      lenisFrame = window.requestAnimationFrame(raf);
-    };
-
-    lenisFrame = window.requestAnimationFrame(raf);
-
-    const cleanupLenis = () => {
-      window.cancelAnimationFrame(lenisFrame);
-      lenis.destroy();
-      document.documentElement.style.scrollBehavior =
-        previousScrollBehavior;
-    };
-
-    document.addEventListener(
-      "astro:before-swap",
-      cleanupLenis,
-      { once: true },
-    );
-  }
-
-  // Keep scrolling native. The previous Lenis/GSAP block added smooth scrolling,
-  // pinning and scrubbed transforms that made the page feel animated while scrolling.
+  // Keep scrolling native. Visual reveals and project motion should not take
+  // control of the user's wheel or touch scrolling.
   if (false) {
     const { default: Lenis } = await import("lenis");
     const { gsap } = await import("gsap");
@@ -2214,7 +2208,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
     margin: 0;
 
     font-family: "Instrument Serif", serif;
-    font-size: clamp(3rem, 5.4vw, 5.5rem);
+    font-size: clamp(3rem, 5vw, 5.5rem);
     font-weight: 400;
     line-height: 0.95;
     letter-spacing: -0.025em;
@@ -2223,7 +2217,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
 
   .head-prompt-yet {
     color: #4d7657;
-    white-space: nowrap;
+    white-space: normal;
   }
 
   .head-prompt-face {
@@ -3335,7 +3329,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
 
     .fill-options {
       display: flex;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
       gap: 5px;
       justify-content: flex-start;
       width: 100%;
@@ -3348,7 +3342,8 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
       padding: 7px 10px;
       font: 400 clamp(0.6rem, 2.7vw, 0.82rem)/0.95 "Instrument Serif", serif;
       letter-spacing: -0.04em;
-      white-space: nowrap;
+      white-space: normal;
+      overflow-wrap: anywhere;
       text-align: center;
     }
 
@@ -3385,7 +3380,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
     }
 
     .head-prompt h2 {
-      font-size: clamp(2.8rem, 13vw, 4.2rem);
+      font-size: 3.2rem;
     }
 
     .head-prompt-actions {
