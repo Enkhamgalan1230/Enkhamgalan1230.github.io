@@ -34,6 +34,9 @@ npx wrangler d1 execute entwan-guestbook --remote --file=migrations/0001_guestbo
 npx wrangler d1 execute entwan-guestbook --remote --file=migrations/0002_guestbook_styles.sql
 npx wrangler d1 execute entwan-guestbook --remote --file=migrations/0003_guestbook_text_styles.sql
 npx wrangler d1 execute entwan-guestbook --remote --file=migrations/0004_guestbook_abuse_controls.sql
+npx wrangler d1 execute entwan-guestbook --remote --file=migrations/0006_guestbook_green_colours.sql
+npx wrangler d1 execute entwan-guestbook --remote --file=migrations/0007_guestbook_colour_choices.sql
+npx wrangler d1 execute entwan-guestbook --remote --file=migrations/0008_guestbook_light_green_colours.sql
 ```
 
 Copy the returned database ID into `wrangler.toml` in place of
@@ -55,9 +58,9 @@ The public routes are `GET /api/guestbook` and `POST /api/guestbook`. To delete
 an entry, send `DELETE /api/guestbook/{id}` with
 `Authorization: Bearer <GUESTBOOK_ADMIN_TOKEN>`.
 
-Each approved note receives a soft colour and one of five message fonts at the
-Worker, plus a random weight and italic treatment, so visitors cannot submit
-arbitrary styles.
+Each approved note receives a visitor-selected colour from the approved muted
+green palette and one of five message fonts at the Worker, plus a random weight
+and italic treatment, so visitors cannot submit arbitrary styles.
 
 To activate moderation from the site, enter the name `entwan` and the private
 trigger phrase as the note. That submission is not saved; instead, the Worker

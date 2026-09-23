@@ -54,9 +54,9 @@ type GuestbookRow = {
 };
 
 const guestbookColours = [
-  "rose", "peach", "apricot", "butter", "sage",
-  "mint", "seafoam", "powder", "periwinkle", "lavender",
-  "lilac", "blush", "terracotta", "sand", "sky",
+  "pale-sage", "soft-eucalyptus", "whisper-mint", "light-moss",
+  "dusty-celadon", "faded-fern", "cream-sage", "gentle-olive",
+  "airy-sage",
 ];
 const guestbookFonts = ["serif", "mono", "grotesk", "soft", "display"];
 const guestbookFontWeights = ["normal", "normal", "normal", "bold"];
@@ -428,10 +428,12 @@ export default {
         const body = await request.json<{
           name?: string;
           message?: string;
+          color?: string;
           visitorId?: string;
         }>();
         const name = body.name?.trim() ?? "";
         const message = body.message?.trim() ?? "";
+        const color = body.color?.trim() ?? "";
         const visitorId = body.visitorId?.trim() ?? "";
 
         if (!name || !message) {
@@ -440,6 +442,10 @@ export default {
 
         if (name.length > 40 || message.length > 280) {
           return json({ error: "Name or message is too long" }, 400, origin, env);
+        }
+
+        if (!guestbookColours.includes(color)) {
+          return json({ error: "Please choose a note colour" }, 400, origin, env);
         }
 
         if (!/^[a-z0-9-]{16,80}$/i.test(visitorId)) {
@@ -466,7 +472,6 @@ export default {
           );
         }
 
-        const color = randomGuestbookChoice(guestbookColours);
         const font = randomGuestbookChoice(guestbookFonts);
         const fontWeight = randomGuestbookChoice(guestbookFontWeights);
         const fontStyle = randomGuestbookChoice(guestbookFontStyles);

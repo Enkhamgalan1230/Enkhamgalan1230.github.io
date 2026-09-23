@@ -43,6 +43,82 @@
           ></textarea>
         </label>
 
+        <label class="guestbook-colour-label">
+          <span>Note colour</span>
+
+          <span class="guestbook-colour-picker" data-guestbook-colour-picker>
+            <input
+              type="hidden"
+              name="color"
+              value="pale-sage"
+              data-guestbook-colour-input
+            />
+
+            <button
+              type="button"
+              class="guestbook-colour-trigger"
+              data-guestbook-colour-trigger
+              aria-haspopup="listbox"
+              aria-expanded="false"
+            >
+              <span class="guestbook-colour-trigger-content">
+                <span
+                  class="guestbook-colour-swatch"
+                  data-guestbook-colour-swatch
+                  aria-hidden="true"
+                ></span>
+                <span data-guestbook-colour-name>Pale Sage</span>
+              </span>
+              <span aria-hidden="true">&#x2193;</span>
+            </button>
+
+            <div
+              class="guestbook-colour-menu"
+              data-guestbook-colour-menu
+              role="listbox"
+              aria-label="Choose a note colour"
+              hidden
+            >
+              <button type="button" role="option" data-guestbook-colour-option="pale-sage" aria-selected="true">
+                <span class="guestbook-colour-swatch" style="background: rgb(212, 219, 205)" aria-hidden="true"></span>
+                <span>Steppe Sage</span>
+              </button>
+              <button type="button" role="option" data-guestbook-colour-option="soft-eucalyptus" aria-selected="false">
+                <span class="guestbook-colour-swatch" style="background: rgb(195, 208, 188)" aria-hidden="true"></span>
+                <span>Liść Laurowy</span>
+              </button>
+              <button type="button" role="option" data-guestbook-colour-option="whisper-mint" aria-selected="false">
+                <span class="guestbook-colour-swatch" style="background: rgb(220, 228, 214)" aria-hidden="true"></span>
+                <span>Whisper Mint</span>
+              </button>
+              <button type="button" role="option" data-guestbook-colour-option="light-moss" aria-selected="false">
+                <span class="guestbook-colour-swatch" style="background: rgb(180, 195, 170)" aria-hidden="true"></span>
+                <span>Арц ногоон</span>
+              </button>
+              <button type="button" role="option" data-guestbook-colour-option="dusty-celadon" aria-selected="false">
+                <span class="guestbook-colour-swatch" style="background: rgb(198, 210, 195)" aria-hidden="true"></span>
+                <span>Dusty Green</span>
+              </button>
+              <button type="button" role="option" data-guestbook-colour-option="faded-fern" aria-selected="false">
+                <span class="guestbook-colour-swatch" style="background: rgb(175, 190, 165)" aria-hidden="true"></span>
+                <span>Tesco Tinned Peas</span>
+              </button>
+              <button type="button" role="option" data-guestbook-colour-option="cream-sage" aria-selected="false">
+                <span class="guestbook-colour-swatch" style="background: rgb(216, 222, 200)" aria-hidden="true"></span>
+                <span>Cream Sage</span>
+              </button>
+              <button type="button" role="option" data-guestbook-colour-option="gentle-olive" aria-selected="false">
+                <span class="guestbook-colour-swatch" style="background: rgb(200, 205, 175)" aria-hidden="true"></span>
+                <span>Gentle Olive</span>
+              </button>
+              <button type="button" role="option" data-guestbook-colour-option="airy-sage" aria-selected="false">
+                <span class="guestbook-colour-swatch" style="background: rgb(205, 215, 200)" aria-hidden="true"></span>
+                <span>Airy Sage</span>
+              </button>
+            </div>
+          </span>
+        </label>
+
         <div class="guestbook-form-footer">
           <small>
             Notes are filtered before they appear.
@@ -224,6 +300,121 @@
       "[data-guestbook-status]",
     );
 
+  const guestbookColourInput =
+    document.querySelector<HTMLInputElement>(
+      "[data-guestbook-colour-input]",
+    );
+
+  const guestbookColourTrigger =
+    document.querySelector<HTMLButtonElement>(
+      "[data-guestbook-colour-trigger]",
+    );
+
+  const guestbookColourMenu =
+    document.querySelector<HTMLElement>(
+      "[data-guestbook-colour-menu]",
+    );
+
+  const guestbookColourName =
+    document.querySelector<HTMLElement>(
+      "[data-guestbook-colour-name]",
+    );
+
+  const guestbookColourOptions =
+    Array.from(
+      document.querySelectorAll<HTMLButtonElement>(
+        "[data-guestbook-colour-option]",
+      ),
+    );
+
+  const guestbookColourSwatch =
+    document.querySelector<HTMLElement>(
+      "[data-guestbook-colour-swatch]",
+    );
+
+  const guestbookColourValues: Record<string, string> = {
+    "pale-sage": "rgb(212, 219, 205)",
+    "soft-eucalyptus": "rgb(195, 208, 188)",
+    "whisper-mint": "rgb(220, 228, 214)",
+    "light-moss": "rgb(180, 195, 170)",
+    "dusty-celadon": "rgb(198, 210, 195)",
+    "faded-fern": "rgb(175, 190, 165)",
+    "cream-sage": "rgb(216, 222, 200)",
+    "gentle-olive": "rgb(200, 205, 175)",
+    "airy-sage": "rgb(205, 215, 200)",
+  };
+
+  function updateGuestbookColourSwatch() {
+    if (!guestbookColourInput || !guestbookColourSwatch) {
+      return;
+    }
+
+    const colour = guestbookColourInput.value;
+
+    guestbookColourSwatch.style.backgroundColor =
+      guestbookColourValues[colour] ??
+      guestbookColourValues["pale-sage"];
+
+    if (guestbookColourName) {
+      const selectedOption = guestbookColourOptions.find(
+        (option) => option.dataset.guestbookColourOption === colour,
+      );
+
+      guestbookColourName.textContent =
+        selectedOption?.querySelector("span:last-child")?.textContent ??
+        "Pale Sage";
+    }
+
+    guestbookColourOptions.forEach((option) => {
+      option.setAttribute(
+        "aria-selected",
+        String(option.dataset.guestbookColourOption === colour),
+      );
+    });
+  }
+
+  function closeGuestbookColourMenu() {
+    if (!guestbookColourMenu || !guestbookColourTrigger) {
+      return;
+    }
+
+    guestbookColourMenu.hidden = true;
+    guestbookColourTrigger.setAttribute("aria-expanded", "false");
+  }
+
+  guestbookColourTrigger?.addEventListener("click", () => {
+    if (!guestbookColourMenu) {
+      return;
+    }
+
+    guestbookColourMenu.hidden = !guestbookColourMenu.hidden;
+    guestbookColourTrigger.setAttribute(
+      "aria-expanded",
+      String(!guestbookColourMenu.hidden),
+    );
+  });
+
+  guestbookColourOptions.forEach((option) => {
+    option.addEventListener("click", () => {
+      guestbookColourInput!.value =
+        option.dataset.guestbookColourOption ?? "pale-sage";
+      updateGuestbookColourSwatch();
+      closeGuestbookColourMenu();
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (
+      guestbookColourMenu &&
+      !guestbookColourMenu.hidden &&
+      !(event.target as HTMLElement).closest("[data-guestbook-colour-picker]")
+    ) {
+      closeGuestbookColourMenu();
+    }
+  });
+
+  updateGuestbookColourSwatch();
+
   const guestbookAdmin =
     document.querySelector<HTMLElement>(
       "[data-guestbook-admin]",
@@ -354,6 +545,10 @@
         entry.fontStyle || "normal"
       }`,
     ].join(" ");
+
+    article.style.backgroundColor =
+      guestbookColourValues[entry.color] ??
+      guestbookColourValues["pale-sage"];
 
     article.dataset.guestbookEntryId =
       String(entry.id);
@@ -935,6 +1130,12 @@
           ) ?? "",
         ).trim();
 
+      const color =
+        String(
+          formData.get("color") ??
+            "pale-sage",
+        ).trim();
+
       if (!name || !message) {
         return;
       }
@@ -969,6 +1170,7 @@
               body: JSON.stringify({
                 name,
                 message,
+                color,
                 visitorId:
                   guestbookVisitorId,
               }),
@@ -1012,6 +1214,7 @@
         }
 
         guestbookForm.reset();
+        updateGuestbookColourSwatch();
 
         if (guestbookStatus) {
           guestbookStatus.textContent =
@@ -1169,7 +1372,10 @@
     input,
   .guestbook-form
     > label
-    textarea {
+    textarea,
+  .guestbook-form
+    > label
+    select {
     width: 100%;
 
     border:
@@ -1209,7 +1415,10 @@
     input:focus,
   .guestbook-form
     > label
-    textarea:focus {
+    textarea:focus,
+  .guestbook-form
+    > label
+    select:focus {
     border-color: #4d7657;
 
     box-shadow:
@@ -1222,6 +1431,95 @@
       );
 
     background: #fff;
+  }
+
+  .guestbook-colour-picker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .guestbook-colour-picker {
+    position: relative;
+  }
+
+  .guestbook-colour-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0;
+    border: 1px solid rgba(17, 17, 17, 0.2) !important;
+    border-radius: 10px !important;
+    padding: 11px 13px !important;
+    background: #f7f6f4 !important;
+    color: #111 !important;
+    font: 0.8rem / 1.4 "Courier Prime", monospace !important;
+    text-align: left;
+    transform: none !important;
+  }
+
+  .guestbook-colour-trigger:hover {
+    background: #fff !important;
+  }
+
+  .guestbook-colour-trigger-content,
+  .guestbook-colour-menu button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .guestbook-colour-trigger span,
+  .guestbook-colour-menu button span {
+    margin-left: 0 !important;
+    font-size: inherit !important;
+  }
+
+  .guestbook-colour-menu {
+    position: absolute;
+    z-index: 5;
+    top: calc(100% + 6px);
+    right: 0;
+    left: 0;
+    display: grid;
+    gap: 3px;
+    padding: 6px;
+    border: 1px solid rgba(17, 17, 17, 0.16);
+    border-radius: 12px;
+    background: #f7f6f4;
+    box-shadow: 0 14px 30px rgba(17, 17, 17, 0.14);
+  }
+
+  .guestbook-colour-menu[hidden] {
+    display: none;
+  }
+
+  .guestbook-colour-menu button {
+    width: 100%;
+    justify-content: flex-start;
+    margin: 0;
+    border-radius: 8px !important;
+    padding: 9px 10px !important;
+    background: transparent !important;
+    color: #333 !important;
+    font: 0.72rem "Courier Prime", monospace !important;
+    text-align: left;
+    transform: none !important;
+  }
+
+  .guestbook-colour-menu button:hover,
+  .guestbook-colour-menu button[aria-selected="true"] {
+    background: rgba(77, 118, 87, 0.1) !important;
+  }
+
+  .guestbook-colour-swatch {
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    border: 1px solid rgba(17, 17, 17, 0.22);
+    border-radius: 7px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
   }
 
   .guestbook-form-footer {
@@ -1522,7 +1820,7 @@
 
     border-radius: 14px;
 
-    background: #f2d7c9;
+    background: rgb(168, 178, 158);
 
     box-shadow:
       0 8px 18px
@@ -1568,95 +1866,15 @@
     outline-offset: 3px;
   }
 
-  :global(
-    .guestbook-entry--rose
-  ) {
-    background: #f1d8d2;
-  }
-
-  :global(
-    .guestbook-entry--peach
-  ) {
-    background: #f2dfcc;
-  }
-
-  :global(
-    .guestbook-entry--apricot
-  ) {
-    background: #eed8c3;
-  }
-
-  :global(
-    .guestbook-entry--butter
-  ) {
-    background: #f2e7bf;
-  }
-
-  :global(
-    .guestbook-entry--sage
-  ) {
-    background: #dbe7cf;
-  }
-
-  :global(
-    .guestbook-entry--mint
-  ) {
-    background: #d6e8dc;
-  }
-
-  :global(
-    .guestbook-entry--seafoam
-  ) {
-    background: #d2e5df;
-  }
-
-  :global(
-    .guestbook-entry--powder
-  ) {
-    background: #d8e4f1;
-  }
-
-  :global(
-    .guestbook-entry--periwinkle
-  ) {
-    background: #dddff0;
-  }
-
-  :global(
-    .guestbook-entry--lavender
-  ) {
-    background: #e6d9e9;
-  }
-
-  :global(
-    .guestbook-entry--lilac
-  ) {
-    background: #eadce9;
-  }
-
-  :global(
-    .guestbook-entry--blush
-  ) {
-    background: #efd9e1;
-  }
-
-  :global(
-    .guestbook-entry--terracotta
-  ) {
-    background: #ebd4cc;
-  }
-
-  :global(
-    .guestbook-entry--sand
-  ) {
-    background: #eadfcf;
-  }
-
-  :global(
-    .guestbook-entry--sky
-  ) {
-    background: #dce9ed;
-  }
+  :global(.guestbook-entry--pale-sage) { background: rgb(212, 219, 205); }
+  :global(.guestbook-entry--soft-eucalyptus) { background: rgb(195, 208, 188); }
+  :global(.guestbook-entry--whisper-mint) { background: rgb(220, 228, 214); }
+  :global(.guestbook-entry--light-moss) { background: rgb(180, 195, 170); }
+  :global(.guestbook-entry--dusty-celadon) { background: rgb(198, 210, 195); }
+  :global(.guestbook-entry--faded-fern) { background: rgb(175, 190, 165); }
+  :global(.guestbook-entry--cream-sage) { background: rgb(216, 222, 200); }
+  :global(.guestbook-entry--gentle-olive) { background: rgb(200, 205, 175); }
+  :global(.guestbook-entry--airy-sage) { background: rgb(205, 215, 200); }
 
   :global(
     .guestbook-entry-message-wrap
@@ -1972,7 +2190,7 @@
 
     border-radius: 24px;
 
-    background: #dbe7cf;
+    background: rgb(212, 219, 205);
 
     box-shadow:
       0 24px 70px
@@ -1984,65 +2202,15 @@
       );
   }
 
-  .guestbook-note-dialog--rose {
-    background: #f1d8d2;
-  }
-
-  .guestbook-note-dialog--peach {
-    background: #f2dfcc;
-  }
-
-  .guestbook-note-dialog--apricot {
-    background: #eed8c3;
-  }
-
-  .guestbook-note-dialog--butter {
-    background: #f2e7bf;
-  }
-
-  .guestbook-note-dialog--sage {
-    background: #dbe7cf;
-  }
-
-  .guestbook-note-dialog--mint {
-    background: #d6e8dc;
-  }
-
-  .guestbook-note-dialog--seafoam {
-    background: #d2e5df;
-  }
-
-  .guestbook-note-dialog--powder {
-    background: #d8e4f1;
-  }
-
-  .guestbook-note-dialog--periwinkle {
-    background: #dddff0;
-  }
-
-  .guestbook-note-dialog--lavender {
-    background: #e6d9e9;
-  }
-
-  .guestbook-note-dialog--lilac {
-    background: #eadce9;
-  }
-
-  .guestbook-note-dialog--blush {
-    background: #efd9e1;
-  }
-
-  .guestbook-note-dialog--terracotta {
-    background: #ebd4cc;
-  }
-
-  .guestbook-note-dialog--sand {
-    background: #eadfcf;
-  }
-
-  .guestbook-note-dialog--sky {
-    background: #dce9ed;
-  }
+  .guestbook-note-dialog--pale-sage { background: rgb(212, 219, 205); }
+  .guestbook-note-dialog--soft-eucalyptus { background: rgb(195, 208, 188); }
+  .guestbook-note-dialog--whisper-mint { background: rgb(220, 228, 214); }
+  .guestbook-note-dialog--light-moss { background: rgb(180, 195, 170); }
+  .guestbook-note-dialog--dusty-celadon { background: rgb(198, 210, 195); }
+  .guestbook-note-dialog--faded-fern { background: rgb(175, 190, 165); }
+  .guestbook-note-dialog--cream-sage { background: rgb(216, 222, 200); }
+  .guestbook-note-dialog--gentle-olive { background: rgb(200, 205, 175); }
+  .guestbook-note-dialog--airy-sage { background: rgb(205, 215, 200); }
 
   .guestbook-note-dialog-close {
     position: absolute;
