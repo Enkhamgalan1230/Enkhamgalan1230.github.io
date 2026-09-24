@@ -316,6 +316,8 @@
 
   if (footerPetLane && footerPet && footerPetSprite && footerPetConfig && !footerPetReducedMotion.matches) {
     const { walkFrames, settleFrames, restFrames } = footerPetConfig;
+    const footerPetFrameOffset = window.matchMedia("(max-width: 640px)").matches ? 4 : 7;
+    footerPetSprite.style.setProperty("--footer-pet-y", `${footerPetFrameOffset}px`);
 
     const wait = (duration: number) =>
       new Promise<void>((resolve) => window.setTimeout(resolve, duration));
@@ -343,7 +345,6 @@
       const distance = Math.abs(target - start);
       const duration = Math.max(4200, Math.min(11000, distance * 65));
 
-      footerPetSprite.style.setProperty("--footer-pet-y", "0px");
       footerPetSprite.style.transform =
         `scaleX(${direction}) translateY(var(--footer-pet-y, 0px))`;
       const movement = footerPet.animate(
@@ -367,20 +368,16 @@
     }
 
     async function restRandomly() {
-      const restingOffset = window.matchMedia("(max-width: 640px)").matches ? 4 : 7;
-      footerPetSprite.style.setProperty("--footer-pet-y", "0px");
       await playFrames(settleFrames, 280);
       await wait(randomBetween(700, 1800));
 
       if (Math.random() < 0.62) {
-        footerPetSprite.style.setProperty("--footer-pet-y", `${restingOffset}px`);
         await playFrames(restFrames, 280);
         await wait(randomBetween(1800, 4200));
         await playFrames([...restFrames].reverse(), 280);
       }
 
       await playFrames([...settleFrames].reverse(), 280);
-      footerPetSprite.style.setProperty("--footer-pet-y", "0px");
     }
 
     async function runFooterPet() {
