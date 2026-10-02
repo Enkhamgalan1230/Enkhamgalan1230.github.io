@@ -375,6 +375,106 @@ export default {
     }
 
     if (
+      url.pathname === "/api/site-analytics" &&
+      request.method === "POST"
+    ) {
+      if (!env.GUESTBOOK_DB) {
+        return json({ error: "Analytics database is not configured" }, 503, origin, env);
+      }
+
+      try {
+        const body = await request.json<{ visitorId?: string }>();
+        const visitorId = body.visitorId?.trim() ?? "";
+        if (!/^[a-z0-9-]{16,80}$/i.test(visitorId)) {
+          return json({ error: "Could not verify this browser" }, 400, origin, env);
+        }
+
+        const country = ((request.cf as { country?: string } | undefined)?.country ?? "XX")
+          .toUpperCase()
+          .replace(/[^A-Z]/g, "")
+          .slice(0, 2) || "XX";
+        const now = new Date();
+        const nowIso = now.toISOString();
+        const activeUntil = new Date(now.getTime() + 90_000).toISOString();
+        const previousVisit = await env.GUESTBOOK_DB.prepare(
+          `SELECT visited_at
+           FROM site_visits
+           WHERE visitor_id = ?
+           ORDER BY visited_at DESC
+           LIMIT 1`,
+        ).bind(visitorId).first<{ visited_at: string }>();
+
+        if (
+          !previousVisit ||
+          now.getTime() - new Date(previousVisit.visited_at).getTime() >= 30 * 60 * 1000
+        ) {
+          await env.GUESTBOOK_DB.prepare(
+            `INSERT INTO site_visits (visitor_id, country, visited_at)
+             VALUES (?, ?, ?)`,
+          ).bind(visitorId, country, nowIso).run();
+        }
+
+        await env.GUESTBOOK_DB.prepare(
+          `INSERT INTO site_presence (visitor_id, country, last_seen, active_until)
+           VALUES (?, ?, ?, ?)
+           ON CONFLICT(visitor_id) DO UPDATE SET
+             country = excluded.country,
+             last_seen = excluded.last_seen,
+             active_until = excluded.active_until`,
+        ).bind(visitorId, country, nowIso, activeUntil).run();
+
+        const [total, lastVisit, liveVisitors, countryVisits] = await Promise.all([
+          env.GUESTBOOK_DB.prepare(
+            "SELECT COUNT(*) AS count FROM site_visits",
+          ).first<{ count: number }>(),
+          env.GUESTBOOK_DB.prepare(
+            `SELECT country, visited_at
+             FROM site_visits
+             ORDER BY visited_at DESC, id DESC
+             LIMIT 1`,
+          ).first<{ country: string; visited_at: string }>(),
+          env.GUESTBOOK_DB.prepare(
+            `SELECT country, COUNT(*) AS count
+             FROM site_presence
+             WHERE active_until > ?
+             GROUP BY country
+             ORDER BY count DESC, country ASC`,
+          ).bind(nowIso).all<{ country: string; count: number }>(),
+          env.GUESTBOOK_DB.prepare(
+            `SELECT country, COUNT(*) AS count
+             FROM site_visits
+             GROUP BY country
+             ORDER BY count DESC, country ASC
+             LIMIT 10`,
+          ).all<{ country: string; count: number }>(),
+        ]);
+
+        return json(
+          {
+            totalVisits: Number(total?.count ?? 0),
+            lastVisit: lastVisit
+              ? { country: lastVisit.country, at: lastVisit.visited_at }
+              : null,
+            live: (liveVisitors.results ?? []).map((row) => ({
+              country: row.country,
+              count: Number(row.count),
+            })),
+            countries: (countryVisits.results ?? []).map((row) => ({
+              country: row.country,
+              count: Number(row.count),
+            })),
+          },
+          200,
+          origin,
+          env,
+        );
+      } catch (error) {
+        console.error("Site analytics failed:", error);
+        return json({ error: "Could not update site analytics" }, 500, origin, env);
+      }
+    }
+
+    if (
       url.pathname === "/api/guestbook" &&
       request.method === "GET"
     ) {

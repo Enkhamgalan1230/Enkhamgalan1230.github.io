@@ -37,6 +37,7 @@ npx wrangler d1 execute entwan-guestbook --remote --file=migrations/0004_guestbo
 npx wrangler d1 execute entwan-guestbook --remote --file=migrations/0006_guestbook_green_colours.sql
 npx wrangler d1 execute entwan-guestbook --remote --file=migrations/0007_guestbook_colour_choices.sql
 npx wrangler d1 execute entwan-guestbook --remote --file=migrations/0008_guestbook_light_green_colours.sql
+npx wrangler d1 execute entwan-guestbook --remote --file=migrations/0009_site_analytics.sql
 ```
 
 Copy the returned database ID into `wrangler.toml` in place of
@@ -54,7 +55,9 @@ reuse a phrase that has been shared publicly:
 npx wrangler secret put GUESTBOOK_ADMIN_TRIGGER
 ```
 
-The public routes are `GET /api/guestbook` and `POST /api/guestbook`. To delete
+The public routes are `GET /api/guestbook`, `POST /api/guestbook`, and
+`POST /api/site-analytics`. Site analytics stores an anonymous browser ID,
+country code, and timestamps only; it does not store IP addresses. To delete
 an entry, send `DELETE /api/guestbook/{id}` with
 `Authorization: Bearer <GUESTBOOK_ADMIN_TOKEN>`.
 
