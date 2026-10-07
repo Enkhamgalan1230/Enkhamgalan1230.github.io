@@ -1,15 +1,24 @@
 <section class="connect-section" data-scroll-reveal-section="connect" aria-labelledby="connect-title">
   <div class="connect-inner" data-scroll-reveal-group>
     <div class="connect-copy-column">
-      <h2 id="connect-title">Let's <span>connect</span></h2>
-      <p class="connect-copy">
-        Found something interesting?<br />
-        Say hello.
-      </p>
-      <div class="connect-actions">
-        <a class="connect-button connect-button-primary" href="https://www.linkedin.com/in/entwan" target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">&#x2197;</span></a>
-        <a class="connect-button connect-button-secondary" href="mailto:enkhamgalan.entwan@outlook.com">Email me <span aria-hidden="true">&#x2197;</span></a>
+      <p class="connect-label">CONTACT</p>
+      <h2 id="connect-title">Let's get in <span>touch.</span></h2>
+      <div
+        class="connect-hands"
+        data-connect-hands
+        role="button"
+        tabindex="0"
+        aria-label="Bring the hands together"
+      >
+        <img class="connect-hand connect-hand-left" src="/images/hands/left.png" alt="" />
+        <img class="connect-hand connect-hand-right" src="/images/hands/right.png" alt="" />
       </div>
+      <p class="connect-copy">
+        <a class="connect-email" href="mailto:enkhamgalan.entwan@outlook.com">enkhamgalan.entwan@outlook.com</a>
+        <button class="connect-copy-button" type="button" data-copy-email aria-label="Copy email address">
+          <span class="connect-copy-status" data-copy-status aria-live="polite">COPY</span>
+        </button>
+      </p>
     </div>
 
   </div>
@@ -18,13 +27,15 @@
 <style>
   .connect-section {
     position: relative;
+    z-index: 1;
+    box-sizing: border-box;
     transform: translateY(24px);
     isolation: isolate;
     overflow: hidden;
-    min-height: min(760px, 88vh);
+    min-height: 100svh;
     display: grid;
     align-items: center;
-    padding: clamp(120px, 16vw, 210px) 5vw clamp(70px, 8vw, 110px);
+    padding: clamp(90px, 10vw, 140px) 5vw;
     background:
       radial-gradient(circle, rgba(77, 104, 80, 0.12) 1px, transparent 1.5px),
       linear-gradient(
@@ -69,59 +80,89 @@
   .connect-copy-column { text-align: center; }
 
   .connect-label {
-    margin: 0 0 17px;
-    color: #4d7657;
+    margin: 0 0 14px;
+    color: #777;
     font: 0.68rem "Courier Prime", monospace;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
   .connect-section h2 {
-    max-width: 8ch;
+    max-width: 22ch;
     margin-right: auto;
     margin-left: auto;
-    font: 400 clamp(3rem, 5vw, 5.5rem)/0.9 "Instrument Serif", serif;
+    font: 400 clamp(3.15rem, 5vw, 5.6rem)/0.9 "Instrument Serif", serif;
     letter-spacing: -0.05em;
   }
 
   .connect-section h2 span { color: #4d7657; }
 
-  .connect-copy {
-    max-width: 520px;
-    margin: 27px auto 0;
-    color: #4d7657;
-    font: 400 clamp(1.35rem, 2.4vw, 2rem)/1.2 "Instrument Serif", serif;
+  .connect-hands {
+    position: relative;
+    width: min(760px, 100%);
+    height: 112px;
+    margin: -14px auto 0;
+    cursor: pointer;
   }
 
-  .connect-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 11px; margin-top: 34px; }
-
-  .connect-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    border: 1px solid #4d7657;
-    border-radius: 999px;
-    padding: 12px 17px;
-    font: 0.7rem "Courier Prime", monospace;
-    text-decoration: none;
-    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  .connect-hand {
+    position: absolute;
+    top: 7px;
+    width: auto;
+    height: 100px;
+    user-select: none;
+    transition: transform 2.4s steps(10, end);
   }
 
-  .connect-button span { font-size: 1rem; }
-  .connect-button-primary { background: #4d7657; color: #fff; }
-  .connect-button-secondary { background: transparent; color: #4d7657; }
-  .connect-button:hover { background: #111; border-color: #111; color: #fff; transform: translateY(-2px); }
+  .connect-hand-left {
+    left: calc(50% - 340px);
+    transform: translateX(0);
+  }
+
+  .connect-hand-right {
+    top: 10px;
+    height:120px;
+    right: calc(50% - 340px);
+    transform: translateX(0);
+  }
+
+  .connect-hands.is-touch .connect-hand-left { transform: translateX(var(--touch-distance, 0px)); }
+  .connect-hands.is-touch .connect-hand-right { transform: translateX(calc(var(--touch-distance, 0px) * -1)); }
+
+  .connect-copy { display: inline-flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 14px; margin: 58px auto 0; color: #4d7657; font: 0.86rem "Courier Prime", monospace; }
+  .connect-email { color: #111; text-decoration: none; border-bottom: 1px solid #4d7657; padding-bottom: 4px; }
+  .connect-email:hover, .connect-email:focus-visible { color: #4d7657; }
+  .connect-copy-button { border: 0; padding: 0; color: #4d7657; background: transparent; cursor: pointer; font: inherit; animation: copy-attention 3.6s infinite; }
+  .connect-copy-button.is-copied { animation: none; }
+  .connect-copy-button:hover, .connect-copy-button:focus-visible { color: #111; }
+  .connect-copy-status { letter-spacing: 0.08em; }
+
+  @keyframes copy-attention {
+    0%, 62%, 100% { transform: translateX(0) rotate(0); }
+    64% { transform: translateX(-5px) rotate(-8deg); }
+    66% { transform: translateX(5px) rotate(8deg); }
+    68% { transform: translateX(-7px) rotate(-10deg); }
+    70% { transform: translateX(7px) rotate(10deg); }
+    72% { transform: translateX(-5px) rotate(-7deg); }
+    74% { transform: translateX(5px) rotate(7deg); }
+    76% { transform: translateX(0) rotate(0); }
+  }
 
   @media (max-width: 700px) {
-    .connect-section { min-height: 110dvh; padding: 136px 20px 36px; }
+    .connect-section { min-height: 100svh; padding: 88px 20px; }
     .connect-inner { grid-template-columns: 1fr; gap: 42px; }
     .connect-copy-column { transform: translateY(24px); }
-    .connect-section h2 { max-width: none; font-size: 3.2rem; }
-    .connect-copy { margin-top: 22px; }
-    .connect-actions { margin-top: 28px; }
+    .connect-section h2 { max-width: 15ch; font-size: clamp(3rem, 12vw, 4.5rem); }
+    .connect-hands { height: 92px; margin-top: -8px; }
+    .connect-hand { top: 8px; height: 76px; }
+    .connect-hand-left { left: calc(50% - 220px); }
+    .connect-hand-right { top: 10px; height: 84px; right: calc(50% - 220px); }
+    .connect-copy { margin-top: 46px; font-size: 0.76rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .connect-section, .connect-button { transition: none; }
+    .connect-section { transition: none; }
+    .connect-copy-button { animation: none; }
   }
 </style>
 
@@ -142,5 +183,54 @@
     );
 
     connectObserver.observe(connectSection);
+
+    const copyButton = connectSection.querySelector<HTMLButtonElement>("[data-copy-email]");
+    const copyStatus = connectSection.querySelector<HTMLElement>("[data-copy-status]");
+    const hands = connectSection.querySelector<HTMLElement>("[data-connect-hands]");
+    const email = "enkhamgalan.entwan@outlook.com";
+
+    const animateHands = () => {
+      copyButton?.classList.add("is-copied");
+      hands?.classList.remove("is-touch");
+      requestAnimationFrame(() => {
+        if (hands) {
+          const leftHand = hands.querySelector<HTMLElement>(".connect-hand-left");
+          const rightHand = hands.querySelector<HTMLElement>(".connect-hand-right");
+
+          if (leftHand && rightHand) {
+            const leftEdge = leftHand.getBoundingClientRect().right;
+            const rightEdge = rightHand.getBoundingClientRect().left;
+            const touchDistance = (rightEdge - leftEdge) / 2;
+            hands.style.setProperty("--touch-distance", `${touchDistance}px`);
+          }
+
+          hands.classList.add("is-touch");
+        }
+      });
+      window.setTimeout(() => hands?.classList.remove("is-touch"), 5200);
+    };
+
+    hands?.addEventListener("click", animateHands);
+    hands?.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        animateHands();
+      }
+    });
+
+    copyButton?.addEventListener("click", async () => {
+      copyButton.classList.add("is-copied");
+      animateHands();
+
+      try {
+        await navigator.clipboard.writeText(email);
+        if (copyStatus) copyStatus.textContent = "COPIED ✓";
+        window.setTimeout(() => {
+          if (copyStatus) copyStatus.textContent = "COPY";
+        }, 1800);
+      } catch {
+        window.location.href = `mailto:${email}`;
+      }
+    });
   }
 </script>
