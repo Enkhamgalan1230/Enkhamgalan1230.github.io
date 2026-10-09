@@ -176,7 +176,7 @@ import MusicButton from "./MusicButton.astro";
   }
 
   .identity-name {
-    font-size: 0.9rem;
+    font-size: 1rem;
 
     font-weight: 500;
 
@@ -188,7 +188,7 @@ import MusicButton from "./MusicButton.astro";
   }
 
   .identity-role {
-    font-size: 0.9rem;
+    font-size: 1rem;
 
     font-weight: 500;
 
@@ -320,8 +320,15 @@ import MusicButton from "./MusicButton.astro";
   }
 
   @media (max-width: 900px) {
+    .identity {
+      min-width: 0;
+    }
+
     .identity-name {
       font-size: 0.82rem;
+      line-height: 1.15;
+      white-space: normal;
+      overflow-wrap: break-word;
     }
 
     .identity-role {
