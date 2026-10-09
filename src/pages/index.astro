@@ -603,17 +603,16 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
 
       <div class="kumo-info-copy">
         <p class="head-prompt-label">KUMO.exe</p>
-        <h2 id="kumo-info-title">Meet Kumo, my old cat.</h2>
+        <h2 id="kumo-info-title">Meet <span>Kumo 雲</span>, My old cat.</h2>
         <p>
-          She was a tiny boo who came into my life so suddenly and left it
-          just as quickly. I wasn't her fan the first day, idk why.
+          Smelled like warm popcorn. I wasn't her fan the first day, idk why.
           Everything changed following night when she slept on my chest whole night.
         </p>
         <p>
-          I loved her deeply.
+          Loved her deeply.
         </p>
         <p>
-          I named her Kumo(雲) because it meant “cloud” in Japanese, and her soft cloudy-coloured fur made the
+          I named her Kumo(雲) because it meant “cloud” in Japanese (also spider haha), and her soft cloudy-coloured fur made the
           name feel perfect.
         </p>
       </div>
@@ -2332,6 +2331,10 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
     font-size: clamp(2.7rem, 6vw, 5rem);
     font-weight: 400;
     line-height: 0.92;
+  }
+
+  .kumo-info-copy h2 span {
+    color: #4d7657;
   }
 
   .kumo-info-copy > p:not(.head-prompt-label) {
