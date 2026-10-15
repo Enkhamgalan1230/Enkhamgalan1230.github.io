@@ -2,7 +2,7 @@
   <button
     class="face-button"
     type="button"
-    aria-label="Open about me"
+    aria-label="Portrait of Entwan"
   >
     <img
       class="face-image"
@@ -11,13 +11,6 @@
     />
   </button>
 
-  <button
-    class="face-hint"
-    type="button"
-    aria-label="Open about me"
-  >
-    CLICK ME ↗
-  </button>
 </div>
 
 <div class="face-overlay" aria-hidden="true">
@@ -73,17 +66,8 @@
   const faceButton =
     document.querySelector<HTMLButtonElement>(".face-button");
 
-  const faceHint =
-    document.querySelector<HTMLButtonElement>(".face-hint");
-
   const image =
     faceButton?.querySelector<HTMLImageElement>(".face-image");
-
-  const overlay =
-    document.querySelector<HTMLElement>(".face-overlay");
-
-  const closeButton =
-    document.querySelector<HTMLButtonElement>(".about-card-close");
 
   const STRAIGHT = "/images/faces/straight-main.png";
   const LEFT_TRANSITION = "/images/faces/left-transition.png";
@@ -141,35 +125,6 @@
     }
   }
 
-  function openCard() {
-    if (!overlay) return;
-
-    overlay.classList.add("is-open");
-    overlay.setAttribute("aria-hidden", "false");
-
-    document.body.style.overflow = "hidden";
-  }
-
-  function closeCard() {
-    if (!overlay) return;
-
-    overlay.classList.remove("is-open");
-    overlay.setAttribute("aria-hidden", "true");
-
-    document.body.style.overflow = "";
-
-    setTimeout(() => {
-      playFaceSequence();
-    }, 350);
-  }
-
-  function openAbout() {
-    playFaceSequence();
-    openCard();
-
-    faceButton?.classList.add("has-been-clicked");
-  }
-
   const canHover = window.matchMedia("(hover: hover)").matches;
 
   if (canHover) {
@@ -178,24 +133,6 @@
     });
   }
 
-  closeButton?.addEventListener("click", () => {
-    closeCard();
-  });
-
-  overlay?.addEventListener("click", (event) => {
-    if (event.target === overlay) {
-      closeCard();
-    }
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (
-      event.key === "Escape" &&
-      overlay?.classList.contains("is-open")
-    ) {
-      closeCard();
-    }
-  });
 </script>
 
 <style>
@@ -211,39 +148,8 @@
   }
 
   .face-button {
-    cursor: pointer;
+    cursor: default;
   }
-
-  .face-hint {
-    padding: 0;
-
-    border: 0;
-
-    background: transparent;
-
-    font-family: "Courier Prime", monospace;
-    font-size: 0.58rem;
-
-    font-weight: 700;
-
-    letter-spacing: 0.08em;
-
-    color: #111111;
-
-    cursor: pointer;
-
-    transition:
-      opacity 0.25s ease,
-      transform 0.25s ease,
-      color 0.2s ease;
-  }
-
-  .face-hint:hover {
-    transform: translateY(2px);
-
-    color: #2f302f;
-  }
-
 
   @keyframes face-notice {
     0%,
@@ -277,11 +183,6 @@
     animation: face-notice 3.5s ease-in-out infinite;
   }
 
-  .face-button.has-been-clicked {
-    animation: none;
-  }
-
-
   .face-button:hover {
     animation-play-state: paused;
 
@@ -301,7 +202,7 @@
     border: 0;
     background: transparent;
 
-    cursor: pointer;
+    cursor: default;
 
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
@@ -517,10 +418,6 @@
 
     .face-overlay {
       padding: 18px;
-    }
-
-    .face-hint {
-      font-size: 0.62rem;
     }
 
     .about-card {
