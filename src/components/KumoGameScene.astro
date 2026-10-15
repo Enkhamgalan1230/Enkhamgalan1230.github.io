@@ -12,10 +12,8 @@
     <p class="kumo-game__description">You can ask about me from KUMO, Play some tunes ♪ too!</p>
   </div>
 
-  <div class="kumo-game__window">
-    <div class="kumo-game__window-bar">
-      <span class="kumo-game__window-title" aria-hidden="true">KUMO REST AREA.exe</span>
-    </div>
+  <div class="kumo-game__stage" aria-label="Vintage CCTV monitor showing the Kumo game">
+    <canvas class="kumo-game__monitor" aria-hidden="true"></canvas>
 
     <audio class="kumo-game__audio" loop preload="none" muted>
       <source src="/game/kumo/audio/lofi.mp3" type="audio/mpeg" />
@@ -41,7 +39,7 @@
       <video
         class="kumo-game__video"
         data-desktop-src="/game/kumo/desktop/scene.mp4"
-        data-mobile-src="/game/kumo/mobile/scene.mp4"
+        data-mobile-src="/game/kumo/desktop/scene.mp4"
         autoplay
         muted
         loop
@@ -71,7 +69,7 @@
         type="button"
         aria-label="Talk to Kumo"
       >
-        <img src="/game/kumo/ui/f-talk.png" alt="Press F to talk" />
+        <img src="/game/kumo/ui/press-to-interact.png" alt="Press E to interact" />
       </button>
 
       <button
@@ -79,7 +77,7 @@
         type="button"
         aria-label="Talk to Kumo"
       >
-        <img src="/game/kumo/ui/tap-to-talk.png" alt="Tap to talk" />
+        <img src="/game/kumo/ui/press-to-interact.png" alt="Tap to interact" />
       </button>
 
       <div class="kumo-game__undertale" aria-hidden="true" aria-live="polite">
@@ -105,7 +103,12 @@
 </section>
 
 <script>
+  import * as THREE from "three";
+  import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
   const kumoGame = document.querySelector<HTMLElement>(".kumo-game");
+  const kumoStage = kumoGame?.querySelector<HTMLElement>(".kumo-game__stage");
+  const kumoMonitorCanvas = kumoGame?.querySelector<HTMLCanvasElement>(".kumo-game__monitor");
   const kumoGameScene = kumoGame?.querySelector<HTMLElement>(".kumo-game__scene");
   const kumoGameVideo = kumoGame?.querySelector<HTMLVideoElement>(".kumo-game__video");
   const kumoMobileViewport = window.matchMedia("(max-width: 640px)");
@@ -141,6 +144,7 @@
   let kumoGameActive = false;
   let kumoFrameIndex = 0;
   let kumoFrameTimer: number | undefined;
+  let kumoDialogueStarting = false;
   let kumoUndertaleAdvanceTimer: number | undefined;
   let kumoAudioFadeFrame: number | undefined;
   let kumoUndertaleIndex = 0;
@@ -148,6 +152,253 @@
   const kumoVolumeLevel = 0.3;
   if (kumoAudio) kumoAudio.volume = kumoVolumeLevel;
   const kumoReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const kumoMonitorIdleViewAngle = -0.52;
+  const kumoMonitorIdleElevation = 0.18;
+  let kumoMonitorModel: THREE.Group | undefined;
+  let kumoMonitorCameraDistance = 0;
+  let kumoMonitorMobileCameraDistance = 0;
+  let kumoAnimateMonitorView: (straightOn: boolean) => Promise<void> = () => Promise.resolve();
+
+  if (kumoStage && kumoMonitorCanvas) {
+    const renderer = new THREE.WebGLRenderer({ canvas: kumoMonitorCanvas, alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    const scene = new THREE.Scene();
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x40352b, 2.1));
+    const keyLight = new THREE.DirectionalLight(0xffe4bc, 2.4);
+    keyLight.position.set(45, 55, 65);
+    scene.add(keyLight);
+    const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 1000);
+    camera.up.set(0, 0, 1);
+    camera.position.set(100, 0, 17);
+    camera.lookAt(0, 0, 0);
+    const monitorRaycaster = new THREE.Raycaster();
+    const monitorPointer = new THREE.Vector2();
+
+    kumoMonitorCanvas.addEventListener("click", (event) => {
+      if (!kumoMonitorModel) return;
+      const rect = kumoMonitorCanvas.getBoundingClientRect();
+      monitorPointer.set(
+        ((event.clientX - rect.left) / rect.width) * 2 - 1,
+        -((event.clientY - rect.top) / rect.height) * 2 + 1,
+      );
+      monitorRaycaster.setFromCamera(monitorPointer, camera);
+      if (monitorRaycaster.intersectObject(kumoMonitorModel, true).length === 0) return;
+      if (kumoGameState === "idle") startKumoDialogue();
+      else if (kumoGameState === "dialogue") advanceKumoUndertale();
+    });
+
+    let screenMesh: THREE.Mesh | undefined;
+    const screenVideoTexture = kumoGameVideo
+      ? new THREE.VideoTexture(kumoGameVideo)
+      : undefined;
+    if (screenVideoTexture) {
+      screenVideoTexture.colorSpace = THREE.SRGBColorSpace;
+      // The GLB screen's UVs span [1, 2], so repeat the video once across it.
+      screenVideoTexture.wrapS = THREE.RepeatWrapping;
+      screenVideoTexture.wrapT = THREE.RepeatWrapping;
+      screenVideoTexture.minFilter = THREE.LinearFilter;
+      screenVideoTexture.magFilter = THREE.LinearFilter;
+    }
+    const loader = new GLTFLoader();
+    loader.load("/assets/tv-cctv-monitor.glb", ({ scene: monitor }) => {
+      kumoMonitorModel = monitor;
+      // This model was authored a quarter-turn from landscape; rotate the
+      // monitor face into landscape before centering and projecting its screen.
+      monitor.rotation.x = Math.PI / 2;
+      monitor.rotation.z = 0;
+      const unscaledBounds = new THREE.Box3().setFromObject(monitor);
+      const unscaledSize = unscaledBounds.getSize(new THREE.Vector3());
+      const scale = 5.8 / Math.max(unscaledSize.x, unscaledSize.y, unscaledSize.z);
+      monitor.scale.setScalar(scale);
+      // Center after scaling so the model's large source coordinates do not
+      // become an equally large translation in the camera's world space.
+      const bounds = new THREE.Box3().setFromObject(monitor);
+      const center = bounds.getCenter(new THREE.Vector3());
+      monitor.position.sub(center);
+      monitor.updateMatrixWorld(true);
+      const size = bounds.getSize(new THREE.Vector3());
+      monitor.traverse((object) => {
+        if (!(object instanceof THREE.Mesh)) return;
+        object.castShadow = true;
+        object.receiveShadow = true;
+        if (object.name.includes("Screen")) {
+          screenMesh = object;
+          if (screenVideoTexture) {
+            object.material = new THREE.MeshBasicMaterial({
+              map: screenVideoTexture,
+              side: THREE.DoubleSide,
+              toneMapped: false,
+            });
+          }
+        }
+      });
+      scene.add(monitor);
+      // Keep the established desktop framing and scale the mobile camera
+      // distance with the portrait stage aspect ratio.
+      kumoMonitorCameraDistance = Math.max(size.x, size.y, size.z) * 2.05;
+      const mobileStageAspect = kumoStage.clientWidth / kumoStage.clientHeight;
+      kumoMonitorMobileCameraDistance =
+        Math.max(size.x, size.y, size.z) * (2.6 * 0.72 / mobileStageAspect);
+      const mobile = kumoMobileViewport.matches;
+      const idleAngle = kumoMonitorIdleViewAngle;
+      const idleElevation = kumoMonitorIdleElevation;
+      const idleDistance = mobile ? kumoMonitorMobileCameraDistance : kumoMonitorCameraDistance;
+      const startStraightOn = kumoGameState !== "idle" || kumoDialogueStarting;
+      camera.position.set(
+        startStraightOn ? (mobile ? kumoMonitorMobileCameraDistance : kumoMonitorCameraDistance) : idleDistance * Math.cos(idleAngle),
+        startStraightOn ? 0 : idleDistance * Math.sin(idleAngle),
+        startStraightOn ? 0 : idleDistance * idleElevation,
+      );
+      camera.lookAt(0, 0, 0);
+      updateMonitor();
+      alignGameToScreen();
+    }, undefined, (error) => console.error("Unable to load Kumo monitor model", error));
+
+    function fitGameToScreen() {
+      if (!screenMesh || !kumoStage || !kumoGameScene) return;
+      screenMesh.updateWorldMatrix(true, false);
+      const positions = screenMesh.geometry.getAttribute("position");
+      const projected: THREE.Vector3[] = [];
+      const point = new THREE.Vector3();
+      for (let index = 0; index < positions.count; index += 1) {
+        point.fromBufferAttribute(positions, index).applyMatrix4(screenMesh.matrixWorld).project(camera);
+        projected.push(point.clone());
+      }
+      // ScrollTrigger scales the stage visually. Use its untransformed layout
+      // size here because these values become CSS offsets inside that stage.
+      const stageWidth = kumoStage.clientWidth;
+      const stageHeight = kumoStage.clientHeight;
+      const points = projected.map((point) => ({
+        x: (point.x * 0.5 + 0.5) * stageWidth,
+        y: (-point.y * 0.5 + 0.5) * stageHeight,
+      }));
+      const xs = points.map((point) => point.x);
+      const ys = points.map((point) => point.y);
+      const left = Math.min(...xs), right = Math.max(...xs), top = Math.min(...ys), bottom = Math.max(...ys);
+      kumoGameScene.style.left = `${left}px`;
+      kumoGameScene.style.top = `${top}px`;
+      kumoGameScene.style.width = `${right - left}px`;
+      kumoGameScene.style.height = `${bottom - top}px`;
+
+      // Project the flat HTML controls onto the same four screen corners as
+      // the 3D display so the F prompt and dialogue tilt with the monitor.
+      const corners = [
+        points.reduce((best, point) => point.x + point.y < best.x + best.y ? point : best),
+        points.reduce((best, point) => point.x - point.y > best.x - best.y ? point : best),
+        points.reduce((best, point) => point.x + point.y > best.x + best.y ? point : best),
+        points.reduce((best, point) => point.x - point.y < best.x - best.y ? point : best),
+      ].map((point) => ({ x: point.x - left, y: point.y - top }));
+      const sourceCorners = [
+        { x: 0, y: 0 },
+        { x: right - left, y: 0 },
+        { x: right - left, y: bottom - top },
+        { x: 0, y: bottom - top },
+      ];
+      const equations: number[][] = [];
+      sourceCorners.forEach((source, index) => {
+        const target = corners[index];
+        equations.push([
+          source.x, source.y, 1, 0, 0, 0,
+          -target.x * source.x, -target.x * source.y, target.x,
+        ]);
+        equations.push([
+          0, 0, 0, source.x, source.y, 1,
+          -target.y * source.x, -target.y * source.y, target.y,
+        ]);
+      });
+      for (let column = 0; column < 8; column += 1) {
+        let pivot = column;
+        for (let row = column + 1; row < 8; row += 1) {
+          if (Math.abs(equations[row][column]) > Math.abs(equations[pivot][column])) pivot = row;
+        }
+        [equations[column], equations[pivot]] = [equations[pivot], equations[column]];
+        const divisor = equations[column][column];
+        if (Math.abs(divisor) < 1e-8) return;
+        for (let entry = column; entry <= 8; entry += 1) equations[column][entry] /= divisor;
+        for (let row = 0; row < 8; row += 1) {
+          if (row === column) continue;
+          const factor = equations[row][column];
+          for (let entry = column; entry <= 8; entry += 1) {
+            equations[row][entry] -= factor * equations[column][entry];
+          }
+        }
+      }
+      const [a, b, c, d, e, f, g, h] = equations.map((row) => row[8]);
+      kumoGameScene.style.transformOrigin = "0 0";
+      kumoGameScene.style.transform = `matrix3d(${a},${d},0,${g},${b},${e},0,${h},0,0,1,0,${c},${f},0,1)`;
+    }
+
+    function updateMonitor() {
+      const width = kumoStage!.clientWidth;
+      const height = kumoStage!.clientHeight;
+      if (!width || !height) return;
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.render(scene, camera);
+      fitGameToScreen();
+    }
+
+    function alignGameToScreen() { requestAnimationFrame(updateMonitor); }
+    const getMonitorCameraPosition = (straightOn: boolean) => {
+      const mobile = kumoMobileViewport.matches;
+      const idleAngle = mobile ? -0.12 : kumoMonitorIdleViewAngle;
+      const idleElevation = mobile ? 0.08 : kumoMonitorIdleElevation;
+      const distance = mobile ? kumoMonitorMobileCameraDistance : kumoMonitorCameraDistance;
+      return new THREE.Vector3(
+        straightOn ? distance : distance * Math.cos(idleAngle),
+        straightOn ? 0 : distance * Math.sin(idleAngle),
+        straightOn ? 0 : distance * idleElevation,
+      );
+    };
+    kumoAnimateMonitorView = (straightOn) => new Promise((resolve) => {
+      if (!kumoMonitorModel || kumoReducedMotion.matches) {
+        if (kumoMonitorCameraDistance && kumoMonitorMobileCameraDistance) {
+          camera.position.copy(getMonitorCameraPosition(straightOn));
+          camera.lookAt(0, 0, 0);
+        }
+        updateMonitor();
+        resolve();
+        return;
+      }
+      const from = camera.position.clone();
+      const target = getMonitorCameraPosition(straightOn);
+      const startedAt = performance.now();
+      const duration = 620;
+      const animate = (now: number) => {
+        const progress = Math.min((now - startedAt) / duration, 1);
+        const eased = 1 - (1 - progress) ** 3;
+        camera.position.lerpVectors(from, target, eased);
+        camera.lookAt(0, 0, 0);
+        updateMonitor();
+        if (progress < 1) requestAnimationFrame(animate);
+        else resolve();
+      };
+      requestAnimationFrame(animate);
+    });
+    const resizeObserver = new ResizeObserver(alignGameToScreen);
+    resizeObserver.observe(kumoStage);
+    window.addEventListener("resize", alignGameToScreen);
+    let monitorRenderFrame: number | undefined;
+    const renderFrame = () => {
+      monitorRenderFrame = undefined;
+      renderer.render(scene, camera);
+      if (kumoGameActive) monitorRenderFrame = requestAnimationFrame(renderFrame);
+    };
+    function startMonitorRenderLoop() {
+      if (monitorRenderFrame === undefined) monitorRenderFrame = requestAnimationFrame(renderFrame);
+    }
+    function stopMonitorRenderLoop() {
+      if (monitorRenderFrame !== undefined) cancelAnimationFrame(monitorRenderFrame);
+      monitorRenderFrame = undefined;
+      renderer.render(scene, camera);
+    }
+    kumoStage.dataset.monitorReady = "true";
+    kumoStage.addEventListener("kumo:monitor-start", startMonitorRenderLoop);
+    kumoStage.addEventListener("kumo:monitor-stop", stopMonitorRenderLoop);
+  }
 
   function loadKumoScene() {
     if (!kumoGameVideo) return;
@@ -345,13 +596,27 @@
   }
 
   function startKumoDialogue() {
-    if (!kumoGameActive || kumoGameState !== "idle") return;
+    if (!kumoGameActive || kumoGameState !== "idle" || kumoDialogueStarting) return;
+    kumoDialogueStarting = true;
     stopKumoFrames();
-    playKumoUndertale(0);
-    setKumoGameState("dialogue");
+    kumoGame?.classList.add("kumo-game--turning");
+    void kumoAnimateMonitorView(true).then(() => {
+      kumoDialogueStarting = false;
+      if (!kumoGameActive || kumoGameState !== "idle") {
+        kumoGame?.classList.remove("kumo-game--turning");
+        void kumoAnimateMonitorView(false);
+        scheduleKumoFrame();
+        return;
+      }
+      playKumoUndertale(0);
+      setKumoGameState("dialogue");
+    });
   }
 
   function returnToKumoIdle() {
+    kumoDialogueStarting = false;
+    kumoGame?.classList.remove("kumo-game--turning");
+    void kumoAnimateMonitorView(false);
     clearUndertaleTimer();
     kumoUndertaleIndex = 0;
     kumoFrameIndex = 0;
@@ -361,12 +626,10 @@
     scheduleKumoFrame();
   }
 
-  kumoPrompts?.forEach((prompt) => prompt.addEventListener("click", startKumoDialogue));
-  kumoSpriteButton?.addEventListener("click", startKumoDialogue);
   kumoSoundButton?.addEventListener("click", () => setKumoSoundEnabled(!kumoSoundEnabled));
-  kumoUndertale?.addEventListener("click", () => {
-    if (kumoGameState !== "dialogue") return;
-    advanceKumoUndertale();
+  kumoGameScene?.addEventListener("click", () => {
+    if (kumoGameState === "idle") startKumoDialogue();
+    else if (kumoGameState === "dialogue") advanceKumoUndertale();
   });
 
   kumoUndertaleVideo?.addEventListener("ended", finishKumoUndertale);
@@ -389,7 +652,7 @@
       returnToKumoIdle();
       return;
     }
-    if (event.key.toLowerCase() === "f" && kumoGameState === "idle") {
+    if (["e", "f"].includes(event.key.toLowerCase()) && kumoGameState === "idle") {
       event.preventDefault();
       startKumoDialogue();
     }
@@ -409,11 +672,13 @@
   const kumoGameObserver = kumoGame && new IntersectionObserver(([entry]) => {
     kumoGameActive = Boolean(entry?.isIntersecting && entry.intersectionRatio >= 0.35);
     if (kumoGameActive) {
+      kumoStage?.dispatchEvent(new Event("kumo:monitor-start"));
       playKumoVideo();
       playKumoAudio();
       fadeKumoAudio(kumoSoundEnabled ? kumoVolumeLevel : 0);
       scheduleKumoFrame();
     } else {
+      kumoStage?.dispatchEvent(new Event("kumo:monitor-stop"));
       kumoGameVideo?.pause();
       if (kumoSoundEnabled) fadeKumoAudio(0, true);
       else kumoAudio?.pause();
@@ -436,7 +701,7 @@
     overflow: hidden;
     --kumo-left: 26%;
     --kumo-bottom: 8%;
-    --kumo-width: clamp(70px, 8vw, 120px);
+    --kumo-width: clamp(44px, 4.8vw, 76px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -520,34 +785,23 @@
     line-height: 1.6;
   }
 
-  .kumo-game__window {
+  .kumo-game__stage {
     position: relative;
     z-index: 2;
-    width: min(100%, 1320px);
+    width: min(100%, 1180px);
+    height: min(76vh, 820px);
+    height: min(76dvh, 820px);
     margin: 0 auto;
-    overflow: hidden;
-    border-style: solid;
-    border-width: 20px;
-    border-image-source: url("/assets/kumo-window-frame.png");
-    border-image-slice: 60;
-    border-image-width: 20px;
-    border-image-outset: 0;
-    border-image-repeat: stretch;
-    background: #211f1d;
-    box-shadow: 0 24px 0 rgba(42, 40, 37, 0.08), 0 18px 45px rgba(42, 40, 37, 0.2);
+    isolation: isolate;
   }
 
-  .kumo-game__window-bar {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    min-height: 34px;
-    padding: 0 12px;
-    color: #edecea;
-    font: 0.68rem "Courier Prime", monospace;
-    letter-spacing: 0.05em;
+  .kumo-game__monitor {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    outline: none;
   }
 
   .kumo-game__sound-controls {
@@ -592,11 +846,12 @@
   .kumo-game__audio { display: none; }
 
   .kumo-game__scene {
-    position: relative;
-    aspect-ratio: var(--kumo-video-ratio, 16 / 9);
+    position: absolute;
+    z-index: 1;
     overflow: hidden;
     isolation: isolate;
-    background: #413c38;
+    background: transparent;
+    will-change: transform;
   }
 
   .kumo-game__video,
@@ -609,7 +864,8 @@
 
   .kumo-game__video {
     z-index: 0;
-    object-fit: cover;
+    object-fit: fill;
+    visibility: hidden;
   }
 
   .kumo-game__shade {
@@ -644,6 +900,18 @@
     bottom: var(--kumo-bottom);
     width: var(--kumo-width);
     transform: translateX(-50%);
+    transform-origin: center bottom;
+    transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .kumo-game__kumo {
+    transform: perspective(360px) rotateY(-16deg);
+    transform-origin: center bottom;
+    transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .kumo-game--turning .kumo-game__kumo {
+    transform: perspective(360px) rotateY(0deg);
   }
 
   .kumo-game__kumo {
@@ -662,16 +930,16 @@
 
   .kumo-game__prompt {
     left: 50%;
-    bottom: 8%;
+    bottom: 50%;
     width: clamp(150px, 15vw, 220px);
-    transform: translateX(-50%);
+    transform: translate(-50%, 50%);
     will-change: transform;
     animation: kumo-game__prompt-float 3.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
   }
 
   @keyframes kumo-game__prompt-float {
-    0%, 100% { transform: translate(-50%, 0); }
-    50% { transform: translate(-50%, -5px); }
+    0%, 100% { transform: translate(-50%, 50%); }
+    50% { transform: translate(-50%, calc(50% - 5px)); }
   }
 
   .kumo-game__prompt img {
@@ -687,7 +955,7 @@
     position: absolute;
     bottom: 2%;
     left: 50%;
-    width: min(30%, 620px);
+    width: min(72%, 800px);
     aspect-ratio: 873 / 234;
     z-index: 3;
     opacity: 0;
@@ -740,28 +1008,19 @@
 
   @media (max-width: 640px) {
     .kumo-game {
-      --kumo-left: 58%;
-      --kumo-bottom: 15%;
-      --kumo-width: clamp(42px, 13vw, 64px);
+      --kumo-left: 28%;
+      --kumo-bottom: 10%;
+      --kumo-width: clamp(30px, 8vw, 46px);
       gap: 16px;
       padding: 24px 14px 32px;
-      background-image: linear-gradient(rgba(223, 233, 223, 0.48), rgba(223, 233, 223, 0.48)), url("/game/kumo/mobile/mobile_bg.png");
-      background-position: center;
-      background-size: cover;
-      background-repeat: no-repeat;
     }
     .kumo-game__eyebrow { margin-bottom: 8px; }
-    .kumo-game__title { font-size: 3.2rem; }
     .kumo-game__description { max-width: 320px; margin-top: 8px; line-height: 1.45; }
-    .kumo-game__window-bar { min-height: 30px; font-size: 0.58rem; }
-    .kumo-game__window {
-      border-width: 15px;
-      border-image-width: 15px;
-    }
+    .kumo-game__stage { width: 100%; height: min(70vh, 620px); height: min(70dvh, 620px); }
     .kumo-game__sound-controls { top: 12px; right: 12px; }
     .kumo-game__sound-button { width: 38px; height: 38px; }
     .kumo-game__prompt--desktop { display: none; }
-    .kumo-game__prompt--mobile { display: block; bottom: calc(var(--kumo-bottom) + var(--kumo-width) * 1.05); width: 34vw; }
+    .kumo-game__prompt--mobile { display: block; bottom: 50%; width: 34vw; }
     .kumo-game__undertale { bottom: 1.5%; width: 88%; }
     .kumo-game__choices { width: min(78%, 300px); gap: 10px; }
     .kumo-game__choice { padding: 6px 8px; text-align: left; }
@@ -770,6 +1029,7 @@
   @media (prefers-reduced-motion: reduce) {
     .kumo-game__video { visibility: hidden; }
     .kumo-game__prompt { animation: none; }
+    .kumo-game__kumo { transition-duration: 0ms; }
     .kumo-game__shade,
     .kumo-game__undertale { transition: none; }
   }
