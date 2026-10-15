@@ -8,9 +8,6 @@
       class="face-image"
       src="/images/faces/straight-main.png"
       alt=""
-      width="450"
-      height="450"
-      decoding="async"
     />
   </button>
 
@@ -19,11 +16,11 @@
     type="button"
     aria-label="Open about me"
   >
-    ABOUT ME ↗
+    CLICK ME ↗
   </button>
 </div>
 
-<div class="face-overlay" aria-hidden="true" data-lenis-prevent>
+<div class="face-overlay" aria-hidden="true">
   <div
     class="about-card"
     role="dialog"
@@ -40,12 +37,8 @@
 
     <div class="about-card-image">
       <img
-        src="/images/profile/about.webp"
+        src="/images/profile/about.jpeg"
         alt="Portrait of Entwan"
-        width="2142"
-        height="2856"
-        loading="lazy"
-        decoding="async"
       />
     </div>
 
@@ -57,16 +50,16 @@
       </h2>
 
       <p class="about-card-text">
-        I'm a Data Scientist and AI Engineer at <b>Powerserve Global</b> in London, originally from <b>Mongolia</b>.
+        I'm a Data Scientist and AI Engineer at <b>Powerserve Global</b> based in London, originally from <b>Mongolia</b> .
       </p>
 
       <p class="about-card-text">
-        BScHons in AI, <b>Buckinghamshire New University</b>.
+        In 2021 came to the UK to chase my dream and ended up graduating with a BSc (Hons) in AI from <b>Buckinghamshire New University</b>.
       </p>
 
       <p class="about-card-text">
-        Outside work, I'm also a sushi chef, I train Muay Thai, go JIM (gym haha), and play basketball. 
-        I love autumn, nature, painting, and my <b>skull-cap hats</b>.
+        Outside work, I'm also a sushi chef, I train Muay Thai, go to JIM (gym haha), and play basketball. 
+        I love autumn, nature, painting, and my <b>skull-caps hat</b>.
       </p>
 
       <p class="about-card-text">
@@ -177,14 +170,7 @@
     faceButton?.classList.add("has-been-clicked");
   }
 
-  faceButton?.addEventListener("click", openAbout);
-
-  faceHint?.addEventListener("click", openAbout);
-
-  window.addEventListener("open-about-dialog", openAbout);
-
-  const canHover =
-    window.matchMedia("(hover: hover)").matches;
+  const canHover = window.matchMedia("(hover: hover)").matches;
 
   if (canHover) {
     faceButton?.addEventListener("mouseenter", () => {
@@ -236,7 +222,7 @@
     background: transparent;
 
     font-family: "Courier Prime", monospace;
-    font-size: 0.7rem;
+    font-size: 0.58rem;
 
     font-weight: 700;
 
@@ -405,10 +391,6 @@
     transition:
       transform 0.75s
       cubic-bezier(0.22, 1, 0.36, 1);
-
-    overscroll-behavior: contain;
-    touch-action: pan-y;
-    -webkit-overflow-scrolling: touch;
   }
 
   .face-overlay.is-open .about-card {
@@ -538,7 +520,7 @@
     }
 
     .face-hint {
-      font-size: 0.72rem;
+      font-size: 0.62rem;
     }
 
     .about-card {

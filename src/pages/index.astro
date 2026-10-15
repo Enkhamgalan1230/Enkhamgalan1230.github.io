@@ -21,37 +21,100 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
        HERO
        ========================= -->
 
-  <section class="hero" data-scroll-reveal-section="hero" data-scroll-fade-section>
-    <div class="hero-content" data-scroll-reveal-group>
-      <p class="hero-intro">
-        Data and problem <span class="hero-green">given.</span>
-        <br />
-        I turn them into:
-      </p>
+  <section class="hero hero-about" data-scroll-reveal-section="hero" data-scroll-fade-section>
+    <div class="hero-content hero-about-content" data-scroll-reveal-group>
+      <div class="hero-about-copy">
+        <h1>
+          Enkh-Amgalan <span>Entwan</span> Enkhbayar.
+        </h1>
 
-      <div class="fill-game" aria-label="Examples of what I build">
-        <div class="fill-options" aria-hidden="true">
-          <span class="fill-word" data-fill-word="FORECASTS">FORECASTS</span>
-          <span class="fill-word" data-fill-word="AUTOMATION">AUTOMATION</span>
-          <span class="fill-word" data-fill-word="RECOMMENDATIONS">RECOMMENDATIONS</span>
-          <span class="fill-word" data-fill-word="COOL AI THINGS">COOL AI THINGS</span>
-        </div>
+        <p class="hero-bio">
+          I am a <strong>Data Scientist and AI Engineer</strong> at
+          <a class="hero-inline-link hero-company-link" href="https://powerserve.global/" target="_blank" rel="noreferrer">
+            <img src="/images/powerserve.png" alt="" aria-hidden="true" />
+            <span class="hero-company-name">PowerServe Systems Ltd</span>
+            <span class="hero-link-arrow" aria-hidden="true">↗</span>
+          </a>, currently based in London, UK.
+        </p>
 
-        <div class="fill-answer" aria-live="polite">
-          <span id="typewriter">COOL AI THINGS</span>
+        <p class="hero-bio">
+          I graduated from
+          <a class="hero-inline-link hero-university-link" href="https://www.bucks.ac.uk/" target="_blank" rel="noreferrer">
+            <img src="/images/uni.png" alt="" aria-hidden="true" />
+            <span class="hero-university-name">Buckinghamshire New University</span>
+            <span class="hero-link-arrow" aria-hidden="true">↗</span>
+          </a>
+          with BSc(Hons) in Artificial Intelligence in June 2025.
+        </p>
+
+        <p class="hero-bio">
+          I have so many interests, ranging from technology to sports, arts, motorcycles etc haha. Currently working on AI agents and cloud computing platforms.
+        </p>
+
+        <div class="hero-links" aria-label="Profile links">
+          <a class="hero-cv-link" href="/cv/Enkh-Amgalan_CV.pdf" target="_blank" rel="noreferrer">
+            <span>CV</span>
+            <span aria-hidden="true">↗</span>
+          </a>
         </div>
       </div>
 
-      <a
-        class="cv-download"
-        href="/cv/Enkh-Amgalan_CV.pdf"
-        target="_blank"
-        rel="noreferrer"
-        aria-label="View Enkh-Amgalan's CV"
-      >
-        <span>VIEW CV</span>
-        <span class="cv-download-arrow" aria-hidden="true">&#x2197;</span>
-      </a>
+      <div class="hero-about-image" data-hero-orbit>
+        <div class="hero-orbit-message" data-hero-orbit-message role="status" aria-live="polite"></div>
+
+        <div class="hero-orbit-items" aria-label="Things I enjoy">
+          <button class="hero-orbit-item orbit-leaf" type="button" data-orbit-index="0" data-placeholder="AUTUMN / NATURE" data-message="I love nature, especially during autumn." aria-label="Show autumn and nature message">
+            <span class="hero-orbit-label">LEAF</span>
+            <img src="/images/hero/leaf.png" alt="" aria-hidden="true" />
+          </button>
+          <button class="hero-orbit-item orbit-laptop" type="button" data-orbit-index="4" data-placeholder="AI / DATA SCIENCE" data-message="My Asus V16, I do my AI and Data Science things on this." aria-label="Show AI and Data Science message">
+            <span class="hero-orbit-label">ASUS V16</span>
+            <img src="/images/hero/asus.png" alt="" aria-hidden="true" />
+          </button>
+          <button class="hero-orbit-item orbit-boots" type="button" data-orbit-index="3" data-placeholder="MONGOLIAN ROOTS" data-message="I'm from Mongolia btw, this is a traditional boot" aria-label="Show Mongolian roots message">
+            <span class="hero-orbit-label">MONGOLIAN ROOTS</span>
+            <img src="/images/hero/boots.png" alt="" aria-hidden="true" />
+          </button>
+          <button class="hero-orbit-item orbit-uk" type="button" data-orbit-index="1" data-placeholder="LIVING IN THE UK" data-message="I'm living in the London, UK at the moment." aria-label="Show living in the UK message">
+            <span class="hero-orbit-label">UK</span>
+            <img src="/images/hero/uk.png" alt="" aria-hidden="true" />
+          </button>
+          <button class="hero-orbit-item orbit-plate" type="button" data-orbit-index="2" data-placeholder="LIFTING" data-message="I like lifting, it's been for four years now." aria-label="Show lifting message">
+            <span class="hero-orbit-label">25 PlATE</span>
+            <img src="/images/hero/plate.png" alt="" aria-hidden="true" />
+          </button>
+          <button class="hero-orbit-item orbit-gloves" type="button" data-orbit-index="6" data-placeholder="MUAY THAI" data-message="I do Muay Thai, OOOweee!" aria-label="Show Muay Thai message">
+            <span class="hero-orbit-label">GLOVES</span>
+            <img src="/images/hero/gloves.png" alt="" aria-hidden="true" />
+          </button>
+          <button class="hero-orbit-item orbit-soysauce" type="button" data-orbit-index="7" data-placeholder="SUSHI CHEF" data-message="I am a SUSHI CHEF too, I love making it but not eating it." aria-label="Show sushi chef message">
+            <span class="hero-orbit-label">KIKOMAN</span>
+            <img src="/images/hero/soysauce.png" alt="" aria-hidden="true" />
+          </button>
+          <button class="hero-orbit-item orbit-cap" type="button" data-orbit-index="5" data-placeholder="SKULL-CAP HATS" data-message="I love my skull cap hats." aria-label="Show skull-cap hats message">
+            <span class="hero-orbit-label">SKULL-CAP</span>
+            <img src="/images/hero/skull.png" alt="" aria-hidden="true" />
+          </button>
+        </div>
+
+        <button
+          class="hero-main-trigger"
+          type="button"
+          data-placeholder="ME"
+          data-message="Poland Easter Trip 2026 with Luska and Sully."
+          aria-label="Show Poland Easter Trip 2026 message"
+        >
+          <span class="hero-main-label">ME</span>
+          <img
+            class="hero-main-image"
+            src="/images/hero/m3e.png"
+            alt="Enkh-Amgalan with his dogs"
+            width="800"
+            height="1000"
+            fetchpriority="high"
+          />
+        </button>
+      </div>
     </div>
 
     <a class="scroll-cue" href="#projects">
@@ -520,7 +583,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
 
         <a
           class="projects-scroll-cue"
-          href="#head-prompt"
+          href="#kumo-game"
         >
           <span>SCROLL TO EXPLORE</span>
           <span class="scroll-arrow" aria-hidden="true">&#x2193;</span>
@@ -529,58 +592,6 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
       </div>
     </div>
   </section>
-
-  <section
-    class="head-prompt"
-    id="head-prompt"
-    data-scroll-reveal-section="head-prompt"
-    data-scroll-fade-section
-    data-scroll-reveal-group
-    aria-labelledby="head-prompt-title"
-  >
-    <p class="head-prompt-label">ABOUT ME</p>
-
-    <h2 id="head-prompt-title">
-      Did you click on that
-      <span class="head-prompt-yet">
-        <img
-          class="head-prompt-face"
-          src="/images/faces/straight-main.png"
-          alt=""
-          aria-hidden="true"
-        />
-        yet?
-      </span>
-    </h2>
-
-    <div class="head-prompt-actions">
-      <button
-        class="head-prompt-button head-prompt-button-muted"
-        type="button"
-        data-head-not-yet
-      >
-        Not yet
-      </button>
-
-      <button
-        class="head-prompt-button"
-        type="button"
-        data-head-did-it
-      >
-        Yeah I did
-      </button>
-    </div>
-
-  </section>
-
-  <div
-    class="head-toast"
-    data-head-toast
-    role="status"
-    aria-live="polite"
-  >
-    NICE TO MEET YOU IN THAT CASE &#x1F91D;
-  </div>
 
   <KumoGameScene />
 
@@ -635,6 +646,116 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
 
 
 <script>
+  function initHeroOrbit() {
+    const heroOrbit = document.querySelector<HTMLElement>("[data-hero-orbit]");
+    const heroOrbitMessage = heroOrbit?.querySelector<HTMLElement>("[data-hero-orbit-message]");
+    const heroOrbitItems = heroOrbit
+      ? Array.from(heroOrbit.querySelectorAll<HTMLButtonElement>("[data-placeholder]"))
+      : [];
+    const heroOrbitObjects = heroOrbitItems
+      .filter((item) => item.classList.contains("hero-orbit-item"))
+      .sort((a, b) => Number(a.dataset.orbitIndex) - Number(b.dataset.orbitIndex));
+    let heroOrbitMessageTimer: number | undefined;
+
+    const heroOrbitDefinitions = [
+      { selector: ".orbit-leaf", angle: 185.625, size: 104, rotation: -12, mobileX: 0.12, mobileY: 0.88 },
+      { selector: ".orbit-uk", angle: 196.875, size: 80, rotation: -4, mobileX: 0.11, mobileY: 0.48 },
+      { selector: ".orbit-plate", angle: 208.125, size: 75, rotation: 10, mobileX: 0.23, mobileY: 0.68 },
+      { selector: ".orbit-boots", angle: 219.375, size: 100, rotation: -8, xOffset: -18, mobileX: 0.19, mobileY: 0.22 },
+      { selector: ".orbit-laptop", angle: 230.625, size: 160, rotation: 4, mobileX: 0.43, mobileY: 0.37 },
+      { selector: ".orbit-cap", angle: 241.875, size: 84, rotation: -7, mobileX: 0.42, mobileY: 0.14 },
+      { selector: ".orbit-gloves", angle: 253.125, size: 110, rotation: 12, xOffset: 20, mobileX: 0.66, mobileY: 0.21 },
+      { selector: ".orbit-soysauce", angle: 264.375, size: 86, rotation: -10, mobileX: 0.86, mobileY: 0.14 },
+    ];
+
+    function layoutHeroOrbit() {
+      if (!heroOrbit) return;
+
+      const stageRect = heroOrbit.getBoundingClientRect();
+      const mainImage = heroOrbit.querySelector<HTMLElement>(".hero-main-trigger");
+      const mainRect = mainImage?.getBoundingClientRect();
+      if (!mainRect) return;
+      const isMobile = window.matchMedia("(max-width: 640px)").matches;
+
+      // The portrait sits inside the lower-right quadrant. The objects follow
+      // one quarter-ellipse around its outside edge, like the reference sketch.
+      const arcCenterX = mainRect.right - stageRect.left - 18;
+      const arcCenterY = mainRect.bottom - stageRect.top - 18;
+      const arcRadiusX = mainRect.width * 1.12;
+      const arcRadiusY = mainRect.height * 0.92;
+
+      heroOrbitDefinitions.forEach((definition, index) => {
+        const item = heroOrbit.querySelector<HTMLButtonElement>(definition.selector);
+        if (!item) return;
+        const isBoots = definition.selector === ".orbit-boots";
+
+        const angle = (definition.angle * Math.PI) / 180;
+        const size = Math.min(
+          definition.size * (isMobile ? 0.78 : 1),
+          stageRect.width * (isMobile ? 0.2 : 0.24),
+        );
+        const gap = 68 + size / 2;
+        const rawX = isMobile && definition.mobileX !== undefined
+          ? definition.mobileX * stageRect.width
+          : arcCenterX + ((arcRadiusX + gap) * Math.cos(angle)) + (definition.xOffset ?? 0);
+        const rawY = isMobile && definition.mobileY !== undefined
+          ? definition.mobileY * stageRect.height
+          : arcCenterY + ((arcRadiusY + gap) * Math.sin(angle)) + (definition.yOffset ?? 0);
+        const defaultX = Math.max(
+          isMobile ? size / 2 + 8 : size / 2 + 12,
+          Math.min(stageRect.width - size / 2 - 12, rawX),
+        );
+        const defaultY = Math.max(size / 2 + 12, Math.min(stageRect.height - size / 2 - 12, rawY));
+        const x = defaultX;
+        const y = defaultY;
+
+        item.style.left = `${x}px`;
+        item.style.top = `${y}px`;
+        item.style.width = `${size}px`;
+        item.style.setProperty("--orbit-rotation", `${definition.rotation}deg`);
+        item.style.setProperty(
+          "--orbit-duration",
+          `${isBoots ? (isMobile ? 8.4 : 7.2) + ((index * 0.47) % (isMobile ? 1.4 : 1.2)) : isMobile ? 7.2 + ((index * 0.47) % 2.2) : 4.8 + ((index * 0.47) % 1.7)}s`,
+        );
+        item.style.setProperty("--orbit-delay", `${-(index * 0.63)}s`);
+        item.style.setProperty("--orbit-lift", `${isBoots ? 2 : isMobile ? 3 + ((index * 2) % 3) : 6 + ((index * 3) % 6)}px`);
+        item.style.setProperty(
+          "--orbit-sway",
+          `${(index % 2 === 0 ? -1 : 1) * (isBoots ? 1 : isMobile ? 1 + (index % 2) : 2 + (index % 3))}px`,
+        );
+      });
+      if (heroOrbitMessage) {
+        heroOrbitMessage.style.left = `${mainRect.left - stageRect.left + mainRect.width * 0.62}px`;
+        heroOrbitMessage.style.top = "auto";
+        heroOrbitMessage.style.bottom = "18px";
+      }
+    }
+
+    layoutHeroOrbit();
+    heroOrbit?.querySelector<HTMLImageElement>(".hero-main-image")?.addEventListener("load", layoutHeroOrbit, { once: true });
+    requestAnimationFrame(layoutHeroOrbit);
+    window.addEventListener("resize", layoutHeroOrbit, { passive: true });
+
+    heroOrbit?.addEventListener("click", (event) => {
+    const target = event.target as HTMLElement;
+    const item = target.closest<HTMLButtonElement>("[data-placeholder]");
+    if (!item || !heroOrbitMessage) return;
+
+    window.clearTimeout(heroOrbitMessageTimer);
+    heroOrbitMessage.textContent = item.dataset.message ?? item.dataset.placeholder ?? "";
+    heroOrbitMessage.classList.add("is-visible");
+    heroOrbitMessageTimer = window.setTimeout(() => {
+      heroOrbitMessage.classList.remove("is-visible");
+    }, 6000);
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initHeroOrbit, { once: true });
+  } else {
+    initHeroOrbit();
+  }
+
   const deferredVideos = Array.from(
     document.querySelectorAll<HTMLVideoElement>("[data-deferred-video]"),
   );
@@ -717,160 +838,6 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
       closeKumoInfo();
     }
   });
-
-  const notYetButton =
-    document.querySelector<HTMLButtonElement>(
-      "[data-head-not-yet]"
-    );
-
-  const didItButton =
-    document.querySelector<HTMLButtonElement>(
-      "[data-head-did-it]"
-    );
-
-  let toastTimer: number | undefined;
-
-  function showHeadToast() {
-    const toast =
-      document.querySelector<HTMLElement>(
-        "[data-head-toast]"
-      );
-
-    if (!toast) return;
-
-    window.clearTimeout(toastTimer);
-    toast.classList.remove("is-visible");
-
-    requestAnimationFrame(() => {
-      toast?.classList.add("is-visible");
-    });
-
-    toastTimer = window.setTimeout(() => {
-      toast?.classList.remove("is-visible");
-    }, 3200);
-  }
-
-  notYetButton?.addEventListener("click", () => {
-    window.dispatchEvent(new CustomEvent("open-about-dialog"));
-  });
-
-  didItButton?.addEventListener("click", showHeadToast);
-
-  const promptFace =
-    document.querySelector<HTMLImageElement>(
-      ".head-prompt-face"
-    );
-
-  const promptFaceFrames = [
-    { src: "/images/faces/straight-main.png", duration: 80 },
-    { src: "/images/faces/left-transition.png", duration: 90 },
-    { src: "/images/faces/left-main.png", duration: 240 },
-    { src: "/images/faces/left-transition.png", duration: 90 },
-    { src: "/images/faces/straight-main.png", duration: 120 },
-    { src: "/images/faces/right-transition.png", duration: 90 },
-    { src: "/images/faces/right-main.png", duration: 240 },
-    { src: "/images/faces/right-transition.png", duration: 90 },
-    { src: "/images/faces/straight-main.png", duration: 0 },
-  ];
-
-  let promptFacePlaying = false;
-
-  promptFaceFrames.forEach(({ src }) => {
-    const image = new Image();
-    image.src = src;
-  });
-
-  function wait(ms: number) {
-    return new Promise<void>((resolve) => {
-      window.setTimeout(resolve, ms);
-    });
-  }
-
-  async function playPromptFace() {
-    if (
-      !promptFace ||
-      promptFacePlaying ||
-      document.hidden ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      return;
-    }
-
-    promptFacePlaying = true;
-
-    try {
-      for (const frame of promptFaceFrames) {
-        promptFace.src = frame.src;
-
-        if (frame.duration > 0) {
-          await wait(frame.duration);
-        }
-      }
-    } finally {
-      promptFace.src = "/images/faces/straight-main.png";
-      promptFacePlaying = false;
-    }
-  }
-
-  window.setInterval(playPromptFace, 8000);
-
-  /* =========================
-     TYPEWRITER
-     ========================= */
-
-  const words = [
-    "FORECASTS",
-    "AUTOMATION",
-    "RECOMMENDATIONS",
-    "“Yeahh, that makes sense” moments",
-    "COOL AI THINGS",
-  ];
-  words.splice(3, 1);
-
-  const element =
-    document.querySelector<HTMLElement>(
-      "#typewriter"
-    );
-
-  const fillWords = document.querySelectorAll<HTMLElement>("[data-fill-word]");
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  let fillIndex = 0;
-
-  function showFillWord(word: string) {
-    if (!element) return;
-
-    fillWords.forEach((fillWord) => {
-      fillWord.classList.toggle(
-        "is-active",
-        fillWord.dataset.fillWord === word,
-      );
-    });
-
-    element.classList.remove("is-filling");
-    void element.offsetWidth;
-    element.textContent = word;
-    element.classList.add("is-filling");
-  }
-
-  if (reducedMotion.matches) {
-    showFillWord(words[words.length - 1]);
-  } else {
-    showFillWord(words[0]);
-
-    const advanceFillWord = () => {
-      if (fillIndex >= words.length - 1) return;
-
-      fillIndex += 1;
-      showFillWord(words[fillIndex]);
-
-      if (fillIndex < words.length - 1) {
-        window.setTimeout(advanceFillWord, 1000);
-      }
-    };
-
-    window.setTimeout(advanceFillWord, 1000);
-  }
-
 
   // Keep scrolling native. Visual reveals and project motion should not take
   // control of the user's wheel or touch scrolling.
@@ -1841,12 +1808,9 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
 
     width: 100%;
 
-    min-height:
-      calc(
-        100vh - 140px
-      );
+    min-height: min(680px, calc(100vh - 140px));
 
-    padding: 24px;
+    padding: 84px 48px 96px;
 
     overflow: hidden;
 
@@ -1876,7 +1840,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
       );
     background-size: 30px 30px;
 
-    opacity: 1;
+    opacity: 0;
   }
 
   .hero-content {
@@ -1893,6 +1857,355 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
       );
 
     text-align: left;
+  }
+
+  .hero-about-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(480px, 620px);
+    align-items: center;
+    gap: clamp(48px, 8vw, 96px);
+    width: min(100%, 1340px);
+  }
+
+  .hero-about-copy {
+    max-width: 570px;
+  }
+
+  .hero-label {
+    margin: 0 0 22px;
+    color: #777777;
+    font-family: "Courier Prime", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+  }
+
+  .hero-about h1 {
+    margin: 0;
+    color: #111111;
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: clamp(3rem, 4.3vw, 4.7rem);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    line-height: 0.96;
+  }
+
+  .hero-about h1 span {
+    color: #4d7657;
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  .hero-role {
+    margin: 14px 0 0;
+    color: #777777;
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+  }
+
+  .hero-bio {
+    max-width: 54ch;
+    margin: 22px 0 0;
+    color: #555555;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: clamp(1rem, 1.05vw, 1.08rem);
+    line-height: 1.58;
+  }
+
+  .hero-bio strong {
+    color: #111111;
+    font-weight: 700;
+  }
+
+  .hero-inline-link {
+    border-bottom: 1px dotted currentColor;
+    color: inherit;
+    text-decoration: none;
+    transition: color 160ms ease;
+  }
+
+  .hero-inline-link:hover,
+  .hero-inline-link:focus-visible {
+    color: #4d7657;
+  }
+
+  .hero-company-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.16em;
+    color: inherit;
+    border-bottom: 0;
+    vertical-align: baseline;
+    position: relative;
+    top: 0.1em;
+  }
+
+  .hero-company-link img {
+    width: 1.65em;
+    height: 1.65em;
+    object-fit: contain;
+    vertical-align: middle;
+  }
+
+  .hero-company-name {
+    border-bottom: 1px dotted currentColor;
+    color: #111111;
+    white-space: nowrap;
+  }
+
+  .hero-link-arrow {
+    color: #4d7657;
+  }
+
+  .hero-university-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.18em;
+    border-bottom: 0;
+    color: inherit;
+    vertical-align: baseline;
+    position: relative;
+    top: 0.1em;
+  }
+
+  .hero-university-link img {
+    width: 1.35em;
+    height: 1.35em;
+    object-fit: contain;
+    vertical-align: middle;
+  }
+
+  .hero-university-name {
+    border-bottom: 1px dotted currentColor;
+    color: #111111;
+    white-space: nowrap;
+  }
+
+  .hero-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 22px;
+    margin-top: 32px;
+  }
+
+  .hero-links a {
+    border-bottom: 1px dotted currentColor;
+    color: #111111;
+    font-size: 0.78rem;
+    transition: color 160ms ease;
+  }
+
+  .hero-links a:hover {
+    color: #4d7657;
+  }
+
+  .hero-links span {
+    color: #4d7657;
+  }
+
+  .hero-links .hero-cv-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    border: 0;
+    border-radius: 999px;
+    background: #4d7657;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    box-shadow: 0 5px 0 rgba(77, 118, 87, 0.2);
+    transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+  }
+
+  .hero-links .hero-cv-link span {
+    color: inherit;
+  }
+
+  .hero-links .hero-cv-link:hover,
+  .hero-links .hero-cv-link:focus-visible {
+    transform: translateY(-2px);
+    background: #3f6448;
+    color: #ffffff;
+    box-shadow: 0 7px 0 rgba(77, 118, 87, 0.2);
+  }
+
+  .hero-about-image {
+    position: relative;
+    justify-self: end;
+    width: min(100%, 620px);
+    aspect-ratio: 1 / 1.16;
+    overflow: visible;
+  }
+
+  .hero-orbit-message {
+    position: absolute;
+    top: auto;
+    bottom: 18px;
+    left: 78%;
+    z-index: 5;
+    width: min(310px, calc(100vw - 44px));
+    padding: 12px 16px;
+    border: 1px solid rgba(17, 17, 17, 0.12);
+    border-radius: 14px;
+    background: rgba(237, 236, 234, 0.92);
+    color: #555555;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: clamp(1rem, 1.1vw, 1.08rem);
+    line-height: 1.68;
+    letter-spacing: normal;
+    text-align: left;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 8px);
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  .hero-orbit-message::after {
+    position: absolute;
+    right: 40%;
+    top: -10px;
+    width: 17px;
+    height: 17px;
+    border-top: 1px solid rgba(17, 17, 17, 0.12);
+    border-left: 1px solid rgba(17, 17, 17, 0.12);
+    background: rgba(237, 236, 234, 0.92);
+    content: "";
+    transform: rotate(45deg);
+  }
+
+  .hero-orbit-message.is-visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  .hero-orbit-items {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+  }
+
+  .hero-orbit-item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    --orbit-rotation: 0deg;
+    display: block;
+    width: clamp(78px, 10vw, 138px);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+    animation: hero-orbit-float var(--orbit-duration, 5.2s) ease-in-out infinite;
+    animation-delay: var(--orbit-delay, 0s);
+    will-change: transform;
+    transition: filter 180ms ease, transform 180ms ease;
+  }
+
+  .hero-orbit-item:hover,
+  .hero-orbit-item:focus-visible {
+    z-index: 4;
+    filter: drop-shadow(0 8px 8px rgba(17, 17, 17, 0.12));
+    animation-play-state: paused;
+  }
+
+  .hero-orbit-item:hover img,
+  .hero-orbit-item:focus-visible img {
+    transform: scale(1.16);
+  }
+
+  .hero-orbit-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transform-origin: center;
+    transition: transform 180ms ease;
+  }
+
+  .hero-orbit-label {
+    position: relative;
+    z-index: 10;
+    display: block;
+    width: max-content;
+    max-width: 150px;
+    margin: 0 auto 5px;
+    padding: 4px 7px;
+    border: 1px solid rgba(17, 17, 17, 0.1);
+    border-radius: 999px;
+    background: rgba(237, 236, 234, 0.96);
+    color: #555555;
+    font: 0.52rem "Courier Prime", monospace;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .orbit-laptop { width: clamp(88px, 12vw, 150px); }
+  .orbit-cap { width: clamp(58px, 8vw, 88px); }
+  .orbit-gloves { width: clamp(78px, 10vw, 122px); }
+  .orbit-soysauce { width: clamp(46px, 6vw, 72px); }
+
+  .hero-main-trigger {
+    position: absolute;
+    right: 1%;
+    bottom: 0;
+    z-index: 2;
+    width: 72%;
+    height: 92%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    transition: filter 180ms ease, transform 180ms ease;
+  }
+
+  .hero-main-trigger:hover,
+  .hero-main-trigger:focus-visible {
+    z-index: 6;
+    filter: drop-shadow(0 10px 10px rgba(17, 17, 17, 0.12));
+    transform: scale(1.04);
+  }
+
+  .hero-main-trigger:focus-visible {
+    outline: 2px solid rgba(77, 118, 87, 0.6);
+    outline-offset: 6px;
+    border-radius: 46%;
+  }
+
+  .hero-main-label {
+    position: absolute;
+    top: 24%;
+    left: 66%;
+    z-index: 1;
+    display: block;
+    width: max-content;
+    padding: 4px 8px;
+    border: 1px solid rgba(17, 17, 17, 0.1);
+    border-radius: 999px;
+    background: rgba(237, 236, 234, 0.86);
+    color: #555555;
+    font: 0.58rem "Courier Prime", monospace;
+    letter-spacing: 0.08em;
+    transform: translateX(-50%);
+  }
+
+  .hero-main-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center bottom;
+  }
+
+  @keyframes hero-orbit-float {
+    0%, 100% {
+      transform: translate(calc(-50% - var(--orbit-sway, 0px)), -50%) rotate(var(--orbit-rotation));
+    }
+    50% {
+      transform: translate(calc(-50% + var(--orbit-sway, 0px)), calc(-50% - var(--orbit-lift, 8px))) rotate(var(--orbit-rotation));
+    }
   }
 
   .hero-green {
@@ -3296,19 +3609,72 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
   ) {
 
     .hero {
-      min-height:
-        calc(
-          100vh - 110px
-        );
-
-      padding:
-        24px
-        18px
-        120px;
+      min-height: auto;
+      padding: 42px 18px 64px;
     }
 
     .hero-content {
       width: 100%;
+    }
+
+    .hero-about-content {
+      display: flex;
+      flex-direction: column;
+      grid-template-columns: 1fr;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .hero-about-copy {
+      display: contents;
+      max-width: none;
+    }
+
+    .hero-about h1 {
+      order: 1;
+      font-size: clamp(2.7rem, 13vw, 4rem);
+    }
+
+    .hero-bio {
+      order: 3;
+      width: 100%;
+      margin-top: 18px;
+      font-size: 0.96rem;
+      line-height: 1.55;
+    }
+
+    .hero-about-image {
+      order: 2;
+      justify-self: start;
+      width: min(100%, 480px);
+      aspect-ratio: 0.88 / 1;
+      margin-top: 42px;
+    }
+
+    .hero-main-trigger {
+      right: -1%;
+      width: 70%;
+      height: 94%;
+    }
+
+    .hero-links {
+      order: 4;
+      width: 100%;
+      margin-top: 24px;
+      justify-content: center;
+    }
+
+    .hero-orbit-label {
+      max-width: 112px;
+      padding: 3px 5px;
+      font-size: 0.44rem;
+    }
+
+    .hero-orbit-message {
+      width: min(250px, calc(100vw - 36px));
+      padding: 10px 12px;
+      font-size: 0.94rem;
+      line-height: 1.5;
     }
 
     .cv-download {
@@ -3359,12 +3725,9 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
     }
 
     .scroll-cue {
-      bottom: 82px;
-
-      padding:
-        7px 11px;
-
-      font-size: 0.56rem;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
     }
 
     .projects-section {
@@ -3538,6 +3901,10 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
 
     .carousel-item {
       transition: none !important;
+    }
+
+    .hero-orbit-item {
+      animation: none;
     }
   }
 
