@@ -55,11 +55,21 @@ reuse a phrase that has been shared publicly:
 npx wrangler secret put GUESTBOOK_ADMIN_TRIGGER
 ```
 
-The public routes are `GET /api/guestbook`, `POST /api/guestbook`, and
-`POST /api/site-analytics`. Site analytics stores an anonymous browser ID,
+The public routes include `GET /api/guestbook`, `POST /api/guestbook`,
+`POST /api/site-analytics`, `POST /api/kumo/chat`, and
+`GET /api/kumo/retrieve`. Site analytics stores an anonymous browser ID,
 country code, and timestamps only; it does not store IP addresses. To delete
 an entry, send `DELETE /api/guestbook/{id}` with
 `Authorization: Bearer <GUESTBOOK_ADMIN_TOKEN>`.
+
+Public analytics, guestbook reads, Spotify, Kumo chat, and Kumo retrieval
+routes have separate per-IP limits of 5 requests per minute through the
+`KUMO_RATE_LIMITER` binding. Guestbook writes use their own 5-per-minute key.
+Chat request bodies are capped at 8 KiB; chat prompts and retrieval queries
+are limited to 1,000 characters, and generated answers are capped at 250
+tokens. These limits reduce abuse from a single source but are not an
+account-wide spending cap; distributed traffic can still consume the Workers
+AI allocation.
 
 Each approved note receives a visitor-selected colour from the approved muted
 green palette and one of five message fonts at the Worker, plus a random weight

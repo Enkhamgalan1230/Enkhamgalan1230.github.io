@@ -10,7 +10,7 @@
       alt=""
     />
   </button>
-
+  <span class="face-greeting" role="status" aria-live="polite"></span>
 </div>
 
 <div class="face-overlay" aria-hidden="true">
@@ -68,6 +68,15 @@
 
   const image =
     faceButton?.querySelector<HTMLImageElement>(".face-image");
+  const greeting =
+    document.querySelector<HTMLElement>(".face-greeting");
+  const greetings = [
+    "ᠰᠠᠶᠢᠨ ᠪᠠᠶᠢᠨ᠎ᠠ ᠤᠤ?",
+    "Сайн байна уу?",
+    "Hello.",
+  ];
+  let greetingIndex = 0;
+  let greetingTimer: number | undefined;
 
   const STRAIGHT = "/images/faces/straight-main.png";
   const LEFT_TRANSITION = "/images/faces/left-transition.png";
@@ -133,6 +142,20 @@
     });
   }
 
+  faceButton?.addEventListener("click", () => {
+    if (!greeting) return;
+
+    greeting.textContent = greetings[greetingIndex];
+    greeting.classList.toggle("is-mongolian", greetingIndex === 0);
+    greeting.classList.add("is-visible");
+    greetingIndex = (greetingIndex + 1) % greetings.length;
+    window.clearTimeout(greetingTimer);
+    greetingTimer = window.setTimeout(() => {
+      greeting.classList.remove("is-visible");
+    }, 4000);
+    playFaceSequence();
+  });
+
 </script>
 
 <style>
@@ -147,8 +170,38 @@
     gap: 3px;
   }
 
+  .face-greeting {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 50%;
+    z-index: 10;
+    width: max-content;
+    max-width: min(280px, calc(100vw - 24px));
+    padding: 7px 11px;
+    border: 1px solid rgba(17, 17, 17, 0.12);
+    border-radius: 12px;
+    background: rgba(247, 246, 244, 0.97);
+    color: #555555;
+    font: 0.76rem "Courier Prime", monospace;
+    line-height: 1.35;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -4px);
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  .face-greeting.is-visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  .face-greeting.is-mongolian {
+    font-size: 1rem;
+  }
+
   .face-button {
-    cursor: default;
+    cursor: pointer;
   }
 
   @keyframes face-notice {
@@ -202,7 +255,7 @@
     border: 0;
     background: transparent;
 
-    cursor: default;
+    cursor: pointer;
 
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;

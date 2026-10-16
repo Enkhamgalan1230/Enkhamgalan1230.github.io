@@ -18,6 +18,50 @@ const SPOTIFY_TOKEN_URL =
 const SPOTIFY_API_URL =
   "https://api.spotify.com/v1";
 
+async function checkPublicRateLimit(
+  request: Request,
+  env: Env,
+  scope: string,
+): Promise<boolean> {
+  const clientIp = request.headers.get("CF-Connecting-IP") ?? "unknown";
+  const { success } = await env.KUMO_RATE_LIMITER.limit({
+    key: `${scope}:${clientIp}`,
+  });
+  return success;
+}
+
+async function readJsonBodyWithinLimit<T>(
+  request: Request,
+  maxBytes: number,
+): Promise<T | null> {
+  const reader = request.body?.getReader();
+  if (!reader) return null;
+
+  const decoder = new TextDecoder();
+  let body = "";
+  let totalBytes = 0;
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      totalBytes += value.byteLength;
+      if (totalBytes > maxBytes) {
+        await reader.cancel();
+        return null;
+      }
+
+      body += decoder.decode(value, { stream: true });
+    }
+
+    body += decoder.decode();
+    return JSON.parse(body) as T;
+  } finally {
+    reader.releaseLock();
+  }
+}
+
 function corsHeaders(
   origin: string,
   allowedOrigin: string,
@@ -383,6 +427,10 @@ export default {
       }
 
       try {
+        if (!(await checkPublicRateLimit(request, env, "analytics"))) {
+          return json({ error: "Too many requests. Please wait a minute and try again." }, 429, origin, env);
+        }
+
         const body = await request.json<{ visitorId?: string }>();
         const visitorId = body.visitorId?.trim() ?? "";
         if (!/^[a-z0-9-]{16,80}$/i.test(visitorId)) {
@@ -483,6 +531,10 @@ export default {
       }
 
       try {
+        if (!(await checkPublicRateLimit(request, env, "guestbook-read"))) {
+          return json({ error: "Too many requests. Please wait a minute and try again." }, 429, origin, env);
+        }
+
         const result = await env.GUESTBOOK_DB.prepare(
           `SELECT id, name, message, color, font, font_weight, font_style, created_at
            FROM guestbook_entries
@@ -698,6 +750,10 @@ export default {
         "/api/kumo/retrieve" &&
       request.method === "GET"
     ) {
+      if (!(await checkPublicRateLimit(request, env, "kumo"))) {
+        return json({ error: "Too many Kumo requests. Please wait a minute and try again." }, 429, origin, env);
+      }
+
       const question =
         url.searchParams
           .get("q")
@@ -713,6 +769,10 @@ export default {
           origin,
           env,
         );
+      }
+
+      if (question.length > 1000) {
+        return json({ error: "Question is too long" }, 400, origin, env);
       }
 
       try {
@@ -753,10 +813,22 @@ export default {
       request.method === "POST"
     ) {
       try {
+        if (!(await checkPublicRateLimit(request, env, "kumo"))) {
+          return json({ error: "Too many Kumo requests. Please wait a minute and try again." }, 429, origin, env);
+        }
+
+        const contentLength = Number(request.headers.get("Content-Length") ?? 0);
+        if (contentLength > 8192) {
+          return json({ error: "Request is too large" }, 413, origin, env);
+        }
+
         const body =
-          await request.json<{
+          await readJsonBodyWithinLimit<{
             message?: string;
-          }>();
+          }>(request, 8192);
+        if (!body) {
+          return json({ error: "Request is too large or empty" }, 413, origin, env);
+        }
 
         const question =
           body.message?.trim();
@@ -929,6 +1001,10 @@ export default {
     }
 
     try {
+      if (!(await checkPublicRateLimit(request, env, "spotify"))) {
+        return json({ error: "Too many requests. Please wait a minute and try again." }, 429, origin, env);
+      }
+
       const type =
         url.searchParams.get(
           "type",
