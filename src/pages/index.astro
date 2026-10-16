@@ -3614,6 +3614,51 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
     min-width: 641px
   ) {
 
+    .hero {
+      min-height: auto;
+      padding: 72px 32px 80px;
+    }
+
+    .hero-about-content {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      width: min(100%, 760px);
+    }
+
+    .hero-about-copy {
+      display: contents;
+      max-width: none;
+    }
+
+    .hero-about h1 {
+      order: 1;
+      text-align: left;
+    }
+
+    .hero-bio {
+      order: 3;
+      width: 100%;
+      max-width: none;
+      margin-top: 18px;
+      text-align: left;
+    }
+
+    .hero-about-image {
+      order: 2;
+      align-self: center;
+      width: min(100%, 520px);
+      margin-top: 20px;
+    }
+
+    .hero-links {
+      order: 4;
+      width: 100%;
+      margin-top: 24px;
+      justify-content: flex-start;
+    }
+
     .project-cards {
       --project-gap: 18px;
     }
