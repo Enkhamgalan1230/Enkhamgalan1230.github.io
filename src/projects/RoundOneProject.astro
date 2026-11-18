@@ -1,0 +1,243 @@
+---
+import ProjectModal from "../components/ProjectModal.astro";
+---
+
+<ProjectModal
+  id="roundone-project"
+  ariaLabel="Round One project"
+>
+  <article class="roundone-project">
+    <section class="project-hero">
+      <div class="project-hero-top">
+        <span>06 / SELECTED WORK</span>
+        <span>2026 → PRESENT</span>
+      </div>
+
+      <h1>Round One</h1>
+
+      <p class="project-tagline">
+        From a messy spreadsheet
+        to a live fight card.
+      </p>
+
+      <p class="project-supporting">
+        A mobile-first web app for organising interclubs and fight events:
+        importing fighters, suggesting fair bouts, running check-in and
+        weigh-in, and putting the live card on everyone's phone.
+      </p>
+
+      <div class="project-meta">
+        <span>NEXT.JS</span>
+        <span>REACT</span>
+        <span>TYPESCRIPT</span>
+        <span>SUPABASE</span>
+        <span>POSTGRES</span>
+        <span>OPENROUTER</span>
+        <span>LLM</span>
+        <span>MATCHING ALGORITHM</span>
+      </div>
+
+      <a class="project-live-link" href="https://roundone.uk/" target="_blank" rel="noreferrer">
+        Visit roundone.uk <span aria-hidden="true">↗</span>
+      </a>
+    </section>
+
+    <section class="demo-section">
+      <div class="demo-video-frame">
+        <video
+          class="demo-video"
+          data-project-autoplay
+          loop
+          muted
+          playsinline
+          preload="none"
+          poster="/images/projects/mockups/roundone_mockup/roundone1.webp"
+          aria-label="Round One product demo"
+        >
+          <source src="/videos/roundone/roundone.mp4" type="video/mp4" />
+          Your browser does not support embedded video.
+        </video>
+      </div>
+    </section>
+
+    <section class="intro-grid">
+      <div class="intro-block">
+        <span class="section-number">01</span>
+        <h2>The problem.</h2>
+        <p>
+          Interclubs and amateur fight events usually run on spreadsheets,
+          group chats and paper. Every gym sends its fighters in a different
+          format, coaches pair bouts by hand, weights change by fight day, and
+          nobody in the hall knows which bout is next. One late withdrawal can
+          mean redoing the card from scratch.
+        </p>
+      </div>
+
+      <div class="intro-block">
+        <span class="section-number">02</span>
+        <h2>What I built.</h2>
+        <p>
+          Round One puts the whole event in one workflow. A gym signs in,
+          creates an event and uploads whatever spreadsheet it has. The app
+          works out the columns, cleans every row and suggests fair, editable
+          bouts for the coaches to review. On fight day it runs check-in and
+          weigh-in, re-pairs fighters on their real scale weights, and
+          publishes a live fight card with a QR link that fighters and
+          spectators can follow from their phones.
+        </p>
+      </div>
+    </section>
+
+    <section class="architecture-section">
+      <div class="section-heading">
+        <span>UNDER THE HOOD</span>
+        <h2>From a gym's spreadsheet<br />to a live card.</h2>
+      </div>
+
+      <div class="architecture-flow">
+        <div class="architecture-node"><span>01</span><strong>Any spreadsheet</strong><small>Excel or CSV, read in the browser, first sheet only</small></div>
+        <div class="architecture-arrow">→</div>
+        <div class="architecture-node"><span>02</span><strong>Column recipe</strong><small>Rules read headings, value shapes, tick columns and combined cells</small></div>
+        <div class="architecture-arrow">→</div>
+        <div class="architecture-node"><span>03</span><strong>AI check</strong><small>An LLM on OpenRouter completes the recipe, validated before use</small></div>
+        <div class="architecture-arrow">→</div>
+        <div class="architecture-node"><span>04</span><strong>Clean roster</strong><small>Units, number words, dates and ranges normalised, every row checked</small></div>
+        <div class="architecture-arrow">→</div>
+        <div class="architecture-node"><span>05</span><strong>Bout suggestions</strong><small>An optimiser pairs fighters within group, gender and discipline</small></div>
+        <div class="architecture-arrow">→</div>
+        <div class="architecture-node"><span>06</span><strong>Live card</strong><small>Check-in, weigh-in, no-shows, then a public card, QR link and chat</small></div>
+      </div>
+
+      <div class="architecture-detail">
+        <div>
+          <span>DESIGN PRINCIPLE</span>
+          <h3>Rules first, AI second.</h3>
+          <p>
+            Deterministic rules handle most of the import instantly. The LLM
+            only fills the gaps, and its output is treated as untrusted and
+            validated before use. Columns the rules already matched with
+            certainty can't be changed by it, and if the AI fails or is slow,
+            the app's own reading still works.
+          </p>
+        </div>
+        <div class="principle-card">
+          <span>WHAT THE AI SEES</span>
+          <strong>“Aa Aa · dd/dd/dddd · 00.0 kg”</strong>
+          <small>Column headings and masked summaries only · never fighter data for Juniors events</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="features-section">
+      <div class="section-heading">
+        <span>SOME USEFUL THINGS</span>
+        <h2>What Round One actually does.</h2>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card"><span>01</span><h3>Import any fighter list</h3><p>Works out which column holds the name, club, weight, date of birth, discipline and experience, even when they're combined or spelled oddly, and asks the organiser to confirm only what it isn't sure about.</p></article>
+        <article class="feature-card"><span>02</span><h3>AI that only gets what it needs</h3><p>For Juniors events the AI only sees column headings and masked summaries such as Aa Aa or dd/dd/dddd. It returns column choices and value meanings, never fighter data, and its answer is checked before use.</p></article>
+        <article class="feature-card"><span>03</span><h3>Fair bout suggestions</h3><p>Pairs within the same group, gender and discipline, never outside a 5 kg gap for adults or 3 kg for juniors. As many people as possible get a bout, with the remaining mismatch kept small. Coaches have the final say.</p></article>
+        <article class="feature-card"><span>04</span><h3>Fight-day operations</h3><p>Check-in, weigh-in and no-shows from a phone, with several officials working at once. Once weigh-ins lock, the card can be re-paired on the measured weights, preferring opponents already matched on the draft.</p></article>
+        <article class="feature-card"><span>05</span><h3>Live card and officials control</h3><p>An officials link moves the card through start, next and previous. Everyone else sees which bout is live, which is next and which are done.</p></article>
+        <article class="feature-card"><span>06</span><h3>Public fight list, QR and chat</h3><p>A share link and QR code open a read-only fight list. Fighters can find their own bout, and everyone can join a live chat moderated on the server.</p></article>
+      </div>
+    </section>
+
+    <section class="decision-section">
+      <span class="decision-number">03</span>
+      <div>
+        <span class="decision-label">WHAT I LEARNED</span>
+        <h2>Keep the human in charge.</h2>
+        <div class="learned-list">
+          <p><strong>Rules first, AI second.</strong> The LLM only fills the gaps the deterministic rules leave, and its output is never trusted blindly.</p>
+          <p><strong>Privacy is a design decision.</strong> What leaves the browser depends on the event type, and the server decides it from the database rather than trusting the client. Minors' data never goes to the model.</p>
+          <p><strong>The coach decides.</strong> The matcher suggests and the coach decides. Automatic approval was never the goal.</p>
+          <p><strong>Fight day is real-time and chaotic.</strong> Several officials edit at once, so pending changes are never overwritten by polling, and check-ins and weigh-ins lock when they're done.</p>
+        </div>
+        <p class="testing-note">
+          Tested with the Node test runner across import, matching, live card
+          and chat, plus 20+ real-world import fixture scenarios.
+        </p>
+      </div>
+    </section>
+
+    <section class="project-ending">
+      <p class="ending-label">Live at roundone.uk · Built around coaches and the gyms that take part in their interclubs.</p>
+      <h2>Messy spreadsheet in.<br />Live fight card out.</h2>
+      <p class="ending-supporting">
+        Next.js, React, TypeScript, Supabase, OpenRouter, SheetJS and dnd-kit.
+      </p>
+      <a class="project-live-link" href="https://roundone.uk/" target="_blank" rel="noreferrer">
+        Visit roundone.uk <span aria-hidden="true">↗</span>
+      </a>
+    </section>
+  </article>
+</ProjectModal>
+
+<style>
+  .roundone-project { width: 100%; background: radial-gradient(circle at 10% 6%, #FBFAF7 0%, transparent 36%), radial-gradient(circle at 92% 16%, #DCE6D2 0%, transparent 32%), radial-gradient(circle at 70% 76%, #ECEBE5 0%, transparent 38%), radial-gradient(circle at 16% 90%, #E3E8DC 0%, transparent 30%), linear-gradient(135deg, #F6F5F1 0%, #EEEDE7 48%, #F6F5F1 100%); color: #111; }
+  .roundone-project strong { color: inherit; }
+  .project-hero { position: relative; min-height: 88vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 70px; }
+  .project-hero-top { position: absolute; top: 28px; left: 70px; right: 90px; display: flex; justify-content: space-between; font: .74rem "Courier Prime", monospace; letter-spacing: .06em; color: #5E6157; }
+  .project-hero h1 { margin: 0; font: 400 clamp(4rem, 11vw, 10rem)/.9 "Instrument Serif", serif; letter-spacing: -.05em; }
+  .project-tagline { max-width: 800px; margin: 42px 0 20px; font: 400 clamp(2rem, 3.4vw, 3.6rem)/.98 "Instrument Serif", serif; }
+  .project-supporting, .intro-block p, .architecture-detail p, .feature-card p, .decision-section p, .ending-supporting { max-width: 720px; font: 1rem/1.6 "Courier Prime", monospace; color: #4A4A44; }
+  .project-supporting { margin: 0; }
+  .project-meta { display: flex; flex-wrap: wrap; gap: 9px; }
+  .project-meta { margin-top: 28px; }
+  .project-meta span { padding: 10px 14px; border: 1px solid #1113; border-radius: 999px; font: .72rem "Courier Prime", monospace; letter-spacing: .025em; }
+  .demo-section { padding: 0 70px 110px; }
+  .demo-video-frame { overflow: hidden; border-radius: 22px; background: #F6F5F1; }
+  .demo-video { display: block; width: 100%; height: auto; }
+  .section-heading > span, .architecture-detail span, .decision-label, .ending-label { font: .74rem "Courier Prime", monospace; letter-spacing: .08em; }
+  .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; padding: 20px 70px 130px; }
+  .intro-block { padding-top: 20px; border-top: 1px solid #1113; }
+  .section-number { font: .74rem "Courier Prime", monospace; color: #5E6157; }
+  .intro-block h2, .section-heading h2, .architecture-detail h3, .decision-section h2, .project-ending h2 { font-family: "Instrument Serif", serif; font-weight: 400; letter-spacing: -.025em; }
+  .intro-block h2 { margin: 20px 0; font-size: clamp(2.7rem, 4vw, 4.6rem); line-height: .95; }
+  .intro-block p { margin: 0; }
+  .architecture-section { padding: 110px 70px; background: linear-gradient(135deg, #1B1B1A, #252523 52%, #31312E); color: #EAE6DF; }
+  .architecture-section .section-heading > span, .architecture-detail span { color: #D8D6CE; }
+  .section-heading { margin-bottom: 54px; }
+  .section-heading h2 { max-width: 900px; margin: 14px 0 0; font-size: clamp(3.4rem, 6vw, 7rem); line-height: .9; }
+  .architecture-flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr) auto) minmax(0, 1fr); align-items: center; gap: 14px; }
+  .architecture-node { min-width: 0; overflow-wrap: anywhere; min-height: 205px; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; padding: 23px; border: 1px solid #fff3; border-radius: 14px; }
+  .architecture-node span, .architecture-node small { font-family: "Courier Prime", monospace; }
+  .architecture-node span { font-size: .7rem; color: #B9D3A9; }
+  .architecture-node strong { font: 400 1.82rem/1 "Instrument Serif", serif; color: #EAE6DF; }
+  .architecture-node small { max-width: 170px; font-size: .78rem; line-height: 1.45; color: #C4C2B9; }
+  .architecture-arrow { color: #D8D6CE; }
+  .architecture-detail { display: grid; grid-template-columns: .9fr 1.1fr; gap: 60px; align-items: center; margin-top: 100px; padding-top: 80px; border-top: 1px solid #fff3; }
+  .architecture-detail h3 { margin: 16px 0 24px; font-size: clamp(2.5rem, 4vw, 4.5rem); line-height: .93; }
+  .architecture-detail p { margin: 0; color: #E4E2DA; }
+  .principle-card { display: flex; flex-direction: column; gap: 24px; padding: 32px; border: 1px solid #fff3; border-radius: 18px; background: #ffffff0d; }
+  .principle-card strong { font: 400 clamp(2rem, 3.5vw, 4rem)/.98 "Instrument Serif", serif; }
+  .principle-card small { color: #D8D6CE; font: .78rem/1.5 "Courier Prime", monospace; }
+  .features-section { padding: 130px 70px; background: #EAE6DFaa; }
+  .features-section .section-heading h2 { max-width: 950px; }
+  .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .feature-card { min-height: 300px; display: flex; flex-direction: column; padding: 27px; border: 1px solid #1112; border-radius: 18px; background: #EAE6DFbb; }
+  .feature-card:nth-child(even) { background: #DCE6D2aa; }
+  .feature-card > span { font: .72rem "Courier Prime", monospace; color: #5E6157; }
+  .feature-card h3 { margin: auto 0 20px; font: 400 clamp(2rem, 3vw, 3.7rem)/.95 "Instrument Serif", serif; }
+  .feature-card p { margin: 0; font-size: .95rem; }
+  .decision-section { display: grid; grid-template-columns: 120px 1fr; gap: 40px; padding: 130px 70px; background: #DDE4D4; }
+  .decision-number { font: .74rem "Courier Prime", monospace; color: #5E6157; }
+  .decision-section h2 { max-width: 900px; margin: 18px 0 28px; font-size: clamp(3.5rem, 7vw, 7.5rem); line-height: .88; }
+  .decision-section p { margin: 0; color: #4A4A44; }
+  .testing-note { max-width: 720px; margin-top: 28px !important; padding-top: 20px; border-top: 1px solid #1112; font-size: .82rem !important; }
+  .project-ending { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; padding: 120px 70px; background: #EAE6DF99; }
+  .project-ending h2 { max-width: 1000px; margin: 24px 0 28px; font-size: clamp(4rem, 8vw, 8rem); line-height: .84; }
+  .ending-supporting { margin: 0 0 44px; }
+  .project-live-link { display: inline-flex; align-items: center; gap: 12px; width: fit-content; margin-top: 30px; padding: 13px 20px; border: 1px solid #252523; border-radius: 999px; background: #252523; color: #F6F5F1; font: .74rem "Courier Prime", monospace; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; transition: background-color .25s ease, color .25s ease, gap .25s ease; }
+  .project-live-link:hover, .project-live-link:focus-visible { gap: 18px; background: transparent; color: #252523; }
+  .learned-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 44px; max-width: 1100px; }
+  .learned-list p { margin: 0; max-width: none; }
+  .learned-list strong { display: block; margin-bottom: 6px; font: 400 1.9rem/1 "Instrument Serif", serif; color: #1B1B1A; }
+  @media (min-width: 641px) and (max-width: 1350px) { .architecture-flow { grid-template-columns: repeat(3, 1fr); gap: 18px; } .architecture-arrow { display: none; } .architecture-node { min-height: 170px; } .architecture-node small { max-width: none; } }
+  @media (max-width: 640px) {
+    .project-hero { min-height: 88dvh; padding: 90px 20px 40px; } .project-hero-top { top: 20px; left: 20px; right: 72px; gap: 12px; flex-wrap: wrap; font-size: .6rem; } .project-hero h1 { font-size: clamp(2.75rem, 15vw, 6rem); } .project-tagline { margin: 30px 0 18px; font-size: clamp(2rem, 10vw, 2.8rem); } .project-supporting, .intro-block p, .feature-card p, .decision-section p { font-size: .9rem; } .project-meta { gap: 7px; margin-top: 22px; } .project-meta span { padding: 8px 10px; font-size: .62rem; } .demo-section { padding: 0 16px 80px; } .demo-video-frame { border-radius: 16px; } .intro-grid { grid-template-columns: 1fr; gap: 60px; padding: 20px 20px 90px; } .architecture-section, .features-section, .decision-section, .project-ending { padding: 90px 20px; } .section-heading h2 { font-size: clamp(3rem, 14vw, 5rem); } .architecture-flow { grid-template-columns: 1fr; gap: 12px; } .architecture-arrow { text-align: center; transform: rotate(90deg); } .architecture-node { min-height: 145px; } .architecture-node small { max-width: none; } .architecture-detail { grid-template-columns: 1fr; gap: 34px; margin-top: 70px; padding-top: 60px; } .feature-grid, .learned-list { grid-template-columns: 1fr; } .feature-card { min-height: 285px; padding: 23px; } .decision-section { grid-template-columns: 1fr; gap: 30px; } .project-ending { min-height: 70dvh; } .project-ending h2 { font-size: clamp(3.5rem, 17vw, 5.5rem); }
+  }
+  @media (prefers-reduced-motion: reduce) { .project-live-link { transition: none; } }
+</style>

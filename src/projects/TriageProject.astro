@@ -1,0 +1,236 @@
+---
+import ProjectModal from "../components/ProjectModal.astro";
+---
+
+<ProjectModal
+  id="triage-project"
+  ariaLabel="AI Ticket Triage project"
+>
+  <article class="triage-project">
+    <section class="project-hero">
+      <div class="project-hero-top">
+        <span>05 / CLIENT WORK</span>
+        <span>2026 → PRESENT</span>
+      </div>
+
+      <h1>AI Ticket Triage</h1>
+
+      <p class="project-tagline">
+        Every ticket read, sorted and routed.
+        A human still signs it off.
+      </p>
+
+      <p class="project-supporting">
+        An AI agentic triage workflow for a professional services automation
+        platform, built for a UK managed service provider. It reads each new
+        support ticket, proposes how it should be classified, recommends who
+        should pick it up, and puts the result in front of a reviewer.
+        Client-facing project, now in a live pilot with service-desk staff.
+      </p>
+
+      <div class="project-meta">
+        <span>AI AGENTIC WORKFLOW</span>
+        <span>CLIENT-FACING</span>
+        <span>PYTHON</span>
+        <span>FASTAPI</span>
+        <span>SENTENCE-TRANSFORMERS</span>
+        <span>FAISS</span>
+        <span>SCIKIT-LEARN</span>
+        <span>DUCKDB</span>
+        <span>.NET 10</span>
+        <span>ASP.NET CORE</span>
+        <span>ANGULAR</span>
+        <span>MSAL</span>
+        <span>ENTRA ID</span>
+        <span>AZURE APP SERVICE</span>
+        <span>ACR</span>
+        <span>STATIC WEB APPS</span>
+        <span>KEY VAULT</span>
+        <span>BLOB STORAGE</span>
+        <span>APP INSIGHTS</span>
+        <span>AZURE DEVOPS</span>
+      </div>
+    </section>
+
+    <section class="demo-section">
+      <div class="demo-video-frame">
+        <img
+          class="demo-image"
+          src="/images/projects/mockups/triage_mockup/triage1.webp"
+          alt="Mockup of an AI ticket triage portal on a desktop monitor and a tablet. A review queue lists support tickets, and the selected ticket shows suggested classifications with confidence scores and a ranked list of recommended technicians, with approve and correct buttons."
+          width="2000"
+          height="1250"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </section>
+
+    <section class="intro-grid">
+      <div class="intro-block">
+        <span class="section-number">01</span>
+        <h2>The need.</h2>
+        <p>
+          Tickets arrive in the PSA unsorted. Someone has to read each one, set
+          the priority, issue type, sub-issue, category, type and queue, then
+          decide who should take it. It is slow, it varies between people, and
+          it sits on the critical path of every request.
+        </p>
+      </div>
+
+      <div class="intro-block">
+        <span class="section-number">02</span>
+        <h2>What I built.</h2>
+        <p>
+          Three services that work as one system. A Python triage API classifies
+          tickets and scores technicians. A .NET Middle API owns the PSA
+          integration, from webhooks to write-back. An Angular reviewer portal
+          lets staff approve or correct each suggestion. I designed and built
+          all three, and deployed them to Azure.
+        </p>
+      </div>
+    </section>
+
+    <section class="architecture-section">
+      <div class="section-heading">
+        <span>UNDER THE HOOD</span>
+        <h2>From new ticket<br />to signed-off triage.</h2>
+      </div>
+
+      <div class="architecture-flow">
+        <div class="architecture-node"><span>01</span><strong>PSA webhook</strong><small>A new ticket triggers the workflow</small></div>
+        <div class="architecture-arrow">→</div>
+        <div class="architecture-node"><span>02</span><strong>Verify</strong><small>Signature check and de-duplication</small></div>
+        <div class="architecture-arrow">→</div>
+        <div class="architecture-node"><span>03</span><strong>Context</strong><small>Live ticket and technician workload context</small></div>
+        <div class="architecture-arrow">→</div>
+        <div class="architecture-node"><span>04</span><strong>Triage</strong><small>Classification and technician scoring</small></div>
+        <div class="architecture-arrow">→</div>
+        <div class="architecture-node"><span>05</span><strong>Review</strong><small>Human review in the portal</small></div>
+        <div class="architecture-arrow">→</div>
+        <div class="architecture-node"><span>06</span><strong>Write-back</strong><small>Safe write-back to the PSA</small></div>
+      </div>
+
+      <div class="architecture-detail">
+        <div>
+          <span>DESIGN PRINCIPLE</span>
+          <h3>It should explain itself.</h3>
+          <p>
+            It is not an LLM. The classifier is a retrieval model: MiniLM
+            sentence embeddings, a FAISS index over historical tickets, KMeans
+            cluster priors and neighbour voting. The technician recommendation
+            is a deterministic weighted score. Every suggestion can be traced
+            back to why it was made.
+          </p>
+        </div>
+        <div class="principle-card">
+          <span>TRIAGE SUGGESTION</span>
+          <strong>“Six fields classified. Five technicians ranked, with the working shown.”</strong>
+          <small>Retrieval classifier · weighted scorer · reviewer decision</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="features-section">
+      <div class="section-heading">
+        <span>SOME USEFUL THINGS</span>
+        <h2>What the triage workflow actually does.</h2>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card"><span>01</span><h3>Six targets</h3><p>Priority, issue type, sub-issue type, category, ticket type and queue, each with top-k confidence.</p></article>
+        <article class="feature-card"><span>02</span><h3>Explainable allocation</h3><p>Up to five technicians ranked on skill fit, history, live workload and capacity.</p></article>
+        <article class="feature-card"><span>03</span><h3>Human in the loop</h3><p>Reviewers approve or correct before anything is written back.</p></article>
+        <article class="feature-card"><span>04</span><h3>Safe write-back</h3><p>Only changed fields are sent, with an optimistic-concurrency check and a read-back to verify.</p></article>
+        <article class="feature-card"><span>05</span><h3>Trusted integration</h3><p>HMAC-verified webhooks, a de-duplication ledger, Entra ID sign-in and secrets held in Key Vault.</p></article>
+        <article class="feature-card"><span>06</span><h3>Editable guardrails</h3><p>Labels the model must never suggest are set in a config file that reloads without a redeploy.</p></article>
+      </div>
+    </section>
+
+    <section class="decision-section">
+      <span class="decision-number">03</span>
+      <div>
+        <span class="decision-label">A PERSON STAYS ACCOUNTABLE</span>
+        <h2>Not fully automated, by design.</h2>
+        <p>
+          The aim is faster, more consistent triage with a person accountable
+          for the result. Staff see the suggestion, approve or correct it, and
+          only then does anything reach the live ticket.
+        </p>
+        <p class="testing-note">
+          Live pilot with service-desk staff at a UK managed service provider.
+          Case study on request. Source code private (client work).
+        </p>
+      </div>
+    </section>
+
+    <section class="project-ending">
+      <p class="ending-label">Built through my employer's consultancy work and deployed on Azure.</p>
+      <h2>Tickets in.<br />Suggestions out.</h2>
+      <p class="ending-supporting">
+        A person decides.
+      </p>
+    </section>
+  </article>
+</ProjectModal>
+
+<style>
+  .triage-project { width: 100%; background: radial-gradient(circle at 10% 6%, #F4F6FA 0%, transparent 36%), radial-gradient(circle at 92% 16%, #BFD6F6 0%, transparent 32%), radial-gradient(circle at 70% 76%, #DCE3EE 0%, transparent 38%), radial-gradient(circle at 16% 90%, #CCD8EA 0%, transparent 30%), linear-gradient(135deg, #E9ECF2 0%, #DFE4EC 48%, #E9ECF2 100%); color: #111; }
+  .triage-project strong { color: inherit; }
+  .project-hero { position: relative; min-height: 88vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 70px; }
+  .project-hero-top { position: absolute; top: 28px; left: 70px; right: 90px; display: flex; justify-content: space-between; font: .74rem "Courier Prime", monospace; letter-spacing: .06em; color: #475569; }
+  .project-hero h1 { margin: 0; font: 400 clamp(4rem, 11vw, 10rem)/.9 "Instrument Serif", serif; letter-spacing: -.05em; }
+  .project-tagline { max-width: 800px; margin: 42px 0 20px; font: 400 clamp(2rem, 3.4vw, 3.6rem)/.98 "Instrument Serif", serif; }
+  .project-supporting, .intro-block p, .architecture-detail p, .feature-card p, .decision-section p, .ending-supporting { max-width: 720px; font: 1rem/1.6 "Courier Prime", monospace; color: #3E4E63; }
+  .project-supporting { margin: 0; }
+  .project-meta { display: flex; flex-wrap: wrap; gap: 9px; }
+  .project-meta { margin-top: 28px; }
+  .project-meta span { padding: 10px 14px; border: 1px solid #1113; border-radius: 999px; font: .72rem "Courier Prime", monospace; letter-spacing: .025em; }
+  .demo-section { padding: 0 70px 110px; }
+  .demo-video-frame { overflow: hidden; border-radius: 22px; background: #E9EBF0; }
+  .demo-image { display: block; width: 100%; height: auto; }
+  .section-heading > span, .architecture-detail span, .decision-label, .ending-label { font: .74rem "Courier Prime", monospace; letter-spacing: .08em; }
+  .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; padding: 20px 70px 130px; }
+  .intro-block { padding-top: 20px; border-top: 1px solid #1113; }
+  .section-number { font: .74rem "Courier Prime", monospace; color: #475569; }
+  .intro-block h2, .section-heading h2, .architecture-detail h3, .decision-section h2, .project-ending h2 { font-family: "Instrument Serif", serif; font-weight: 400; letter-spacing: -.025em; }
+  .intro-block h2 { margin: 20px 0; font-size: clamp(2.7rem, 4vw, 4.6rem); line-height: .95; }
+  .intro-block p { margin: 0; }
+  .architecture-section { padding: 110px 70px; background: linear-gradient(135deg, #0B1220, #142035 52%, #1C2C47); color: #EAE6DF; }
+  .architecture-section .section-heading > span, .architecture-detail span { color: #C6D0DB; }
+  .section-heading { margin-bottom: 54px; }
+  .section-heading h2 { max-width: 900px; margin: 14px 0 0; font-size: clamp(3.4rem, 6vw, 7rem); line-height: .9; }
+  .architecture-flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr) auto) minmax(0, 1fr); align-items: center; gap: 14px; }
+  .architecture-node { min-width: 0; overflow-wrap: anywhere; min-height: 205px; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; padding: 23px; border: 1px solid #fff3; border-radius: 14px; }
+  .architecture-node span, .architecture-node small { font-family: "Courier Prime", monospace; }
+  .architecture-node span { font-size: .7rem; color: #5AA2FF; }
+  .architecture-node strong { font: 400 1.82rem/1 "Instrument Serif", serif; color: #EAE6DF; }
+  .architecture-node small { max-width: 170px; font-size: .78rem; line-height: 1.45; color: #B5C2D1; }
+  .architecture-arrow { color: #C6D0DB; }
+  .architecture-detail { display: grid; grid-template-columns: .9fr 1.1fr; gap: 60px; align-items: center; margin-top: 100px; padding-top: 80px; border-top: 1px solid #fff3; }
+  .architecture-detail h3 { margin: 16px 0 24px; font-size: clamp(2.5rem, 4vw, 4.5rem); line-height: .93; }
+  .architecture-detail p { margin: 0; color: #D2D9E1; }
+  .principle-card { display: flex; flex-direction: column; gap: 24px; padding: 32px; border: 1px solid #fff3; border-radius: 18px; background: #ffffff0d; }
+  .principle-card strong { font: 400 clamp(2rem, 3.5vw, 4rem)/.98 "Instrument Serif", serif; }
+  .principle-card small { color: #C6D0DB; font: .78rem/1.5 "Courier Prime", monospace; }
+  .features-section { padding: 130px 70px; background: #EAE6DFaa; }
+  .features-section .section-heading h2 { max-width: 950px; }
+  .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .feature-card { min-height: 300px; display: flex; flex-direction: column; padding: 27px; border: 1px solid #1112; border-radius: 18px; background: #EAE6DFbb; }
+  .feature-card:nth-child(even) { background: #CFE0F7aa; }
+  .feature-card > span { font: .72rem "Courier Prime", monospace; color: #475569; }
+  .feature-card h3 { margin: auto 0 20px; font: 400 clamp(2rem, 3vw, 3.7rem)/.95 "Instrument Serif", serif; }
+  .feature-card p { margin: 0; font-size: .95rem; }
+  .decision-section { display: grid; grid-template-columns: 120px 1fr; gap: 40px; padding: 130px 70px; background: #C3D3EA; }
+  .decision-number { font: .74rem "Courier Prime", monospace; color: #475569; }
+  .decision-section h2 { max-width: 900px; margin: 18px 0 28px; font-size: clamp(3.5rem, 7vw, 7.5rem); line-height: .88; }
+  .decision-section p { margin: 0; color: #3E4E63; }
+  .testing-note { max-width: 720px; margin-top: 28px !important; padding-top: 20px; border-top: 1px solid #1112; font-size: .82rem !important; }
+  .project-ending { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; padding: 120px 70px; background: #EAE6DF99; }
+  .project-ending h2 { max-width: 1000px; margin: 24px 0 28px; font-size: clamp(4rem, 8vw, 8rem); line-height: .84; }
+  .ending-supporting { margin: 0 0 44px; }
+  @media (min-width: 641px) and (max-width: 1350px) { .architecture-flow { grid-template-columns: repeat(3, 1fr); gap: 18px; } .architecture-arrow { display: none; } .architecture-node { min-height: 170px; } .architecture-node small { max-width: none; } }
+  @media (max-width: 640px) {
+    .project-hero { min-height: 88dvh; padding: 90px 20px 40px; } .project-hero-top { top: 20px; left: 20px; right: 72px; gap: 12px; flex-wrap: wrap; font-size: .6rem; } .project-hero h1 { font-size: clamp(2.75rem, 15vw, 6rem); } .project-tagline { margin: 30px 0 18px; font-size: clamp(2rem, 10vw, 2.8rem); } .project-supporting, .intro-block p, .feature-card p, .decision-section p { font-size: .9rem; } .project-meta { gap: 7px; margin-top: 22px; } .project-meta span { padding: 8px 10px; font-size: .62rem; } .demo-section { padding: 0 16px 80px; } .demo-video-frame { border-radius: 16px; } .intro-grid { grid-template-columns: 1fr; gap: 60px; padding: 20px 20px 90px; } .architecture-section, .features-section, .decision-section, .project-ending { padding: 90px 20px; } .section-heading h2 { font-size: clamp(3rem, 14vw, 5rem); } .architecture-flow { grid-template-columns: 1fr; gap: 12px; } .architecture-arrow { text-align: center; transform: rotate(90deg); } .architecture-node { min-height: 145px; } .architecture-node small { max-width: none; } .architecture-detail { grid-template-columns: 1fr; gap: 34px; margin-top: 70px; padding-top: 60px; } .feature-grid { grid-template-columns: 1fr; } .feature-card { min-height: 285px; padding: 23px; } .decision-section { grid-template-columns: 1fr; gap: 30px; } .project-ending { min-height: 70dvh; } .project-ending h2 { font-size: clamp(3.5rem, 17vw, 5.5rem); }
+  }
+</style>

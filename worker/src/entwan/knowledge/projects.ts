@@ -810,4 +810,175 @@ export const projects: KnowledgeChunk[] = [
     text: "Receipt would benefit from a much longer historical pricing dataset. More historical data would allow stronger evaluation of seasonality and could make it reasonable to revisit models such as LSTM or other forecasting approaches that were avoided during the dissertation because the dataset was too small.",
     importance: "medium",
   },
+
+  {
+    id: "project-roundone-001",
+    category: "project",
+    subject: "round-one",
+    topic: "overview",
+    text: "Round One is a mobile-first web app Enkh built for organising interclubs and fight events. It covers fighter import, bout matching, fight-day check-in and weigh-in, and a live public fight card. It is live at roundone.uk.",
+    importance: "high",
+  },
+
+  {
+    id: "project-roundone-002",
+    category: "project",
+    subject: "round-one",
+    topic: "problem",
+    text: "Round One addresses how fight events are usually run on spreadsheets, group chats and paper. Each gym sends fighters in a different format, bouts are paired by hand, weights change by fight day, and nobody in the hall knows which bout is next. One late withdrawal can mean redoing the card from scratch.",
+    importance: "high",
+  },
+
+  {
+    id: "project-roundone-003",
+    category: "project",
+    subject: "round-one",
+    topic: "import",
+    text: "Round One reads any Excel or CSV fighter list in the browser. Its own rules work out which column holds each detail, such as name, club, weight, date of birth, discipline and experience, even when they are combined or spelled oddly. An LLM on OpenRouter then checks and completes that reading. The AI returns column choices and value meanings only, never fighter data, and its answer is validated before use. If the AI fails or is slow, the app's own reading still works.",
+    importance: "high",
+  },
+
+  {
+    id: "project-roundone-004",
+    category: "project",
+    subject: "round-one",
+    topic: "privacy",
+    text: "For Juniors events in Round One, the AI only sees column headings and masked summaries such as 'Aa Aa' or 'dd/dd/dddd'. Data of under-18s or fighters of unknown age is never sent to the model. The server, not the browser, decides what is sent, based on the event type stored in the database.",
+    importance: "high",
+  },
+
+  {
+    id: "project-roundone-005",
+    category: "project",
+    subject: "round-one",
+    topic: "matching",
+    text: "Round One suggests bouts within each group, gender and discipline, with a weight-gap limit of 5 kg for adults and 3 kg for juniors. The matcher maximises the number of fighters who get a bout, then minimises weight, experience, club and age mismatch. Small groups are solved exactly and large groups use a weight-sorted pairing. Coaches review and edit every suggestion.",
+    importance: "high",
+  },
+
+  {
+    id: "project-roundone-006",
+    category: "project",
+    subject: "round-one",
+    topic: "fight-day",
+    text: "On fight day, Round One handles check-in, weigh-in and no-shows from a phone, with several officials working at once. Once weigh-ins lock, the card can be re-paired on measured weights. An officials link moves a live card through start, next and previous, and a public QR fight list lets fighters find their own bout and join a chat moderated on the server.",
+    importance: "high",
+  },
+
+  {
+    id: "project-roundone-007",
+    category: "project",
+    subject: "round-one",
+    topic: "technology",
+    text: "Round One is built with Next.js, React, TypeScript, Supabase (Postgres and Storage, with Row Level Security and server-only access), OpenRouter for the LLM import check, SheetJS for reading spreadsheets and dnd-kit for drag-and-drop. It is tested with the Node test runner across import, matching, live card and chat, plus more than 20 real-world import fixture scenarios.",
+    importance: "high",
+  },
+
+  {
+    id: "project-roundone-008",
+    category: "project",
+    subject: "round-one",
+    topic: "users",
+    text: "Round One is built around coaches at Ko Combat Academy and the gyms that take part in their events.",
+    importance: "medium",
+  },
+
+  {
+    id: "project-roundone-009",
+    category: "project",
+    subject: "round-one",
+    topic: "lessons",
+    text: "Enkh's main lessons from Round One: rules first and AI second, with LLM output treated as untrusted; privacy is a design decision, so minors' data never goes to the model; the matcher suggests and the coach decides; and fight day is real-time and chaotic, so pending changes are never overwritten by polling and check-ins and weigh-ins lock when done.",
+    importance: "medium",
+  },
+
+  {
+    id: "project-roundone-010",
+    category: "project",
+    subject: "round-one",
+    topic: "confidentiality",
+    text: "ENTWAN.EXE should not share Round One gym access codes, fighter names or personal data, event links or tokens, and should not claim user numbers or event results for Round One.",
+    importance: "high",
+  },
+
+  {
+    id: "project-triage-001",
+    category: "project",
+    subject: "ai-ticket-triage",
+    topic: "overview",
+    text: "AI Ticket Triage is a client-facing AI agentic triage workflow Enkh built through his employer's consultancy work for a UK managed service provider. It reads each new support ticket in the provider's professional services automation (PSA) platform, proposes how it should be classified, recommends who should pick it up, and puts the result in front of a human reviewer. It is in a live pilot with service-desk staff.",
+    importance: "high",
+  },
+
+  {
+    id: "project-triage-002",
+    category: "project",
+    subject: "ai-ticket-triage",
+    topic: "problem",
+    text: "Before AI Ticket Triage, tickets arrived in the PSA unsorted. Someone had to read each one, set the priority, issue type, sub-issue, category, type and queue, then decide who should take it. That was slow, varied between people, and sat on the critical path of every request.",
+    importance: "high",
+  },
+
+  {
+    id: "project-triage-003",
+    category: "project",
+    subject: "ai-ticket-triage",
+    topic: "what-enkh-built",
+    text: "Enkh designed, built and deployed all three services of AI Ticket Triage: a Python FastAPI triage API that classifies tickets and scores technicians, a .NET 10 middle API that owns the PSA integration from webhooks to write-back, and an Angular reviewer portal with MSAL sign-in where staff approve or correct each suggestion.",
+    importance: "high",
+  },
+
+  {
+    id: "project-triage-004",
+    category: "project",
+    subject: "ai-ticket-triage",
+    topic: "model",
+    text: "The AI Ticket Triage classifier is not an LLM. It is a retrieval model using MiniLM sentence embeddings, a FAISS index over historical tickets, KMeans cluster priors and neighbour voting. It predicts priority, issue type, sub-issue type, category, ticket type and queue, each with top-k confidence. Technician recommendation is a deterministic weighted score that ranks up to five technicians on skill fit, history, live workload and capacity, so every suggestion can be explained.",
+    importance: "high",
+  },
+
+  {
+    id: "project-triage-005",
+    category: "project",
+    subject: "ai-ticket-triage",
+    topic: "pipeline",
+    text: "The AI Ticket Triage pipeline: a PSA webhook arrives, its signature is verified and it is de-duplicated, the live ticket and technician workload are re-read rather than trusting the payload, the ticket is classified and technicians are scored, a human reviews the suggestion in the portal, and only then is it written back safely to the PSA.",
+    importance: "high",
+  },
+
+  {
+    id: "project-triage-006",
+    category: "project",
+    subject: "ai-ticket-triage",
+    topic: "safety",
+    text: "AI Ticket Triage writes back only changed fields, with an optimistic-concurrency check and a read-back to verify. Webhooks are HMAC-verified, a ledger prevents duplicates, sign-in uses Entra ID and secrets are held in Azure Key Vault. Labels the model must never suggest are set in a config file that reloads without a redeploy.",
+    importance: "medium",
+  },
+
+  {
+    id: "project-triage-007",
+    category: "project",
+    subject: "ai-ticket-triage",
+    topic: "technology",
+    text: "AI Ticket Triage uses Python, FastAPI, sentence-transformers, FAISS, scikit-learn, DuckDB, .NET 10, ASP.NET Core, Angular, MSAL and Entra ID, and runs on Azure App Service, Azure Container Registry, Static Web Apps, Key Vault, Blob Storage and Application Insights, with Azure DevOps pipelines.",
+    importance: "high",
+  },
+
+  {
+    id: "project-triage-008",
+    category: "project",
+    subject: "ai-ticket-triage",
+    topic: "human-in-the-loop",
+    text: "AI Ticket Triage is deliberately not fully automated. The aim is faster, more consistent triage with a person accountable for the result: reviewers approve or correct each suggestion before anything reaches the live ticket.",
+    importance: "high",
+  },
+
+  {
+    id: "project-triage-009",
+    category: "project",
+    subject: "ai-ticket-triage",
+    topic: "confidentiality",
+    text: "AI Ticket Triage is client work. ENTWAN.EXE should not name the client or the PSA product, should not share source code or internal details beyond this description, and should not claim accuracy figures or measured time savings. A case study is available on request.",
+    importance: "high",
+  },
 ];

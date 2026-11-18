@@ -1,95 +1,112 @@
 ---
+interface Props {
+  /** Show only the first N projects. Omit to show every project. */
+  limit?: number;
+  /** Render a "View all projects" link to /projects/ after the grid. */
+  showAllLink?: boolean;
+  title?: string;
+  intro?: string;
+  headingTag?: "h1" | "h2";
+}
+
+const {
+  limit,
+  showAllLink = false,
+  title = "Selected Work",
+  intro = "Here are few projects I completed during my free time, at work, or while attending university.",
+  headingTag: HeadingTag = "h2",
+} = Astro.props;
+
+// Display order. Add new projects here; the home page shows the first four,
+// the /projects/ page shows them all.
 const projects = [
-  { number: "01", name: "Accountancy", meta: ["CLIENT PRESENTATION", "LLM API Gateway", "LLM CLASSIFICATION", "NUMPY", "OLLAMA", "PYTHON"], description: "A calmer way to review financial data, surface anomalies and reconcile accounts.", action: "READ MORE", target: "account-project" },
-  { number: "02", name: "Merchant", meta: ["CLIENT-FACING", "RECOMMENDATION SYSTEMS", "GRU", "TENSORFLOW", "PROPHET", "PYTHON"], description: "A recommendation system that turns purchase behaviour into more useful product discovery.", action: "READ MORE", target: "merchant-recommendation-project" },
-  { number: "03", name: "Receipt", meta: ["API", "WEB CRAWILING", "SQL DATABASE", "DATA PIPELINE", "PREDICTION", "ANALYSIS"], description: "A grocery intelligence tool for seeing price changes, planning purchases and spending with intent.", action: "READ MORE", target: "receipt-project" },
-  { number: "04", name: "KUMO AI.exe", meta: ["RAG", "CLOUDFLARE WORKERS AI", "KNOWLEDGEBASE", "ASTRO", "GEMMA", "EMBEDDINGS"], description: "A small, grounded portfolio assistant with a slightly suspicious amount of personality.", action: "READ MORE", target: "kumo-project" },
+  { slug: "roundone", name: "Round One", meta: ["NEXT.JS", "TYPESCRIPT", "SUPABASE", "LLM", "OPENROUTER", "MATCHING ALGORITHM"], description: "Fight-event software that takes a gym from a messy spreadsheet to a live fight card.", action: "READ MORE", target: "roundone-project", link: { href: "https://roundone.uk/", label: "LIVE SITE" } },
+  { slug: "triage", name: "AI Ticket Triage", meta: ["AI AGENTIC WORKFLOW", "CLIENT-FACING", "FAISS", "FASTAPI", ".NET 10", "AZURE"], description: "Every support ticket read, sorted and routed by an agentic workflow. A human still signs it off.", action: "READ MORE", target: "triage-project" },
+  { slug: "kumo", name: "KUMO AI.exe", meta: ["RAG", "CLOUDFLARE WORKERS AI", "KNOWLEDGEBASE", "ASTRO", "GEMMA", "EMBEDDINGS"], description: "A small, grounded portfolio assistant with a slightly suspicious amount of personality.", action: "READ MORE", target: "kumo-project" },
+  { slug: "receipt", name: "Receipt", meta: ["API", "WEB CRAWILING", "SQL DATABASE", "DATA PIPELINE", "PREDICTION", "ANALYSIS"], description: "A grocery intelligence tool for seeing price changes, planning purchases and spending with intent.", action: "READ MORE", target: "receipt-project" },
+  { slug: "account", name: "Accountancy", meta: ["CLIENT PRESENTATION", "LLM API Gateway", "LLM CLASSIFICATION", "NUMPY", "OLLAMA", "PYTHON"], description: "A calmer way to review financial data, surface anomalies and reconcile accounts.", action: "READ MORE", target: "account-project" },
+  { slug: "merchant", name: "Merchant", meta: ["CLIENT-FACING", "RECOMMENDATION SYSTEMS", "GRU", "TENSORFLOW", "PROPHET", "PYTHON"], description: "A recommendation system that turns purchase behaviour into more useful product discovery.", action: "READ MORE", target: "merchant-recommendation-project" },
 ];
+
+const visibleProjects = limit === undefined ? projects : projects.slice(0, limit);
+const accountScreens = [1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6];
+const kumoPhones = ["c", "d", "a", "b", "c", "d", "a", "b", "c", "d", "a", "b"].map((key) => ({ key, image: { a: 1, b: 2, c: 3, d: 4 }[key] }));
 ---
 
 <section class="project-showcase" id="projects" aria-labelledby="showcase-title">
   <header class="showcase-heading">
-    <h2 id="showcase-title">Selected Work</h2>
-    <p class="showcase-intro">Here are few projects I completed during my free time, at work, or while attending university.</p>
+    <HeadingTag id="showcase-title">{title}</HeadingTag>
+    <p class="showcase-intro">{intro}</p>
   </header>
 
   <div class="showcase-grid">
-    <article class="showcase-project showcase-account" data-motion-project>
-      <div class="project-media account-stage" aria-label="Accountancy product screens">
-        <div class="account-track" aria-hidden="true">
-          <div class="account-sequence">
-            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc1.webp" alt="" width="1920" height="945" loading="lazy" decoding="async" /></div>
-            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc2.webp" alt="" width="1920" height="945" loading="lazy" decoding="async" /></div>
-            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc3.webp" alt="" width="1920" height="945" loading="lazy" decoding="async" /></div>
-            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc4.webp" alt="" width="1920" height="945" loading="lazy" decoding="async" /></div>
-            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc5.webp" alt="" width="1920" height="945" loading="lazy" decoding="async" /></div>
-            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc6.webp" alt="" width="1920" height="945" loading="lazy" decoding="async" /></div>
-            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc1.webp" alt="" width="1920" height="945" loading="lazy" decoding="async" /></div>
-            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc2.webp" alt="" width="1920" height="945" loading="lazy" decoding="async" /></div>
-            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc3.webp" alt="" width="1920" height="945" loading="lazy" decoding="async" /></div>
-            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc4.webp" alt="" width="1920" height="945" loading="lazy" decoding="async" /></div>
-            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc5.webp" alt="" width="1920" height="945" loading="lazy" decoding="async" /></div>
-            <div class="account-screen"><img src="/images/projects/mockups/accountancy_mockup/acc6.webp" alt="" width="1920" height="945" loading="lazy" decoding="async" /></div>
+    {visibleProjects.map((project) => (
+      <article class={`showcase-project showcase-${project.slug}`} data-motion-project>
+        {project.slug === "roundone" && (
+          <div class="project-media roundone-stage" aria-label="Round One">
+            <img src="/images/projects/mockups/roundone_mockup/roundone1.webp" alt="Round One logo with the line: Run fight day from one place." width="1920" height="1080" loading="lazy" decoding="async" />
+          </div>
+        )}
+        {project.slug === "triage" && (
+          <div class="project-media triage-stage" aria-label="AI ticket triage review portal">
+            <img src="/images/projects/mockups/triage_mockup/triage1.webp" alt="Ticket triage review portal on desktop and tablet, showing AI suggestions awaiting approval." width="2000" height="1250" loading="lazy" decoding="async" />
+          </div>
+        )}
+        {project.slug === "account" && (
+          <div class="project-media account-stage" aria-label="Accountancy product screens">
+            <div class="account-track" aria-hidden="true">
+              <div class="account-sequence">
+                {accountScreens.map((n) => (
+                  <div class="account-screen"><img src={`/images/projects/mockups/accountancy_mockup/acc${n}.webp`} alt="" width="1920" height="945" loading="lazy" decoding="async" /></div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+        {project.slug === "merchant" && (
+          <div class="project-media merchant-stage" aria-label="Merchant recommendation system preview">
+            <div class="browser-window merchant-browser" data-motion-layer="browser">
+              <video muted loop playsinline preload="none" data-deferred-video poster="/images/projects/mockups/reciept_mockup/reciept1.webp" aria-label="Merchant recommendation system video"><source data-src="/images/projects/mockups/merchant.mp4" type="video/mp4" /></video>
+            </div>
+          </div>
+        )}
+        {project.slug === "receipt" && (
+          <div class="project-media receipt-stage" aria-label="Receipt data visualisation screens">
+            <div class="receipt-screen"><img src="/images/projects/mockups/reciept_mockup/reciept1.webp" alt="Receipt home screen" width="1920" height="945" loading="lazy" decoding="async" /></div>
+          </div>
+        )}
+        {project.slug === "kumo" && (
+          <div class="project-media kumo-stage" aria-label="Kumo mobile assistant screens">
+            <div class="kumo-track" aria-hidden="true">
+              <div class="kumo-sequence">
+                {kumoPhones.map((phone) => (
+                  <div class={`phone phone-${phone.key}`}><img src={`/images/projects/mockups/kumo_mockup/kumo${phone.image}.webp`} alt="" width="1956" height="3584" loading="lazy" decoding="async" /></div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+        <div class="showcase-copy">
+          <div class="showcase-kicker">{project.meta.map((tag) => <span>{tag}</span>)}</div>
+          <h3>{project.name}</h3><p>{project.description}</p>
+          <div class="showcase-actions">
+            <button class="showcase-action" type="button" data-project-open={project.target}>{project.action}<span aria-hidden="true">↗</span></button>
+            {project.link && <a class="showcase-action" href={project.link.href} target="_blank" rel="noreferrer">{project.link.label}<span aria-hidden="true">↗</span></a>}
           </div>
         </div>
-      </div>
-      <div class="showcase-copy">
-        <div class="showcase-kicker">{projects[0].meta.map((tag) => <span>{tag}</span>)}</div>
-        <h3>{projects[0].name}</h3><p>{projects[0].description}</p>
-        <button class="showcase-action" type="button" data-project-open={projects[0].target}>{projects[0].action}<span aria-hidden="true">↗</span></button>
-      </div>
-    </article>
-
-    <article class="showcase-project showcase-merchant" data-motion-project>
-      <div class="project-media merchant-stage" aria-label="Merchant recommendation system preview">
-        <div class="browser-window merchant-browser" data-motion-layer="browser">
-          <video muted loop playsinline preload="none" data-deferred-video poster="/images/projects/mockups/reciept_mockup/reciept1.webp" aria-label="Merchant recommendation system video"><source data-src="/images/projects/mockups/merchant.mp4" type="video/mp4" /></video>
-        </div>
-      </div>
-      <div class="showcase-copy">
-        <div class="showcase-kicker">{projects[1].meta.map((tag) => <span>{tag}</span>)}</div>
-        <h3>{projects[1].name}</h3><p>{projects[1].description}</p>
-        <button class="showcase-action" type="button" data-project-open={projects[1].target}>{projects[1].action}<span aria-hidden="true">↗</span></button>
-      </div>
-    </article>
-
-    <article class="showcase-project showcase-receipt" data-motion-project>
-      <div class="project-media receipt-stage" aria-label="Receipt data visualisation screens">
-        <div class="receipt-screen"><img src="/images/projects/mockups/reciept_mockup/reciept1.webp" alt="Receipt home screen" width="1920" height="945" loading="lazy" decoding="async" /></div>
-      </div>
-      <div class="showcase-copy">
-        <div class="showcase-kicker">{projects[2].meta.map((tag) => <span>{tag}</span>)}</div>
-        <h3>{projects[2].name}</h3><p>{projects[2].description}</p>
-        <button class="showcase-action" type="button" data-project-open={projects[2].target}>{projects[2].action}<span aria-hidden="true">↗</span></button>
-      </div>
-    </article>
-
-    <article class="showcase-project showcase-kumo" data-motion-project>
-      <div class="project-media kumo-stage" aria-label="Kumo mobile assistant screens">
-        <div class="kumo-track" aria-hidden="true">
-          <div class="kumo-sequence">
-            <div class="phone phone-c"><img src="/images/projects/mockups/kumo_mockup/kumo3.webp" alt="" width="1956" height="3584" loading="lazy" decoding="async" /></div>
-            <div class="phone phone-d"><img src="/images/projects/mockups/kumo_mockup/kumo4.webp" alt="" width="1956" height="3584" loading="lazy" decoding="async" /></div>
-            <div class="phone phone-a"><img src="/images/projects/mockups/kumo_mockup/kumo1.webp" alt="" width="1956" height="3584" loading="lazy" decoding="async" /></div>
-            <div class="phone phone-b"><img src="/images/projects/mockups/kumo_mockup/kumo2.webp" alt="" width="1956" height="3584" loading="lazy" decoding="async" /></div>
-            <div class="phone phone-c"><img src="/images/projects/mockups/kumo_mockup/kumo3.webp" alt="" width="1956" height="3584" loading="lazy" decoding="async" /></div>
-            <div class="phone phone-d"><img src="/images/projects/mockups/kumo_mockup/kumo4.webp" alt="" width="1956" height="3584" loading="lazy" decoding="async" /></div>
-            <div class="phone phone-a"><img src="/images/projects/mockups/kumo_mockup/kumo1.webp" alt="" width="1956" height="3584" loading="lazy" decoding="async" /></div>
-            <div class="phone phone-b"><img src="/images/projects/mockups/kumo_mockup/kumo2.webp" alt="" width="1956" height="3584" loading="lazy" decoding="async" /></div>
-            <div class="phone phone-c"><img src="/images/projects/mockups/kumo_mockup/kumo3.webp" alt="" width="1956" height="3584" loading="lazy" decoding="async" /></div>
-            <div class="phone phone-d"><img src="/images/projects/mockups/kumo_mockup/kumo4.webp" alt="" width="1956" height="3584" loading="lazy" decoding="async" /></div>
-            <div class="phone phone-a"><img src="/images/projects/mockups/kumo_mockup/kumo1.webp" alt="" width="1956" height="3584" loading="lazy" decoding="async" /></div>
-            <div class="phone phone-b"><img src="/images/projects/mockups/kumo_mockup/kumo2.webp" alt="" width="1956" height="3584" loading="lazy" decoding="async" /></div>
-          </div>
-        </div>
-      </div>
-      <div class="showcase-copy">
-        <div class="showcase-kicker">{projects[3].meta.map((tag) => <span>{tag}</span>)}</div>
-        <h3>{projects[3].name}</h3><p>{projects[3].description}</p>
-        <button class="showcase-action" type="button" data-project-open={projects[3].target}>{projects[3].action}<span aria-hidden="true">↗</span></button>
-      </div>
-    </article>
+      </article>
+    ))}
   </div>
+
+  {showAllLink && (
+    <div class="showcase-more">
+      <a class="showcase-more-link" href="/projects/">
+        View all projects
+        <span class="showcase-more-count">{String(projects.length).padStart(2, "0")}</span>
+        <span class="showcase-more-arrow" aria-hidden="true">↗</span>
+      </a>
+    </div>
+  )}
 </section>
 
 <script>
@@ -121,6 +138,34 @@ const projects = [
   }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
 
   motionProjects.forEach((project) => motionObserver.observe(project));
+
+  const showcaseVideos = Array.from(document.querySelectorAll<HTMLVideoElement>(".project-showcase [data-deferred-video]"));
+
+  function loadShowcaseVideo(video: HTMLVideoElement) {
+    if (video.dataset.loaded === "true") return;
+    const source = video.querySelector<HTMLSourceElement>("source[data-src]");
+    if (!source?.dataset.src) return;
+    source.src = source.dataset.src;
+    video.dataset.loaded = "true";
+    video.load();
+  }
+
+  if (reducedMotion.matches || !("IntersectionObserver" in window)) {
+    showcaseVideos.forEach(loadShowcaseVideo);
+  } else {
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting) {
+          loadShowcaseVideo(video);
+          void video.play().catch(() => undefined);
+        } else if (video.dataset.loaded === "true") {
+          video.pause();
+        }
+      });
+    }, { rootMargin: "300px 0px" });
+    showcaseVideos.forEach((video) => videoObserver.observe(video));
+  }
   window.addEventListener("scroll", requestShowcaseMotion, { passive: true });
   window.addEventListener("resize", requestShowcaseMotion);
   requestShowcaseMotion();
@@ -131,14 +176,10 @@ const projects = [
   .showcase-heading, .showcase-grid { width: min(1800px, 100%); margin: 0 auto; }
   .showcase-heading { display: flex; justify-content: space-between; gap: 28px; align-items: end; margin-bottom: clamp(62px, 8vw, 108px); }
   .showcase-label, .showcase-kicker, .visual-note { margin: 0; font: .69rem/1.35 "Courier Prime", monospace; letter-spacing: .08em; color: #657856; }
-  .showcase-heading h2 { margin: 0; font: 400 clamp(3rem, 5vw, 5.5rem)/.9 "Instrument Serif", serif; letter-spacing: -.035em; }
+  .showcase-heading :is(h1, h2) { margin: 0; font: 400 clamp(3rem, 5vw, 5.5rem)/.9 "Instrument Serif", serif; letter-spacing: -.035em; }
   .showcase-intro { max-width: 260px; margin: 0 0 4px auto; font: .8rem/1.5 "Courier Prime", monospace; color: #657856; }
   .showcase-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(10px, 1.4vw, 22px); row-gap: clamp(42px, 4vw, 68px); }
   .showcase-project { min-width: 0; display: flex; flex-direction: column; padding: clamp(14px, 1.6vw, 24px); border: 1px solid rgba(17,17,17,.14); border-radius: 18px; background: #fbfaf7; box-shadow: 0 10px 28px rgba(17,17,17,.035); }
-  .showcase-merchant { order: 1; }
-  .showcase-kumo { order: 2; }
-  .showcase-account { order: 3; }
-  .showcase-receipt { order: 4; }
   .showcase-project.is-entered .project-media { opacity: 1; }
   .project-media { position: relative; min-width: 0; height: clamp(340px, 31vw, 500px); overflow: hidden; isolation: isolate; opacity: .32; transition: opacity .22s ease; }
   .showcase-copy { position: relative; z-index: 2; padding-top: 22px; }
@@ -148,6 +189,14 @@ const projects = [
   .showcase-copy p { max-width: 330px; margin: 0; font: .78rem/1.5 "Courier Prime", monospace; color: #657856; }
   .showcase-action { display: inline-flex; align-items: center; gap: 12px; margin-top: 20px; padding: 9px 0; border: 0; border-bottom: 1px solid #111; background: none; color: #111; font: .68rem "Courier Prime", monospace; letter-spacing: .06em; cursor: pointer; transition: gap .25s ease, color .25s ease; }
   .showcase-action:hover { gap: 18px; color: #4d7657; }
+  .showcase-more { width: min(1800px, 100%); margin: clamp(48px, 5vw, 80px) auto 0; display: flex; justify-content: center; }
+  .showcase-more-link { display: inline-flex; align-items: center; gap: 14px; padding: 15px 18px 15px 26px; border: 1px solid #111; border-radius: 999px; background: #111; color: #f4f2ee; font: .74rem "Courier Prime", monospace; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; transition: background-color .25s ease, color .25s ease, gap .25s ease; }
+  .showcase-more-count { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 24px; padding: 0 8px; border: 1px solid rgba(244,242,238,.35); border-radius: 999px; font-size: .64rem; letter-spacing: .04em; transition: border-color .25s ease; }
+  .showcase-more-arrow { display: inline-block; transition: transform .25s ease; }
+  .showcase-more-link:hover, .showcase-more-link:focus-visible { gap: 18px; background: #f4f2ee; color: #111; }
+  .showcase-more-link:hover .showcase-more-count, .showcase-more-link:focus-visible .showcase-more-count { border-color: rgba(17,17,17,.25); }
+  .showcase-more-link:hover .showcase-more-arrow, .showcase-more-link:focus-visible .showcase-more-arrow { transform: translate(2px, -2px); }
+  .showcase-more-link:focus-visible { outline: 2px solid #4d7657; outline-offset: 3px; }
   .mockup-window, .browser-window { position: absolute; overflow: hidden; border: 1px solid rgba(17,17,17,.14); border-radius: 12px; background: #f4f2f0; box-shadow: 0 26px 60px rgba(17,17,17,.15); will-change: transform; }
   .mockup-chrome, .browser-toolbar { position: relative; z-index: 2; display: flex; align-items: center; gap: 5px; height: 24px; padding: 0 9px; background: rgba(255,255,255,.86); border-bottom: 1px solid rgba(17,17,17,.1); }
   .mockup-chrome i, .browser-dots i { width: 6px; height: 6px; border-radius: 50%; background: #cbd1c9; }
@@ -167,7 +216,13 @@ const projects = [
   .receipt-stage { background: #f7f6f3; }
   .receipt-screen { position: absolute; top: 50%; left: 2%; width: 96%; transform: translateY(-50%); overflow: hidden; border: 1px solid rgba(17,17,17,.16); border-radius: 12px; background: #0d0f14; box-shadow: 0 20px 42px rgba(8,10,16,.16); }
   .receipt-screen img { display: block; width: 100%; height: auto; }
-  .account-stage, .merchant-stage, .receipt-stage { height: clamp(360px, 34vw, 540px); }
+  .roundone-stage { border-radius: 12px; background: #f6f5f1; }
+  .roundone-stage img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; transform: scale(1.18); }
+  .showcase-actions { display: flex; flex-wrap: wrap; gap: 0 28px; }
+  a.showcase-action { text-decoration: none; }
+  .triage-stage { border-radius: 12px; background: linear-gradient(180deg, #eff3f8 0%, #dfe2ea 50%, #ccd4df 100%); }
+  .triage-stage img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; }
+  .account-stage, .merchant-stage, .receipt-stage, .triage-stage, .roundone-stage { height: clamp(360px, 34vw, 540px); }
   .kumo-stage { --kumo-edge: clamp(12px, 2cqw, 24px); --kumo-gap: clamp(4px, 1cqw, 8px); --kumo-gap-double: calc(var(--kumo-gap) + var(--kumo-gap)); --kumo-edge-double: calc(var(--kumo-edge) + var(--kumo-edge)); --kumo-slot: calc((100cqw - var(--kumo-edge-double) - var(--kumo-gap-double)) / 3); height: clamp(360px, 34vw, 540px); container-type: inline-size; background: #f7f6f3; }
   .kumo-track { --kumo-step: calc(var(--kumo-slot) + var(--kumo-gap)); position: absolute; left: calc(var(--kumo-edge) - var(--kumo-step) - var(--kumo-step) - var(--kumo-step) - var(--kumo-step) - var(--kumo-step) - var(--kumo-step)); top: 0; display: flex; width: max-content; height: 100%; animation: kumo-marquee 14s infinite cubic-bezier(.77, 0, .18, 1); will-change: transform; }
   .kumo-sequence { display: flex; align-items: center; gap: var(--kumo-gap); height: 100%; flex: 0 0 auto; }
@@ -185,6 +240,6 @@ const projects = [
   @keyframes kumo-phone-c { 0%, 15% { transform: scale(.98); } 20%, 35% { transform: scale(.88); } 40%, 55% { transform: scale(.98); } 60%, 75% { transform: scale(1.14); } 80%, 100% { transform: scale(.98); } }
   @keyframes kumo-phone-d { 0%, 15% { transform: scale(.88); } 20%, 35% { transform: scale(.98); } 40%, 55% { transform: scale(1.14); } 60%, 75% { transform: scale(.98); } 80%, 100% { transform: scale(.88); } }
   @media (max-width: 800px) { .showcase-heading { display: block; } .showcase-intro { margin: 24px 0 0; } .showcase-grid { grid-template-columns: 1fr; row-gap: 48px; } .project-media { height: clamp(320px, 70vw, 450px); } .showcase-copy h3 { font-size: clamp(3rem, 13vw, 5rem); } }
-  @media (max-width: 520px) { .project-showcase { padding-inline: 20px; } .showcase-heading h2 { font-size: 3.2rem; } .showcase-grid { row-gap: 38px; } .project-media { height: 300px; } .account-stage { height: clamp(240px, 65vw, 340px); } .merchant-stage, .receipt-stage { height: clamp(190px, 50vw, 250px); } .account-back, .account-mid, .account-front { width: 108%; } .account-back { right: -39%; } .account-mid { left: -32%; } .account-front { left: -4%; } .merchant-browser { inset: 3% 3% 3%; } }
-  @media (prefers-reduced-motion: reduce) { .project-media { opacity: 1; transition: none; } .kumo-track, .phone { animation-play-state: paused; } .account-sequence, .account-screen { animation: none; transform: none; } .showcase-action { transition: none; } }
+  @media (max-width: 520px) { .project-showcase { padding-inline: 20px; } .showcase-heading :is(h1, h2) { font-size: 3.2rem; } .showcase-grid { row-gap: 38px; } .project-media { height: 300px; } .account-stage { height: clamp(240px, 65vw, 340px); } .merchant-stage, .receipt-stage, .triage-stage, .roundone-stage { height: clamp(190px, 50vw, 250px); } .account-back, .account-mid, .account-front { width: 108%; } .account-back { right: -39%; } .account-mid { left: -32%; } .account-front { left: -4%; } .merchant-browser { inset: 3% 3% 3%; } }
+  @media (prefers-reduced-motion: reduce) { .project-media { opacity: 1; transition: none; } .kumo-track, .phone { animation-play-state: paused; } .account-sequence, .account-screen { animation: none; transform: none; } .showcase-action, .showcase-more-link, .showcase-more-arrow { transition: none; } }
 </style>

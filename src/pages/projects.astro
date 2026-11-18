@@ -1,0 +1,71 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectShowcase from "../components/ProjectShowcase.astro";
+import ReceiptProject from "../projects/ReceiptProject.astro";
+import AccountProject from "../projects/AccountProject.astro";
+import KumoProject from "../projects/KumoProject.astro";
+import RecommendationProject from "../projects/RecommendationProject.astro";
+import TriageProject from "../projects/TriageProject.astro";
+import RoundOneProject from "../projects/RoundOneProject.astro";
+---
+
+<BaseLayout
+  title="Projects | Enkh-Amgalan (Entwan) Enkhbayar"
+  description="All projects by Enkh-Amgalan (Entwan) Enkhbayar: data science, machine learning and AI engineering work."
+>
+  <nav class="projects-back" aria-label="Breadcrumb">
+    <a href="/#projects"><span aria-hidden="true">←</span> Back home</a>
+  </nav>
+
+  <ProjectShowcase
+    title="Projects"
+    intro="Everything I have built in my free time, at work, or while attending university."
+    headingTag="h1"
+  />
+
+  <ReceiptProject />
+  <AccountProject />
+  <KumoProject />
+  <RecommendationProject />
+  <TriageProject />
+  <RoundOneProject />
+</BaseLayout>
+
+<style>
+  .projects-back {
+    position: relative;
+    z-index: 4;
+    padding: clamp(28px, 4vw, 48px) clamp(12px, 1.6vw, 24px) 0;
+    background: #f4f2ee;
+  }
+
+  .projects-back a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+    margin-left: max(0px, calc((100% - 1800px) / 2));
+    padding: 8px 0;
+    border-bottom: 1px solid #111;
+    color: #111;
+    font: 0.72rem "Courier Prime", monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: gap 0.25s ease, color 0.25s ease;
+  }
+
+  .projects-back a:hover,
+  .projects-back a:focus-visible {
+    gap: 16px;
+    color: #4d7657;
+  }
+
+  @media (max-width: 520px) {
+    .projects-back { padding-inline: 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .projects-back a { transition: none; }
+  }
+</style>

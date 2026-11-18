@@ -6,6 +6,8 @@ import ReceiptProject from "../projects/ReceiptProject.astro";
 import AccountProject from "../projects/AccountProject.astro";
 import KumoProject from "../projects/KumoProject.astro";
 import RecommendationProject from "../projects/RecommendationProject.astro";
+import TriageProject from "../projects/TriageProject.astro";
+import RoundOneProject from "../projects/RoundOneProject.astro";
 import KumoGameScene from "../components/KumoGameScene.astro";
 import KumoChat from "../components/KumoChat.astro";
 import Guestbook from "../components/Guestbook.astro";
@@ -127,7 +129,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
        PROJECTS
        ========================= -->
 
-  <ProjectShowcase />
+  <ProjectShowcase limit={4} showAllLink />
 
   <section
     class="projects-section"
@@ -638,6 +640,8 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
   <AccountProject />
   <KumoProject />
   <RecommendationProject />
+  <TriageProject />
+  <RoundOneProject />
   <KumoChat />
   <Guestbook />
   <ConnectSection />
