@@ -55,7 +55,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
 
       <div class="hero-about-image" data-hero-orbit>
         <div class="hero-orbit-items" aria-label="Things I enjoy">
-          <button class="hero-orbit-item orbit-leaf" type="button" data-orbit-index="0" data-placeholder="Autumn and nature" data-card-video="/videos/hero/autumn.mp4" data-card-poster="/videos/hero/autumn-poster.jpg" data-card-muted="true" data-message="I love nature, especially during autumn. Full of colours, rain, and sun. Peak season IMO." aria-label="Show autumn and nature message">
+          <button class="hero-orbit-item orbit-leaf" type="button" data-orbit-index="0" data-placeholder="Autumn and nature" data-card-video="/videos/hero/autumn.mp4" data-card-poster="/videos/hero/autumn-poster.jpg" data-message="I love nature, especially during autumn. Full of colours, rain, and sun. Peak season IMO." aria-label="Show autumn and nature message">
             <span class="hero-orbit-float">
               <span class="hero-orbit-label">LEAF</span>
               <img src="/images/hero/leaf.png" alt="" aria-hidden="true" draggable="false" />
@@ -85,7 +85,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
               <img src="/images/hero/plate.png" alt="" aria-hidden="true" draggable="false" />
             </span>
           </button>
-          <button class="hero-orbit-item orbit-gloves" type="button" data-orbit-index="6" data-placeholder="Art of Eight Limbs" data-card-video="/videos/hero/gloves.mp4" data-card-poster="/videos/hero/gloves-poster.jpg" data-card-volume="0.25" data-message="Ever since I was a kid, I loved martial arts. I tried kickboxing, taekwondo, and boxing, and in October 2025, I discovered Muay Thai. I was intimidated at first because of the elbows and knees, and I almost quit after the first week. I took a week break then but came back and stuck with it. Now, over a year later, I love it! I hope to go to Thailand at some point and compete in an amateur match in 2027(if coach says yes obv)." aria-label="Show Muay Thai message">
+          <button class="hero-orbit-item orbit-gloves" type="button" data-orbit-index="6" data-placeholder="Art of Eight Limbs" data-card-video="/videos/hero/gloves.mp4" data-card-poster="/videos/hero/gloves-poster.jpg" data-message="Ever since I was a kid, I've loved martial arts. I tried kickboxing, taekwondo, and boxing, but it wasn't until October 2025 that I discovered Muay Thai. I felt intimidated at first because of the elbows and knees involved, and I almost quit after the first week. I absolutely love it!" aria-label="Show Muay Thai message">
             <span class="hero-orbit-float">
               <span class="hero-orbit-label">GLOVES</span>
               <img src="/images/hero/gloves.png" alt="" aria-hidden="true" draggable="false" />
@@ -132,12 +132,11 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
         <button class="hero-orbit-card is-front" type="button" aria-label="Next" data-dialog-slide>
           <span class="hero-orbit-card__media">
             <img src="" alt="" draggable="false" />
-            <video class="hero-orbit-card__video" playsinline loop preload="none" disablepictureinpicture></video>
+            <video class="hero-orbit-card__video" muted playsinline loop preload="none" disablepictureinpicture></video>
             <span class="hero-orbit-card__gate" hidden>
               <span class="hero-orbit-card__gate-text"></span>
               <span class="hero-orbit-card__gate-btn" role="button" tabindex="0">Nahh its fine</span>
             </span>
-            <span class="hero-orbit-card__chip" role="button" tabindex="0" hidden><span aria-hidden="true">&#128263;</span> Sound</span>
             <span class="hero-orbit-card__play" role="button" tabindex="0" aria-label="Play video" hidden>&#9654;</span>
           </span>
           <span class="hero-orbit-card__body" aria-live="polite">
@@ -1071,7 +1070,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
     }
 
     /* ---------- centred dialog with stacked card deck ---------- */
-    type Slide = { el: HTMLElement; src: string; text: string; alt: string; photo: boolean; position: string; video: string; poster: string; gate: string; muted: boolean; volume: number };
+    type Slide = { el: HTMLElement; src: string; text: string; alt: string; photo: boolean; position: string; video: string; poster: string; gate: string };
 
     const dialog = document.querySelector<HTMLDialogElement>("[data-hero-orbit-dialog]");
     const dialogDeck = dialog?.querySelector<HTMLElement>(".hero-orbit-deck") ?? null;
@@ -1092,17 +1091,6 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
     const DEAL_PROMOTE_MS = 260;
     const FADE_MS = 160;
 
-    const ACRONYMS = new Set(["AI", "UK"]);
-    const SMALL_WORDS = new Set(["in", "of", "the", "and", "a", "to"]);
-    function nounFrom(placeholder: string) {
-      return placeholder.trim().split(/\s+/).map((word, i) => {
-        if (ACRONYMS.has(word)) return word;
-        const lower = word.toLowerCase();
-        if (i > 0 && SMALL_WORDS.has(lower)) return lower;
-        return lower.charAt(0).toUpperCase() + lower.slice(1);
-      }).join(" ");
-    }
-
     // Visual order: leaf, uk, plate, boots, laptop, cap, gloves, soysauce. The portrait has no card.
     const slideOrder = [".orbit-leaf", ".orbit-uk", ".orbit-plate", ".orbit-boots", ".orbit-laptop", ".orbit-cap", ".orbit-gloves", ".orbit-soysauce"];
     const slides: Slide[] = [];
@@ -1112,7 +1100,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
       const img = el === mainTrigger
         ? el.querySelector<HTMLImageElement>(".hero-main-image")
         : el.querySelector<HTMLImageElement>("img");
-      const alt = el === mainTrigger ? "Me" : nounFrom(el.dataset.placeholder ?? "");
+      const alt = el === mainTrigger ? "Me" : (el.dataset.placeholder ?? "").trim(); // titles show exactly as written
       slides.push({
         el,
         // A full photo for the card (data-card-image) wins over the small cut-out.
@@ -1124,8 +1112,6 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
         video: el.dataset.cardVideo ?? "",
         poster: el.dataset.cardPoster ?? "",
         gate: el.dataset.cardGate ?? "",
-        muted: el.dataset.cardMuted === "true", // silent clip: never plays sound
-        volume: Number(el.dataset.cardVolume) || 0.5, // per-clip volume, default 50%
       });
       el.setAttribute("aria-label", `Open details: ${alt}`);
       el.setAttribute("aria-haspopup", "dialog");
@@ -1176,19 +1162,10 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
     const gateEl = frontCard?.querySelector<HTMLElement>(".hero-orbit-card__gate") ?? null;
     const gateText = frontCard?.querySelector<HTMLElement>(".hero-orbit-card__gate-text") ?? null;
     const gateBtn = frontCard?.querySelector<HTMLElement>(".hero-orbit-card__gate-btn") ?? null;
-    const soundChip = frontCard?.querySelector<HTMLElement>(".hero-orbit-card__chip") ?? null;
     const playBtn = frontCard?.querySelector<HTMLElement>(".hero-orbit-card__play") ?? null;
-    const VIDEO_VOLUME = 0.5;
     const GATE_FADE_MS = 200;
     let gateAccepted = false; // in-memory: asks again after a page reload
     let gateTimer = 0;
-
-    // Keep the volume at 0.5 whenever sound is on. (iOS Safari ignores
-    // HTMLMediaElement.volume, so there the device volume rules; that is fine.)
-    cardVideo?.addEventListener("volumechange", () => {
-      const target = slides[slideIndex]?.volume ?? VIDEO_VOLUME;
-      if (cardVideo && !cardVideo.muted && cardVideo.volume !== target) cardVideo.volume = target;
-    });
 
     function stopVideo() {
       window.clearTimeout(gateTimer);
@@ -1203,30 +1180,20 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
         gateEl.hidden = true;
         gateEl.classList.remove("is-leaving");
       }
-      if (soundChip) soundChip.hidden = true;
       if (playBtn) playBtn.hidden = true;
     }
 
-    function playWithSound(slide: Slide) {
+    // Every clip plays silently: no audio anywhere on the page.
+    function playVideo(slide: Slide) {
       if (!cardVideo || !frontMedia) return;
       if (playBtn) playBtn.hidden = true;
-      if (soundChip) soundChip.hidden = true;
       frontMedia.classList.add("has-video");
       cardVideo.poster = slide.poster;
       cardVideo.src = slide.video;
-      cardVideo.muted = slide.muted;
-      cardVideo.volume = slide.volume;
-      const started = cardVideo.play();
-      if (started) {
-        started.catch(() => {
-          if (slide.muted) return;
-          // Autoplay policy refused sound: play muted and offer a chip to turn it on.
-          if (!cardVideo.getAttribute("src")) return;
-          cardVideo.muted = true;
-          cardVideo.play().catch(() => {});
-          if (soundChip) soundChip.hidden = false;
-        });
-      }
+      cardVideo.muted = true;
+      cardVideo.play()?.catch(() => {
+        if (playBtn && cardVideo.getAttribute("src")) playBtn.hidden = false; // autoplay refused: offer play
+      });
     }
 
     function startVideo(slide: Slide) {
@@ -1234,7 +1201,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
         if (playBtn) playBtn.hidden = false; // no autoplay: poster plus a play button
         return;
       }
-      playWithSound(slide);
+      playVideo(slide);
     }
 
     function acceptGate() {
@@ -1274,13 +1241,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
     onActivate(gateBtn, acceptGate);
     onActivate(playBtn, () => {
       const slide = slides[slideIndex];
-      if (slide?.video) playWithSound(slide);
-    });
-    onActivate(soundChip, () => {
-      if (!cardVideo) return;
-      cardVideo.muted = false;
-      cardVideo.volume = slides[slideIndex]?.volume ?? VIDEO_VOLUME;
-      if (soundChip) soundChip.hidden = true;
+      if (slide?.video) playVideo(slide);
     });
 
     function focusFront() {
@@ -3051,7 +3012,6 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
   }
 
   .hero-orbit-card__gate[hidden],
-  .hero-orbit-card__chip[hidden],
   .hero-orbit-card__play[hidden] {
     display: none;
   }
@@ -3093,26 +3053,9 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
   }
 
   .hero-orbit-card__gate-btn:focus-visible,
-  .hero-orbit-card__chip:focus-visible,
   .hero-orbit-card__play:focus-visible {
     outline: 2px solid #ffffff;
     outline-offset: 2px;
-  }
-
-  .hero-orbit-card__chip {
-    position: absolute;
-    left: 10px;
-    bottom: 10px;
-    z-index: 2;
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: rgba(17, 17, 17, 0.55);
-    color: #ffffff;
-    font-family: "Courier Prime", monospace;
-    font-size: 0.7rem;
-    line-height: 1.2;
-    cursor: pointer;
-    touch-action: manipulation;
   }
 
   .hero-orbit-card__play {
@@ -4937,12 +4880,22 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
       right: 12px;
     }
 
+    /* Mobile: a tall portrait card, media on top, text underneath, the next card peeking out below. */
+    .hero-orbit-deck {
+      width: min(340px, calc(100vw - 48px));
+    }
+
     .hero-orbit-card {
-      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto 1fr;
+      min-height: min(510px, calc(100svh - 160px));
+      padding: 6px;
+      border-radius: 26px;
     }
 
     .hero-orbit-card.is-peek {
-      transform: translateY(-10px) scale(0.955);
+      transform: translateY(16px) scale(0.9);
+      transform-origin: bottom center;
     }
 
     .hero-orbit-card.is-peek.is-promote {
@@ -4950,21 +4903,25 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
     }
 
     .hero-orbit-card__media {
-      padding: 10%;
-      background-size: 30px 30px;
+      aspect-ratio: 1 / 1;
+      padding: 8%;
+      border-radius: 20px;
+      background-size: 36px 36px;
     }
 
     .hero-orbit-card__body {
-      padding: 14px 14px 14px 16px;
+      align-self: start;
+      gap: 12px;
+      padding: 14px 14px 24px;
     }
 
     .hero-orbit-card__title {
-      font-size: 1.6rem;
+      font-size: 1.9rem;
     }
 
     .hero-orbit-card__text {
       font-size: 0.9rem;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     .hero-orbit-card__gate-text {
