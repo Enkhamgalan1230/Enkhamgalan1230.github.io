@@ -147,7 +147,6 @@ import ProjectModal from "../components/ProjectModal.astro";
     <section class="decision-section">
       <span class="decision-number">03</span>
       <div>
-        <span class="decision-label">WHAT I LEARNED</span>
         <h2>Keep the human in charge.</h2>
         <div class="learned-list">
           <p><strong>Rules first, AI second.</strong> The LLM only fills the gaps the deterministic rules leave, and its output is never trusted blindly.</p>
@@ -163,7 +162,6 @@ import ProjectModal from "../components/ProjectModal.astro";
     </section>
 
     <section class="project-ending">
-      <p class="ending-label">Live at roundone.uk · Built around coaches and the gyms that take part in their interclubs.</p>
       <h2>Messy spreadsheet in.<br />Live fight card out.</h2>
       <p class="ending-supporting">
         Next.js, React, TypeScript, Supabase, OpenRouter, SheetJS and dnd-kit.
@@ -179,21 +177,21 @@ import ProjectModal from "../components/ProjectModal.astro";
   .roundone-project { width: 100%; background: radial-gradient(circle at 10% 6%, #FBFAF7 0%, transparent 36%), radial-gradient(circle at 92% 16%, #DCE6D2 0%, transparent 32%), radial-gradient(circle at 70% 76%, #ECEBE5 0%, transparent 38%), radial-gradient(circle at 16% 90%, #E3E8DC 0%, transparent 30%), linear-gradient(135deg, #F6F5F1 0%, #EEEDE7 48%, #F6F5F1 100%); color: #111; }
   .roundone-project strong { color: inherit; }
   .project-hero { position: relative; min-height: 88vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 70px; }
-  .project-hero-top { position: absolute; top: 28px; left: 70px; right: 90px; display: flex; justify-content: space-between; font: .74rem "Courier Prime", monospace; letter-spacing: .06em; color: #5E6157; }
+  .project-hero-top { position: absolute; top: 28px; left: 70px; right: 90px; display: flex; justify-content: space-between; font: .74rem var(--font-reading); letter-spacing: .06em; color: #5E6157; }
   .project-hero h1 { margin: 0; font: 400 clamp(4rem, 11vw, 10rem)/.9 "Instrument Serif", serif; letter-spacing: -.05em; }
   .project-tagline { max-width: 800px; margin: 42px 0 20px; font: 400 clamp(2rem, 3.4vw, 3.6rem)/.98 "Instrument Serif", serif; }
-  .project-supporting, .intro-block p, .architecture-detail p, .feature-card p, .decision-section p, .ending-supporting { max-width: 720px; font: 1rem/1.6 "Courier Prime", monospace; color: #4A4A44; }
+  .project-supporting, .intro-block p, .architecture-detail p, .feature-card p, .decision-section p, .ending-supporting { max-width: 720px; font: 1rem/1.6 var(--font-reading); color: #4A4A44; }
   .project-supporting { margin: 0; }
   .project-meta { display: flex; flex-wrap: wrap; gap: 9px; }
   .project-meta { margin-top: 28px; }
-  .project-meta span { padding: 10px 14px; border: 1px solid #1113; border-radius: 999px; font: .72rem "Courier Prime", monospace; letter-spacing: .025em; }
+  .project-meta span { padding: 10px 14px; border: 1px solid #1113; border-radius: 999px; font: .72rem var(--font-reading); letter-spacing: .025em; }
   .demo-section { padding: 0 70px 110px; }
   .demo-video-frame { overflow: hidden; border-radius: 22px; background: #F6F5F1; }
   .demo-video { display: block; width: 100%; height: auto; }
-  .section-heading > span, .architecture-detail span, .decision-label, .ending-label { font: .74rem "Courier Prime", monospace; letter-spacing: .08em; }
+  .section-heading > span, .architecture-detail span, .decision-label, .ending-label { font: .74rem var(--font-reading); letter-spacing: .08em; }
   .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; padding: 20px 70px 130px; }
   .intro-block { padding-top: 20px; border-top: 1px solid #1113; }
-  .section-number { font: .74rem "Courier Prime", monospace; color: #5E6157; }
+  .section-number { font: .74rem var(--font-reading); color: #5E6157; }
   .intro-block h2, .section-heading h2, .architecture-detail h3, .decision-section h2, .project-ending h2 { font-family: "Instrument Serif", serif; font-weight: 400; letter-spacing: -.025em; }
   .intro-block h2 { margin: 20px 0; font-size: clamp(2.7rem, 4vw, 4.6rem); line-height: .95; }
   .intro-block p { margin: 0; }
@@ -203,7 +201,8 @@ import ProjectModal from "../components/ProjectModal.astro";
   .section-heading h2 { max-width: 900px; margin: 14px 0 0; font-size: clamp(3.4rem, 6vw, 7rem); line-height: .9; }
   .architecture-flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr) auto) minmax(0, 1fr); align-items: center; gap: 14px; }
   .architecture-node { min-width: 0; overflow-wrap: anywhere; min-height: 205px; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; padding: 23px; border: 1px solid #fff3; border-radius: 14px; }
-  .architecture-node span, .architecture-node small { font-family: "Courier Prime", monospace; }
+  .architecture-node span { font-family: var(--font-reading); }
+  .architecture-node small { font: .9rem/1.45 var(--font-reading); }
   .architecture-node span { font-size: .7rem; color: #B9D3A9; }
   .architecture-node strong { font: 400 1.82rem/1 "Instrument Serif", serif; color: #EAE6DF; }
   .architecture-node small { max-width: 170px; font-size: .78rem; line-height: 1.45; color: #C4C2B9; }
@@ -213,24 +212,24 @@ import ProjectModal from "../components/ProjectModal.astro";
   .architecture-detail p { margin: 0; color: #E4E2DA; }
   .principle-card { display: flex; flex-direction: column; gap: 24px; padding: 32px; border: 1px solid #fff3; border-radius: 18px; background: #ffffff0d; }
   .principle-card strong { font: 400 clamp(2rem, 3.5vw, 4rem)/.98 "Instrument Serif", serif; }
-  .principle-card small { color: #D8D6CE; font: .78rem/1.5 "Courier Prime", monospace; }
+  .principle-card small { color: #D8D6CE; font: .9rem/1.5 var(--font-reading); }
   .features-section { padding: 130px 70px; background: #EAE6DFaa; }
   .features-section .section-heading h2 { max-width: 950px; }
   .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
   .feature-card { min-height: 300px; display: flex; flex-direction: column; padding: 27px; border: 1px solid #1112; border-radius: 18px; background: #EAE6DFbb; }
   .feature-card:nth-child(even) { background: #DCE6D2aa; }
-  .feature-card > span { font: .72rem "Courier Prime", monospace; color: #5E6157; }
+  .feature-card > span { font: .72rem var(--font-reading); color: #5E6157; }
   .feature-card h3 { margin: auto 0 20px; font: 400 clamp(2rem, 3vw, 3.7rem)/.95 "Instrument Serif", serif; }
-  .feature-card p { margin: 0; font-size: .95rem; }
+  .feature-card p { margin: 0; font-size: 1rem; }
   .decision-section { display: grid; grid-template-columns: 120px 1fr; gap: 40px; padding: 130px 70px; background: #DDE4D4; }
-  .decision-number { font: .74rem "Courier Prime", monospace; color: #5E6157; }
+  .decision-number { font: .74rem var(--font-reading); color: #5E6157; }
   .decision-section h2 { max-width: 900px; margin: 18px 0 28px; font-size: clamp(3.5rem, 7vw, 7.5rem); line-height: .88; }
   .decision-section p { margin: 0; color: #4A4A44; }
   .testing-note { max-width: 720px; margin-top: 28px !important; padding-top: 20px; border-top: 1px solid #1112; font-size: .82rem !important; }
   .project-ending { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; padding: 120px 70px; background: #EAE6DF99; }
   .project-ending h2 { max-width: 1000px; margin: 24px 0 28px; font-size: clamp(4rem, 8vw, 8rem); line-height: .84; }
   .ending-supporting { margin: 0 0 44px; }
-  .project-live-link { display: inline-flex; align-items: center; gap: 12px; width: fit-content; margin-top: 30px; padding: 13px 20px; border: 1px solid #252523; border-radius: 999px; background: #252523; color: #F6F5F1; font: .74rem "Courier Prime", monospace; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; transition: background-color .25s ease, color .25s ease, gap .25s ease; }
+  .project-live-link { display: inline-flex; align-items: center; gap: 12px; width: fit-content; margin-top: 30px; padding: 13px 20px; border: 1px solid #252523; border-radius: 999px; background: #252523; color: #F6F5F1; font: .74rem var(--font-reading); letter-spacing: .08em; text-decoration: none; transition: background-color .25s ease, color .25s ease, gap .25s ease; }
   .project-live-link:hover, .project-live-link:focus-visible { gap: 18px; background: transparent; color: #252523; }
   .learned-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 44px; max-width: 1100px; }
   .learned-list p { margin: 0; max-width: none; }

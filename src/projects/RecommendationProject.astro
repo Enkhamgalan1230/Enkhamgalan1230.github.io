@@ -332,8 +332,6 @@ import ProjectModal from "../components/ProjectModal.astro";
       <span class="forecast-number">03</span>
 
       <div>
-        <span class="forecast-label">FROM RECOMMENDATIONS TO STOCK PLANNING</span>
-
         <h2>
           What might sell next,<br />
           and how much?
@@ -416,10 +414,6 @@ import ProjectModal from "../components/ProjectModal.astro";
     </section>
 
     <section class="project-ending">
-      <p class="ending-label">
-        Client-facing recommendation system developed for a plumbing merchant.
-      </p>
-
       <h2>
         Help customers choose.<br />
         Help the merchant prepare.
@@ -464,7 +458,7 @@ import ProjectModal from "../components/ProjectModal.astro";
     right: 90px;
     display: flex;
     justify-content: space-between;
-    font: .74rem "Courier Prime", monospace;
+    font: .74rem var(--font-reading);
     letter-spacing: .06em;
     color: #3F5238;
   }
@@ -491,7 +485,7 @@ import ProjectModal from "../components/ProjectModal.astro";
   .iteration-column p,
   .ending-supporting {
     max-width: 720px;
-    font: 1rem/1.6 "Courier Prime", monospace;
+    font: 1rem/1.6 var(--font-reading);
     color: #3F5238;
   }
 
@@ -508,7 +502,7 @@ import ProjectModal from "../components/ProjectModal.astro";
     padding: 10px 14px;
     border: 1px solid #25301f33;
     border-radius: 999px;
-    font: .72rem "Courier Prime", monospace;
+    font: .72rem var(--font-reading);
     letter-spacing: .025em;
   }
 
@@ -531,7 +525,7 @@ import ProjectModal from "../components/ProjectModal.astro";
   .forecast-label,
   .ending-label,
   .iteration-column > span {
-    font: .74rem "Courier Prime", monospace;
+    font: .74rem var(--font-reading);
     letter-spacing: .08em;
   }
 
@@ -560,7 +554,7 @@ import ProjectModal from "../components/ProjectModal.astro";
   }
 
   .section-number {
-    font: .74rem "Courier Prime", monospace;
+    font: .74rem var(--font-reading);
     color: #657856;
   }
 
@@ -606,8 +600,7 @@ import ProjectModal from "../components/ProjectModal.astro";
     border-radius: 14px;
   }
 
-  .architecture-node span,
-  .architecture-node small { font-family: "Courier Prime", monospace; }
+  .architecture-node span { font-family: var(--font-reading); }
 
   .architecture-node span {
     font-size: .7rem;
@@ -621,7 +614,7 @@ import ProjectModal from "../components/ProjectModal.astro";
 
   .architecture-node small {
     max-width: 170px;
-    font-size: .78rem;
+    font: .9rem/1.45 var(--font-reading);
     line-height: 1.45;
     color: #C7CBB4;
   }
@@ -668,7 +661,7 @@ import ProjectModal from "../components/ProjectModal.astro";
 
   .principle-card small {
     color: #C7CBB4;
-    font: .78rem/1.7 "Courier Prime", monospace;
+    font: .9rem/1.5 var(--font-reading);
   }
 
   .scenario-section {
@@ -698,7 +691,7 @@ import ProjectModal from "../components/ProjectModal.astro";
   }
 
   .scenario-card > span {
-    font: .72rem "Courier Prime", monospace;
+    font: .72rem var(--font-reading);
     letter-spacing: .06em;
     color: #657856;
   }
@@ -719,7 +712,7 @@ import ProjectModal from "../components/ProjectModal.astro";
     padding: 9px 12px;
     border: 1px solid currentColor;
     border-radius: 999px;
-    font: .68rem "Courier Prime", monospace;
+    font: .68rem var(--font-reading);
     letter-spacing: .05em;
   }
 
@@ -747,7 +740,7 @@ import ProjectModal from "../components/ProjectModal.astro";
   .feature-card:nth-child(even) { background: #A1AC8DAA; }
 
   .feature-card > span {
-    font: .72rem "Courier Prime", monospace;
+    font: .72rem var(--font-reading);
     color: #657856;
   }
 
@@ -758,7 +751,7 @@ import ProjectModal from "../components/ProjectModal.astro";
 
   .feature-card p {
     margin: 0;
-    font-size: .95rem;
+    font-size: 1rem;
   }
 
   .forecast-section {
@@ -770,7 +763,7 @@ import ProjectModal from "../components/ProjectModal.astro";
   }
 
   .forecast-number {
-    font: .74rem "Courier Prime", monospace;
+    font: .74rem var(--font-reading);
     color: #3F5238;
   }
 
@@ -811,7 +804,7 @@ import ProjectModal from "../components/ProjectModal.astro";
   }
 
   .forecast-metrics small {
-    font: .72rem "Courier Prime", monospace;
+    font: .72rem var(--font-reading);
     color: #3F5238;
   }
 

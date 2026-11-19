@@ -150,7 +150,6 @@ import ProjectModal from "../components/ProjectModal.astro";
     <section class="decision-section">
       <span class="decision-number">03</span>
       <div>
-        <span class="decision-label">A PERSON STAYS ACCOUNTABLE</span>
         <h2>Not fully automated, by design.</h2>
         <p>
           The aim is faster, more consistent triage with a person accountable
@@ -165,7 +164,6 @@ import ProjectModal from "../components/ProjectModal.astro";
     </section>
 
     <section class="project-ending">
-      <p class="ending-label">Built through my employer's consultancy work and deployed on Azure.</p>
       <h2>Tickets in.<br />Suggestions out.</h2>
       <p class="ending-supporting">
         A person decides.
@@ -178,21 +176,21 @@ import ProjectModal from "../components/ProjectModal.astro";
   .triage-project { width: 100%; background: radial-gradient(circle at 10% 6%, #F4F6FA 0%, transparent 36%), radial-gradient(circle at 92% 16%, #BFD6F6 0%, transparent 32%), radial-gradient(circle at 70% 76%, #DCE3EE 0%, transparent 38%), radial-gradient(circle at 16% 90%, #CCD8EA 0%, transparent 30%), linear-gradient(135deg, #E9ECF2 0%, #DFE4EC 48%, #E9ECF2 100%); color: #111; }
   .triage-project strong { color: inherit; }
   .project-hero { position: relative; min-height: 88vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 70px; }
-  .project-hero-top { position: absolute; top: 28px; left: 70px; right: 90px; display: flex; justify-content: space-between; font: .74rem "Courier Prime", monospace; letter-spacing: .06em; color: #475569; }
+  .project-hero-top { position: absolute; top: 28px; left: 70px; right: 90px; display: flex; justify-content: space-between; font: .74rem var(--font-reading); letter-spacing: .06em; color: #475569; }
   .project-hero h1 { margin: 0; font: 400 clamp(4rem, 11vw, 10rem)/.9 "Instrument Serif", serif; letter-spacing: -.05em; }
   .project-tagline { max-width: 800px; margin: 42px 0 20px; font: 400 clamp(2rem, 3.4vw, 3.6rem)/.98 "Instrument Serif", serif; }
-  .project-supporting, .intro-block p, .architecture-detail p, .feature-card p, .decision-section p, .ending-supporting { max-width: 720px; font: 1rem/1.6 "Courier Prime", monospace; color: #3E4E63; }
+  .project-supporting, .intro-block p, .architecture-detail p, .feature-card p, .decision-section p, .ending-supporting { max-width: 720px; font: 1rem/1.6 var(--font-reading); color: #3E4E63; }
   .project-supporting { margin: 0; }
   .project-meta { display: flex; flex-wrap: wrap; gap: 9px; }
   .project-meta { margin-top: 28px; }
-  .project-meta span { padding: 10px 14px; border: 1px solid #1113; border-radius: 999px; font: .72rem "Courier Prime", monospace; letter-spacing: .025em; }
+  .project-meta span { padding: 10px 14px; border: 1px solid #1113; border-radius: 999px; font: .72rem var(--font-reading); letter-spacing: .025em; }
   .demo-section { padding: 0 70px 110px; }
   .demo-video-frame { overflow: hidden; border-radius: 22px; background: #E9EBF0; }
   .demo-image { display: block; width: 100%; height: auto; }
-  .section-heading > span, .architecture-detail span, .decision-label, .ending-label { font: .74rem "Courier Prime", monospace; letter-spacing: .08em; }
+  .section-heading > span, .architecture-detail span, .decision-label, .ending-label { font: .74rem var(--font-reading); letter-spacing: .08em; }
   .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; padding: 20px 70px 130px; }
   .intro-block { padding-top: 20px; border-top: 1px solid #1113; }
-  .section-number { font: .74rem "Courier Prime", monospace; color: #475569; }
+  .section-number { font: .74rem var(--font-reading); color: #475569; }
   .intro-block h2, .section-heading h2, .architecture-detail h3, .decision-section h2, .project-ending h2 { font-family: "Instrument Serif", serif; font-weight: 400; letter-spacing: -.025em; }
   .intro-block h2 { margin: 20px 0; font-size: clamp(2.7rem, 4vw, 4.6rem); line-height: .95; }
   .intro-block p { margin: 0; }
@@ -202,7 +200,8 @@ import ProjectModal from "../components/ProjectModal.astro";
   .section-heading h2 { max-width: 900px; margin: 14px 0 0; font-size: clamp(3.4rem, 6vw, 7rem); line-height: .9; }
   .architecture-flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr) auto) minmax(0, 1fr); align-items: center; gap: 14px; }
   .architecture-node { min-width: 0; overflow-wrap: anywhere; min-height: 205px; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; padding: 23px; border: 1px solid #fff3; border-radius: 14px; }
-  .architecture-node span, .architecture-node small { font-family: "Courier Prime", monospace; }
+  .architecture-node span { font-family: var(--font-reading); }
+  .architecture-node small { font: .9rem/1.45 var(--font-reading); }
   .architecture-node span { font-size: .7rem; color: #5AA2FF; }
   .architecture-node strong { font: 400 1.82rem/1 "Instrument Serif", serif; color: #EAE6DF; }
   .architecture-node small { max-width: 170px; font-size: .78rem; line-height: 1.45; color: #B5C2D1; }
@@ -212,17 +211,17 @@ import ProjectModal from "../components/ProjectModal.astro";
   .architecture-detail p { margin: 0; color: #D2D9E1; }
   .principle-card { display: flex; flex-direction: column; gap: 24px; padding: 32px; border: 1px solid #fff3; border-radius: 18px; background: #ffffff0d; }
   .principle-card strong { font: 400 clamp(2rem, 3.5vw, 4rem)/.98 "Instrument Serif", serif; }
-  .principle-card small { color: #C6D0DB; font: .78rem/1.5 "Courier Prime", monospace; }
+  .principle-card small { color: #C6D0DB; font: .9rem/1.5 var(--font-reading); }
   .features-section { padding: 130px 70px; background: #EAE6DFaa; }
   .features-section .section-heading h2 { max-width: 950px; }
   .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
   .feature-card { min-height: 300px; display: flex; flex-direction: column; padding: 27px; border: 1px solid #1112; border-radius: 18px; background: #EAE6DFbb; }
   .feature-card:nth-child(even) { background: #CFE0F7aa; }
-  .feature-card > span { font: .72rem "Courier Prime", monospace; color: #475569; }
+  .feature-card > span { font: .72rem var(--font-reading); color: #475569; }
   .feature-card h3 { margin: auto 0 20px; font: 400 clamp(2rem, 3vw, 3.7rem)/.95 "Instrument Serif", serif; }
-  .feature-card p { margin: 0; font-size: .95rem; }
+  .feature-card p { margin: 0; font-size: 1rem; }
   .decision-section { display: grid; grid-template-columns: 120px 1fr; gap: 40px; padding: 130px 70px; background: #C3D3EA; }
-  .decision-number { font: .74rem "Courier Prime", monospace; color: #475569; }
+  .decision-number { font: .74rem var(--font-reading); color: #475569; }
   .decision-section h2 { max-width: 900px; margin: 18px 0 28px; font-size: clamp(3.5rem, 7vw, 7.5rem); line-height: .88; }
   .decision-section p { margin: 0; color: #3E4E63; }
   .testing-note { max-width: 720px; margin-top: 28px !important; padding-top: 20px; border-top: 1px solid #1112; font-size: .82rem !important; }
