@@ -8,8 +8,6 @@
 >
   <div class="guestbook-inner">
     <div class="guestbook-heading">
-      <p class="guestbook-label">SIGN THE GUESTBOOK</p>
-
       <h2 id="guestbook-title">
         Leave a little <span>note.</span>
       </h2>
@@ -125,7 +123,7 @@
           </small>
 
           <button type="submit">
-            Leave note <span aria-hidden="true">→</span>
+            Leave note
           </button>
         </div>
 
@@ -137,24 +135,26 @@
         ></p>
       </form>
 
-      <div
-        class="guestbook-entries"
-        data-guestbook-entries
-        aria-live="polite"
-      >
-        <p class="guestbook-empty" data-guestbook-empty>
-          No notes yet. Be the first.
-        </p>
-      </div>
+      <div class="guestbook-notes-column">
+        <div
+          class="guestbook-entries"
+          data-guestbook-entries
+          aria-live="polite"
+        >
+          <p class="guestbook-empty" data-guestbook-empty>
+            No notes yet. Be the first.
+          </p>
+        </div>
 
-      <button
-        class="guestbook-see-all"
-        type="button"
-        data-guestbook-see-all
-        hidden
-      >
-        SHOW ALL NOTES <span aria-hidden="true">&#x2197;</span>
-      </button>
+        <button
+          class="guestbook-see-all"
+          type="button"
+          data-guestbook-see-all
+          hidden
+        >
+          Show all notes
+        </button>
+      </div>
 
     </div>
 
@@ -195,8 +195,6 @@
       >
         &#x00D7;
       </button>
-
-      <p class="guestbook-label">THE WALL</p>
 
       <h3 id="guestbook-all-title">
         All the notes.
@@ -468,12 +466,11 @@
   let guestbookEntriesData: GuestbookEntry[] = [];
 
   const guestbookFontFamilies: Record<string, string> = {
-    serif: '"Instrument Serif", serif',
-    mono: '"Courier Prime", monospace',
-    grotesk: "Arial, sans-serif",
-    soft: '"Trebuchet MS", sans-serif',
-    display:
-      '"Palatino Linotype", "Book Antiqua", serif',
+    serif: "var(--font-reading)",
+    mono: "var(--font-reading)",
+    grotesk: "var(--font-reading)",
+    soft: "var(--font-reading)",
+    display: "var(--font-reading)",
   };
 
   function getGuestbookVisitorId() {
@@ -1274,7 +1271,7 @@
     position: relative;
     z-index: 2;
 
-    width: min(100%, 1080px);
+    width: min(1800px, 100%);
 
     margin: 0 auto;
   }
@@ -1289,8 +1286,7 @@
     color: #777;
 
     font:
-      0.68rem "Courier Prime",
-      monospace;
+      0.68rem var(--font-reading);
 
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -1299,7 +1295,7 @@
   .guestbook h2 {
     margin: 0;
 
-    font: 400 clamp(3rem, 5vw, 5.5rem) / 0.95 "Instrument Serif", serif;
+    font: 400 clamp(2.7rem, 4.2vw, 4.8rem) / 0.95 "Instrument Serif", serif;
 
     letter-spacing: -0.035em;
   }
@@ -1333,7 +1329,7 @@
   }
 
   .guestbook-form {
-    padding: 22px;
+    padding: 30px;
 
     border:
       1px solid
@@ -1354,14 +1350,13 @@
 
     gap: 8px;
 
-    margin-bottom: 18px;
+    margin-bottom: 24px;
 
     color: #555;
 
     font:
       0.65rem
-      "Courier Prime",
-      monospace;
+      var(--font-reading);
 
     letter-spacing: 0.05em;
 
@@ -1390,7 +1385,7 @@
 
     border-radius: 10px;
 
-    padding: 14px 15px;
+    padding: 16px 15px;
 
     background: #f7f6f4;
 
@@ -1398,8 +1393,7 @@
 
     font:
       0.8rem / 1.4
-      "Courier Prime",
-      monospace;
+      var(--font-reading);
 
     outline: none;
 
@@ -1455,7 +1449,7 @@
     padding: 11px 13px !important;
     background: #f7f6f4 !important;
     color: #111 !important;
-    font: 0.8rem / 1.4 "Courier Prime", monospace !important;
+    font: 0.8rem / 1.4 var(--font-reading) !important;
     text-align: left;
     transform: none !important;
   }
@@ -1504,7 +1498,7 @@
     padding: 9px 10px !important;
     background: transparent !important;
     color: #333 !important;
-    font: 0.72rem "Courier Prime", monospace !important;
+    font: 0.72rem var(--font-reading) !important;
     text-align: left;
     transform: none !important;
   }
@@ -1526,7 +1520,7 @@
   .guestbook-form-footer {
     display: grid;
 
-    gap: 12px;
+    gap: 18px;
   }
 
   .guestbook-form-footer
@@ -1537,8 +1531,7 @@
 
     font:
       0.65rem
-      "Courier Prime",
-      monospace;
+      var(--font-reading);
 
     line-height: 1.45;
   }
@@ -1552,16 +1545,15 @@
 
     border-radius: 999px;
 
-    padding: 11px 15px;
+    padding: 13px 18px;
 
     background: #111;
 
     color: #fff;
 
     font:
-      0.68rem
-      "Courier Prime",
-      monospace;
+      0.76rem
+      var(--font-reading);
 
     cursor: pointer;
 
@@ -1578,13 +1570,6 @@
       translateY(-2px);
   }
 
-  .guestbook-form
-    button span {
-    margin-left: 7px;
-
-    font-size: 1rem;
-  }
-
   .guestbook-status {
     min-height: 1.2em;
 
@@ -1594,14 +1579,17 @@
 
     font:
       0.68rem
-      "Courier Prime",
-      monospace;
+      var(--font-reading);
+  }
+
+  .guestbook-status:empty {
+    display: none;
   }
 
   .guestbook-entries {
     position: relative;
 
-    height: min(430px, 58vh);
+    height: 412px;
 
     padding:
       6px 10px
@@ -1626,6 +1614,10 @@
     );
   }
 
+  .guestbook-notes-column {
+    min-width: 0;
+  }
+
   :global(.guestbook-entry-track) {
     display: grid;
 
@@ -1639,30 +1631,25 @@
   }
 
   .guestbook-see-all {
-    grid-column: 2;
-
     display: inline-flex;
 
     align-items: center;
 
-    gap: 8px;
+    margin-top: 12px;
 
-    margin-top: 14px;
-
-    border: 1px solid #4d7657;
+    border: 0;
 
     border-radius: 999px;
 
-    padding: 10px 14px;
+    padding: 13px 18px;
 
-    background: #4d7657;
+    background: #111;
 
     color: #fff;
 
     font:
-      0.68rem
-      "Courier Prime",
-      monospace;
+      0.76rem
+      var(--font-reading);
 
     cursor: pointer;
 
@@ -1672,16 +1659,14 @@
       transform 0.2s ease;
   }
 
-  .guestbook-see-all:hover {
-    border-color: #111;
-
-    background: #111;
-
-    transform: translateY(-2px);
+  .guestbook-see-all[hidden] {
+    display: none;
   }
 
-  .guestbook-see-all span {
-    font-size: 1rem;
+  .guestbook-see-all:hover {
+    background: #4d7657;
+
+    transform: translateY(-2px);
   }
 
   @keyframes guestbook-scroll {
@@ -1721,8 +1706,7 @@
 
     font:
       0.75rem
-      "Courier Prime",
-      monospace;
+      var(--font-reading);
   }
 
   .guestbook-all-overlay {
@@ -1963,8 +1947,7 @@
 
     font:
       0.72rem
-      "Courier Prime",
-      monospace;
+      var(--font-reading);
   }
 
   :global(
@@ -1974,8 +1957,7 @@
 
     font:
       0.72rem
-      "Courier Prime",
-      monospace;
+      var(--font-reading);
   }
 
   :global(
@@ -1996,8 +1978,7 @@
       .guestbook-entry-message
   ) {
     font-family:
-      "Courier Prime",
-      monospace;
+      var(--font-reading);
 
     font-size: 1.25rem;
 
@@ -2096,8 +2077,7 @@
 
     font:
       0.6rem
-      "Courier Prime",
-      monospace;
+      var(--font-reading);
 
     cursor: pointer;
   }
@@ -2277,8 +2257,7 @@
 
     font:
       0.72rem
-      "Courier Prime",
-      monospace;
+      var(--font-reading);
 
     text-align: right;
   }
@@ -2348,8 +2327,7 @@
 
     font:
       0.62rem
-      "Courier Prime",
-      monospace;
+      var(--font-reading);
 
     cursor: pointer;
   }
@@ -2361,8 +2339,7 @@
 
     font:
       0.62rem
-      "Courier Prime",
-      monospace;
+      var(--font-reading);
   }
 
   @media (
@@ -2377,10 +2354,6 @@
     .guestbook-layout {
       grid-template-columns:
         1fr;
-    }
-
-    .guestbook-see-all {
-      grid-column: 1;
     }
 
     :global(

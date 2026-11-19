@@ -278,7 +278,7 @@
 
   .music-button:hover { opacity: 0.65; transform: scale(1.08); }
   .music-button:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
-  .music-button span { font-family: Georgia, serif; font-size: 1.75rem; line-height: 1; }
+  .music-button span { font-family: var(--font-reading); font-size: 1.75rem; line-height: 1; }
 
   .now-playing-dropdown {
     position: absolute;
@@ -330,7 +330,7 @@
     justify-content: space-between;
     margin-bottom: 11px;
     color: #777;
-    font: 0.62rem "Courier Prime", monospace;
+    font: 0.62rem var(--font-reading);
     letter-spacing: 0.08em;
   }
 
@@ -383,7 +383,7 @@
   .now-playing-copy { display: flex; min-width: 0; flex-direction: column; gap: 4px; }
   .now-playing-copy strong, .now-playing-copy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .now-playing-copy strong { font: 400 1.25rem/1.05 "Instrument Serif", serif; }
-  .now-playing-copy small { color: #777; font: 0.66rem/1.3 "Courier Prime", monospace; }
+  .now-playing-copy small { color: #777; font: 0.66rem/1.3 var(--font-reading); }
   [data-now-playing-time] { color: #4d7657; }
 
   @media (max-width: 640px) {

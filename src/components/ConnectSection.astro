@@ -1,7 +1,6 @@
 <section class="connect-section" data-scroll-reveal-section="connect" aria-labelledby="connect-title">
   <div class="connect-inner" data-scroll-reveal-group>
     <div class="connect-copy-column">
-      <p class="connect-label">CONTACT</p>
       <h2 id="connect-title">Let's get in <span>touch.</span></h2>
       <div
         class="connect-hands"
@@ -16,7 +15,7 @@
       <p class="connect-copy">
         <a class="connect-email" href="mailto:enkhamgalan.entwan@outlook.com">enkhamgalan.entwan@outlook.com</a>
         <button class="connect-copy-button" type="button" data-copy-email aria-label="Copy email address">
-          <span class="connect-copy-status" data-copy-status aria-live="polite">COPY</span>
+          <span class="connect-copy-status" data-copy-status aria-live="polite">Copy</span>
         </button>
       </p>
     </div>
@@ -73,25 +72,25 @@
     grid-template-columns: 1fr;
     align-items: center;
     gap: clamp(48px, 9vw, 150px);
-    width: min(1180px, 100%);
+    width: min(1800px, 100%);
     margin: 0 auto;
   }
 
-  .connect-copy-column { text-align: center; }
+  .connect-copy-column { text-align: left; }
 
   .connect-label {
     margin: 0 0 14px;
     color: #777;
-    font: 0.68rem "Courier Prime", monospace;
+    font: 0.68rem var(--font-reading);
     letter-spacing: 0.1em;
     text-transform: uppercase;
   }
 
   .connect-section h2 {
     max-width: 22ch;
-    margin-right: auto;
-    margin-left: auto;
-    font: 400 clamp(3.15rem, 5vw, 5.6rem)/0.9 "Instrument Serif", serif;
+    margin-right: 0;
+    margin-left: 0;
+    font: 400 clamp(2.7rem, 4.2vw, 4.8rem)/0.9 "Instrument Serif", serif;
     letter-spacing: -0.05em;
   }
 
@@ -129,7 +128,7 @@
   .connect-hands.is-touch .connect-hand-left { transform: translateX(var(--touch-distance, 0px)); }
   .connect-hands.is-touch .connect-hand-right { transform: translateX(calc(var(--touch-distance, 0px) * -1)); }
 
-  .connect-copy { display: inline-flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 14px; margin: 58px auto 0; color: #4d7657; font: 0.86rem "Courier Prime", monospace; }
+  .connect-copy { display: inline-flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 14px; margin: 58px auto 0; color: #4d7657; font: 0.9rem var(--font-reading); }
   .connect-email { color: #111; text-decoration: none; border-bottom: 1px solid #4d7657; padding-bottom: 4px; }
   .connect-email:hover, .connect-email:focus-visible { color: #4d7657; }
   .connect-copy-button { border: 0; padding: 0; color: #4d7657; background: transparent; cursor: pointer; font: inherit; animation: copy-attention 3.6s infinite; }
@@ -157,7 +156,7 @@
     .connect-hand { top: 8px; height: 76px; }
     .connect-hand-left { left: calc(50% - 220px); }
     .connect-hand-right { top: 14px; height: 84px; right: calc(50% - 220px); }
-    .connect-copy { margin-top: 46px; font-size: 0.76rem; }
+    .connect-copy { margin-top: 46px; font-size: 0.9rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -224,9 +223,9 @@
 
       try {
         await navigator.clipboard.writeText(email);
-        if (copyStatus) copyStatus.textContent = "COPIED ✓";
+        if (copyStatus) copyStatus.textContent = "Copied ✓";
         window.setTimeout(() => {
-          if (copyStatus) copyStatus.textContent = "COPY";
+          if (copyStatus) copyStatus.textContent = "Copy";
         }, 1800);
       } catch {
         window.location.href = `mailto:${email}`;
