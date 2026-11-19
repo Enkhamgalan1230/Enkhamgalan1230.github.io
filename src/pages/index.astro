@@ -1089,7 +1089,35 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
       ["#4d7657", "#edecea"],
     ];
     const DEAL_PROMOTE_MS = 260;
-    const FADE_MS = 160;
+    const DECK_COMMIT_RATIO = 0.3;
+    const DECK_COMMIT_VELOCITY = 0.11; // px per ms
+    const DECK_MAX_TILT_DEG = 8;
+    const DECK_TILT_PER_PX = 0.04;
+    const DECK_FLING_GAP = 48;
+    const DECK_REDUCED_THRESHOLD = 50;
+
+    type DeckDrag = {
+      pointerId: number;
+      startX: number; startY: number;
+      dx: number;
+      threshold: number;
+      engaged: boolean;
+      abandoned: boolean;
+      samples: Array<{ t: number; x: number }>;
+    };
+    let deckDrag: DeckDrag | null = null;
+    let suppressDeckClickUntil = 0;
+
+    const deckTilt = (dx: number) =>
+      Math.max(-DECK_MAX_TILT_DEG, Math.min(DECK_MAX_TILT_DEG, dx * DECK_TILT_PER_PX));
+    const deckPose = (dx: number) => `translate3d(${dx}px, 0, 0) rotate(${deckTilt(dx)}deg)`;
+
+    function clearInlinePose(card: HTMLElement | null) {
+      if (!card) return;
+      card.style.transform = "";
+      card.style.transition = "";
+      card.style.opacity = "";
+    }
 
     // Visual order: leaf, uk, plate, boots, laptop, cap, gloves, soysauce. The portrait has no card.
     const slideOrder = [".orbit-leaf", ".orbit-uk", ".orbit-plate", ".orbit-boots", ".orbit-laptop", ".orbit-cap", ".orbit-gloves", ".orbit-soysauce"];
@@ -1274,10 +1302,43 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
       preloadAhead(i);
     }
 
+    /* every card gets the tallest slide's height, so the deck never resizes between cards */
+    function syncDeckHeight() {
+      if (!frontCard || !dialogDeck || !dialog?.open) return;
+      const probe = frontCard.cloneNode(true) as HTMLElement;
+      probe.removeAttribute("data-dialog-slide");
+      probe.setAttribute("aria-hidden", "true");
+      probe.inert = true;
+      probe.querySelector("video")?.remove();
+      probe.classList.remove("is-out", "is-dragging");
+      Object.assign(probe.style, {
+        position: "absolute",
+        top: "0",
+        left: "0",
+        width: `${frontCard.offsetWidth}px`,
+        minHeight: "",
+        transform: "none",
+        transition: "none",
+        opacity: "",
+        visibility: "hidden",
+        pointerEvents: "none",
+      });
+      dialogDeck.appendChild(probe);
+      const probeTitle = probe.querySelector<HTMLElement>(".hero-orbit-card__title");
+      const probeText = probe.querySelector<HTMLElement>(".hero-orbit-card__text");
+      let tallest = 0;
+      for (const slide of slides) {
+        if (probeTitle) probeTitle.textContent = slide.alt;
+        if (probeText) probeText.textContent = slide.text;
+        tallest = Math.max(tallest, probe.offsetHeight);
+      }
+      probe.remove();
+      frontCard.style.minHeight = tallest ? `${tallest}px` : "";
+    }
+
     function resetDealClasses() {
       frontCard?.classList.remove("is-out");
       peekCard?.classList.remove("is-promote", "is-hidden");
-      dialogDeck?.classList.remove("is-fading");
     }
 
     function finishPending() {
@@ -1304,21 +1365,26 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
         peekCard?.classList.add("is-promote");
         pendingFinish = () => {
           dialogDeck.classList.add("is-swapping");
+          clearInlinePose(frontCard);
           resetDealClasses();
           renderDeck(slideIndex);
           peekCard?.classList.add("is-hidden");
           void dialogDeck.offsetWidth; // commit the rest state with no transition
           dialogDeck.classList.remove("is-swapping");
-          peekCard?.classList.remove("is-hidden"); // new peek fades in
+          peekCard?.classList.remove("is-hidden"); // new peek slides out from behind the front card
         };
         swapTimer = window.setTimeout(finishPending, DEAL_PROMOTE_MS);
       } else {
-        dialogDeck.classList.add("is-fading");
-        pendingFinish = () => {
-          renderDeck(slideIndex);
-          dialogDeck.classList.remove("is-fading");
-        };
-        swapTimer = window.setTimeout(finishPending, FADE_MS);
+        // the reverse deal: previous card comes back onto the front, current card recedes to the peek slot
+        dialogDeck.classList.add("is-swapping");
+        resetDealClasses();
+        renderDeck(slideIndex);
+        frontCard?.classList.add("is-out");
+        peekCard?.classList.add("is-promote");
+        void dialogDeck.offsetWidth; // commit the start pose with no transition
+        dialogDeck.classList.remove("is-swapping");
+        frontCard?.classList.remove("is-out");
+        peekCard?.classList.remove("is-promote");
       }
     }
 
@@ -1338,6 +1404,8 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
       delete dialog.dataset.state;
       document.documentElement.style.overflow = "hidden";
       dialog.showModal();
+      syncDeckHeight();
+      document.fonts?.ready.then(() => { if (dialog.open) syncDeckHeight(); });
       void dialog.offsetWidth; // commit the closed state so the open transition runs
       openFrame = requestAnimationFrame(() => {
         if (dialog.open && !dialogClosing) dialog.dataset.state = "open";
@@ -1346,6 +1414,8 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
     }
 
     function closeDialog() {
+      deckDrag = null;
+      frontCard?.classList.remove("is-dragging");
       if (!dialog?.open || dialogClosing) return;
       dialogClosing = true;
       window.clearTimeout(swapTimer);
@@ -1355,6 +1425,110 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
       closeTimer = window.setTimeout(() => dialog.close(), reduceMotion ? 120 : DIALOG_CLOSE_MS);
     }
 
+    /* ---------- deck swipe ---------- */
+    function onDeckPointerDown(event: PointerEvent) {
+      if (deckDrag || !dialog?.open || dialogClosing || !frontCard) return;
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      if ((event.target as Element | null)?.closest(".hero-orbit-card__gate-btn, .hero-orbit-card__play")) return;
+      finishPending(); // land any running deal before grabbing the card
+      deckDrag = {
+        pointerId: event.pointerId,
+        startX: event.clientX, startY: event.clientY,
+        dx: 0,
+        threshold: event.pointerType === "mouse" ? THRESHOLD_MOUSE : THRESHOLD_TOUCH,
+        engaged: false, abandoned: false,
+        samples: [],
+      };
+    }
+
+    function onDeckPointerMove(event: PointerEvent) {
+      const state = deckDrag;
+      if (!state || state.abandoned || event.pointerId !== state.pointerId || !frontCard) return;
+      const dx = event.clientX - state.startX;
+      const dy = event.clientY - state.startY;
+      if (!state.engaged) {
+        if (Math.hypot(dx, dy) < state.threshold) return;
+        if (Math.abs(dy) >= Math.abs(dx)) { state.abandoned = true; return; } // vertical intent: let the page have it
+        state.engaged = true;
+        frontCard.style.transition = ""; // drop any spring-back transition so the finger drives 1:1
+        state.startX = event.clientX; // absorb the threshold so the card doesn't jump
+        try { frontCard.setPointerCapture(state.pointerId); } catch { /* pointer gone */ }
+        if (!reduceMotion) frontCard.classList.add("is-dragging");
+      }
+      state.dx = event.clientX - state.startX;
+      const t = event.timeStamp;
+      state.samples.push({ t, x: state.dx });
+      while (state.samples.length > 2 && t - state.samples[0].t > VELOCITY_WINDOW_MS) state.samples.shift();
+      if (!reduceMotion) frontCard.style.transform = deckPose(state.dx);
+    }
+
+    function deckReleaseVelocity(state: DeckDrag, releaseTime: number) {
+      const first = state.samples[0];
+      const last = state.samples[state.samples.length - 1];
+      if (!first || !last || last.t <= first.t || releaseTime - last.t >= VELOCITY_STALE_MS) return 0;
+      return (last.x - first.x) / (last.t - first.t); // px per ms
+    }
+
+    function endDeckDrag(event?: Event) {
+      const state = deckDrag;
+      if (!state || !frontCard) return;
+      const pointerEvent = event as PointerEvent | undefined;
+      if (pointerEvent && "pointerId" in pointerEvent && pointerEvent.pointerId !== state.pointerId) return;
+      deckDrag = null;
+      if (!state.engaged) return;
+
+      try {
+        if (frontCard.hasPointerCapture(state.pointerId)) frontCard.releasePointerCapture(state.pointerId);
+      } catch { /* ignore */ }
+      frontCard.classList.remove("is-dragging");
+      if (event?.type === "pointerup") suppressDeckClickUntil = performance.now() + 400;
+
+      const cancelled = event?.type !== "pointerup";
+      const dx = state.dx;
+      const vx = cancelled ? 0 : deckReleaseVelocity(state, event ? event.timeStamp : performance.now());
+      const width = frontCard.offsetWidth;
+
+      if (reduceMotion) {
+        if (!cancelled && Math.abs(dx) > DECK_REDUCED_THRESHOLD) goTo(dx < 0 ? 1 : -1);
+        return;
+      }
+
+      const commit = !cancelled && (
+        Math.abs(dx) > width * DECK_COMMIT_RATIO
+        || (Math.abs(vx) > DECK_COMMIT_VELOCITY && Math.sign(vx) === Math.sign(dx))
+      );
+
+      if (!commit) {
+        frontCard.style.transition = "transform 280ms var(--ease-out)";
+        frontCard.style.transform = "";
+        window.setTimeout(() => {
+          if (!deckDrag) frontCard.style.transition = "";
+        }, 280);
+        return;
+      }
+
+      if (dx < 0) {
+        // fling out from where the finger let go; goTo(1) promotes the peek and swaps at its finish
+        frontCard.style.transition = "transform 220ms var(--ease-out), opacity 220ms var(--ease-out)";
+        frontCard.style.transform = `translate3d(${-(width + DECK_FLING_GAP)}px, 0, 0) rotate(${-DECK_MAX_TILT_DEG}deg)`;
+        frontCard.style.opacity = "0";
+        goTo(1);
+      } else {
+        clearInlinePose(frontCard);
+        goTo(-1);
+        startPeekFromFinger(dx);
+      }
+    }
+
+    function startPeekFromFinger(dx: number) {
+      if (!peekCard || !dialogDeck) return;
+      dialogDeck.classList.add("is-swapping");
+      peekCard.style.transform = deckPose(dx);
+      void peekCard.offsetWidth; // commit the finger pose with no transition
+      dialogDeck.classList.remove("is-swapping");
+      peekCard.style.transform = ""; // falls back to the class pose: recede into the peek slot
+    }
+
     if (dialog && dialogDeck && frontCard && typeof dialog.showModal === "function" && slides.length) {
       dialog.addEventListener("close", () => {
         window.clearTimeout(closeTimer);
@@ -1362,6 +1536,9 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
         pendingFinish = null;
         stopVideo(); // no audio may outlive the dialog
         resetDealClasses();
+        clearInlinePose(frontCard);
+        clearInlinePose(peekCard);
+        if (frontCard) frontCard.style.minHeight = "";
         dialogClosing = false;
         delete dialog.dataset.state;
         document.documentElement.style.overflow = "";
@@ -1382,7 +1559,21 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
         event.stopPropagation();
         closeDialog();
       });
-      frontCard.addEventListener("click", () => goTo(1));
+      frontCard.addEventListener("click", (event) => {
+        if (performance.now() < suppressDeckClickUntil) {
+          suppressDeckClickUntil = 0;
+          event.preventDefault();
+          return;
+        }
+        goTo(1);
+      });
+      frontCard.addEventListener("pointerdown", onDeckPointerDown);
+      window.addEventListener("pointermove", onDeckPointerMove, { passive: true });
+      window.addEventListener("pointerup", endDeckDrag);
+      window.addEventListener("pointercancel", endDeckDrag);
+      frontCard.addEventListener("lostpointercapture", endDeckDrag);
+      frontCard.addEventListener("dragstart", (event) => event.preventDefault());
+      dialog.addEventListener("close", () => { deckDrag = null; frontCard.classList.remove("is-dragging"); });
 
       dialog.addEventListener("keydown", (event) => {
         if (event.key === "ArrowLeft") {
@@ -1443,6 +1634,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
         lastWidth = width;
         endDrag();
         layoutHeroOrbit();
+        if (dialog?.open) syncDeckHeight();
       });
     }, { passive: true });
 
@@ -2746,6 +2938,11 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
     --orbit-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   }
 
+  /* keep layout width stable when the orbit dialog locks scroll */
+  :global(html) {
+    scrollbar-gutter: stable;
+  }
+
   /* ---------- orbit dialog (stacked card deck) ---------- */
   .hero-orbit-dialog {
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -2842,8 +3039,6 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
     border-radius: 22px;
     /* Solid, so the peek card's text behind it never shows through. */
     background: #ffffff;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     box-shadow:
       0 20px 50px rgba(17, 17, 17, 0.12),
       0 2px 6px rgba(17, 17, 17, 0.05);
@@ -2857,7 +3052,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
     position: relative;
     z-index: 1;
     cursor: pointer;
-    touch-action: manipulation;
+    touch-action: pan-y;
     -webkit-tap-highlight-color: transparent;
     transition:
       opacity 220ms var(--ease-out),
@@ -2894,7 +3089,18 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
   }
 
   .hero-orbit-card.is-front:active {
-    transform: scale(0.99);
+    transform: scale(0.98);
+    transition:
+      opacity 220ms var(--ease-out),
+      transform 120ms var(--ease-out);
+  }
+
+  /* deck swipe: the finger drives transform directly */
+  .hero-orbit-card.is-front.is-dragging,
+  .hero-orbit-card.is-front.is-dragging:active {
+    transition: none;
+    transform-origin: 50% 100%;
+    cursor: grabbing;
   }
 
   /* the deal: front leaves, peek takes its place */
@@ -2908,14 +3114,10 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
     filter: none;
   }
 
+  /* the next card waits tucked behind the front one, then slides out to peek */
   .hero-orbit-dialog .hero-orbit-card.is-peek.is-hidden {
-    opacity: 0;
-    animation: none;
-  }
-
-  .hero-orbit-deck.is-fading .hero-orbit-card {
-    opacity: 0;
-    transition-duration: 160ms;
+    transform: translateY(0) scale(0.92);
+    filter: brightness(0.92);
   }
 
   .hero-orbit-deck.is-swapping .hero-orbit-card,
@@ -3161,6 +3363,10 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
       transform: scale(1.03);
     }
 
+    .hero-orbit-card.is-front:hover:active {
+      transform: scale(0.98);
+    }
+
     .hero-orbit-card.is-front.is-out:hover {
       transform: translateY(18px) scale(0.97);
     }
@@ -3280,6 +3486,18 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
   .hero-orbit-item.is-dragging img,
   .hero-orbit-item.is-dragging:hover img {
     transform: scale(1.08);
+  }
+
+  /* press: after hover/drag so ordering is explicit; drag still wins via :not(.is-dragging) */
+  .hero-orbit-item:active:not(.is-dragging) img {
+    transform: scale(0.94);
+    transition-duration: 120ms;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .hero-orbit-item:hover:active:not(.is-dragging) img {
+      transform: scale(1.08);
+    }
   }
 
   .hero-orbit-label {
@@ -4900,6 +5118,10 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
 
     .hero-orbit-card.is-peek.is-promote {
       transform: none;
+    }
+
+    .hero-orbit-dialog .hero-orbit-card.is-peek.is-hidden {
+      transform: translateY(0) scale(0.86);
     }
 
     .hero-orbit-card__media {
