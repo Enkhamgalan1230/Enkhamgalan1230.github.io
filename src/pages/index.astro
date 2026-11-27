@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ConnectSection from "../components/ConnectSection.astro";
+import { CV_URL } from "../data/cv";
 
 import ReceiptProject from "../projects/ReceiptProject.astro";
 import AccountProject from "../projects/AccountProject.astro";
@@ -46,7 +47,7 @@ import ProjectShowcase from "../components/ProjectShowcase.astro";
         </p>
 
         <div class="hero-links" aria-label="Profile links">
-          <a class="hero-cv-link" href="/cv/Enkh-Amgalan_CV.pdf" target="_blank" rel="noreferrer">
+          <a class="hero-cv-link" href={CV_URL} target="_blank" rel="noreferrer">
             <span>View CV</span>
             <span aria-hidden="true">↗</span>
           </a>
